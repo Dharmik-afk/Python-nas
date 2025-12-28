@@ -1,0 +1,21 @@
+# Environments
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Project specific ignores
+/copyparty/.gitkeep
+/logs/
+/storage/
+
+# Legacy (Root level folders are gone, but keeping patterns for safety if they reappear)
+/zip/
+/docs/
+/cash/
+/apk/
+
+# Logs
+*.log

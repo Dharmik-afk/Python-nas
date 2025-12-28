@@ -1,0 +1,197 @@
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .hover-opacity-100:hover { opacity: 1 !important; }
+</style>
+
+<div x-data="galleryHandler()" 
+     @open-preview.window="open($event.detail.path)"
+     @keydown.escape.window="close()"
+     @keydown.left.window="prev()"
+     @keydown.right.window="next()"
+     class="lightbox-root">
+
+    <!-- Lightbox Overlay -->
+    <template x-if="isOpen">
+        <div class="lightbox-overlay" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            
+            <!-- Toolbar -->
+            <div class="lightbox-toolbar shadow-sm">
+                <div class="d-flex align-items-center">
+                    <button @click="close()" class="btn btn-dark rounded-circle me-2 me-sm-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 40px; background: rgba(255,255,255,0.1); border: none;">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <div>
+                        <h6 class="mb-0 fw-bold text-truncate" x-text="currentItem?.name" style="max-width: 150px;"></h6>
+                        <div class="lightbox-counter">
+                            <span x-text="currentIndex + 1"></span> / <span x-text="items.length"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-1 gap-sm-2">
+                    <template x-if="currentItem?.type === 'text'">
+                        <button @click="copyToClipboard(textContent)" class="btn btn-outline-light btn-sm rounded-pill px-2 px-sm-3 border-opacity-25">
+                            <i class="bi bi-clipboard"></i> <span class="btn-text-hide">Copy</span>
+                        </button>
+                    </template>
+                    <button @click="copyLink()" class="btn btn-outline-light btn-sm rounded-pill px-2 px-sm-3 border-opacity-25">
+                        <i class="bi bi-link-45deg"></i> <span class="btn-text-hide">Share</span>
+                    </button>
+                    <a :href="currentItem?.url" download class="btn btn-primary btn-sm rounded-pill px-2 px-sm-3 shadow-sm">
+                        <i class="bi bi-download"></i> <span class="btn-text-hide">Save</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="lightbox-content" 
+                 @click.self="close()"
+                 @touchstart="touchStartX = $event.changedTouches[0].screenX"
+                 @touchend="handleSwipe($event.changedTouches[0].screenX)">
+                
+                <!-- Loading Spinner -->
+                <div x-show="isLoading" class="position-absolute top-50 start-50 translate-middle z-index-2010">
+                    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Prev Button -->
+                <button @click="prev()" class="lightbox-nav prev" x-show="items.length > 1">
+                    <i class="bi bi-chevron-compact-left"></i>
+                </button>
+
+                <!-- Media Display Container with Transitions -->
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center" x-show="!isLoading" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+                    <!-- Image -->
+                    <template x-if="currentItem?.type === 'image'">
+                        <img :src="currentItem.url + '?media'" @load="isLoading = false" class="lightbox-media" :alt="currentItem.name">
+                    </template>
+
+                    <!-- Video -->
+                    <template x-if="currentItem?.type === 'video'">
+                        <video :src="currentItem.url + '?media'" @loadeddata="isLoading = false" controls autoplay class="lightbox-media"></video>
+                    </template>
+
+                    <!-- Text/Code -->
+                    <template x-if="currentItem?.type === 'text'">
+                        <div class="text-preview-container w-100 h-100 overflow-auto shadow-lg" style="max-width: 900px; max-height: 80vh;">
+                            <pre class="m-0 small" x-text="textContent"></pre>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Next Button -->
+                <button @click="next()" class="lightbox-nav next" x-show="items.length > 1">
+                    <i class="bi bi-chevron-compact-right"></i>
+                </button>
+            </div>
+
+            <!-- Counter -->
+            <div class="text-center p-3 small text-white-50">
+                <span x-text="currentIndex + 1"></span> / <span x-text="items.length"></span>
+            </div>
+        </div>
+    </template>
+</div>
+
+<script>
+function galleryHandler() {
+    return {
+        isOpen: false,
+        isLoading: false,
+        items: [],
+        currentIndex: 0,
+        touchStartX: 0,
+        textContent: '',
+        get currentItem() {
+            return this.items[this.currentIndex] || null;
+        },
+        async open(path) {
+            // Encode the path for the API request
+            const encodedPath = encodeURIComponent(path);
+            
+            this.isOpen = true;
+            this.isLoading = true;
+            this.items = [];
+            this.currentIndex = 0;
+            this.textContent = '';
+            
+            try {
+                const response = await fetch(`/api/v1/gallery/${encodedPath}`);
+                if (!response.ok) throw new Error("Gallery API failed");
+                
+                const data = await response.json();
+                this.items = data.items;
+                
+                // Find index using absolute comparison
+                this.currentIndex = this.items.findIndex(item => item.path === path);
+                if (this.currentIndex === -1) this.currentIndex = 0;
+                
+                if (this.currentItem?.type === 'text') {
+                    await this.loadText();
+                }
+
+                document.body.style.overflow = 'hidden';
+            } catch (e) {
+                console.error("Failed to load gallery info", e);
+                // Don't close or redirect automatically, just show the specific item if possible
+                this.isLoading = false;
+                this.textContent = "Error: Could not load gallery metadata. Direct preview failed.";
+            }
+        },
+        close() {
+            this.isOpen = false;
+            document.body.style.overflow = '';
+            this.textContent = '';
+        },
+        async next() {
+            if (this.items.length === 0) return;
+            this.isLoading = true;
+            this.currentIndex = (this.currentIndex + 1) % this.items.length;
+            if (this.currentItem?.type === 'text') {
+                await this.loadText();
+            }
+        },
+        async prev() {
+            if (this.items.length === 0) return;
+            this.isLoading = true;
+            this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
+            if (this.currentItem?.type === 'text') {
+                await this.loadText();
+            }
+        },
+        async loadText() {
+            try {
+                const res = await fetch(this.currentItem.url);
+                this.textContent = await res.text();
+                this.isLoading = false;
+            } catch (e) {
+                this.textContent = "Error loading text content.";
+                this.isLoading = false;
+            }
+        },
+        handleSwipe(endX) {
+            const threshold = 50;
+            if (this.touchStartX - endX > threshold) {
+                this.next();
+            } else if (endX - this.touchStartX > threshold) {
+                this.prev();
+            }
+        },
+        async copyLink() {
+            if (!this.currentItem) return;
+            const url = window.location.origin + this.currentItem.url;
+            this.copyToClipboard(url, "Link copied to clipboard!");
+        },
+        async copyToClipboard(text, message = "Copied to clipboard!") {
+            try {
+                await navigator.clipboard.writeText(text);
+                // Simple toast or alert fallback
+                alert(message);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+    }
+}
+</script>

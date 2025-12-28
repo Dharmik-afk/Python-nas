@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Server</title>
+    <link rel="stylesheet" href="/static/css/bundle.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/htmx.min.js"></script>
+    <script defer src="/static/js/alpine.min.js"></script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+</head>
+<body class="bg-body min-vh-100 d-flex flex-column" x-data="{}">
+    <nav class="navbar navbar-expand-lg sticky-top main-nav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <div class="brand-icon me-2">
+                    <i class="bi bi-hdd-network-fill"></i>
+                </div>
+                <span class="brand-text">Media Vault</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list text-white fs-2"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="/"><i class="bi bi-house-door me-1"></i> Home</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    {% if request.state.session.username %}
+                        <div class="dropdown">
+                            <button class="user-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="avatar-sm">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <span class="d-none d-md-inline">{{ request.state.session.username }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-2xl border-0 animate slide-in">
+                                <li>
+                                    <div class="dropdown-header text-uppercase small fw-bold opacity-50">Manage Account</div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <button class="dropdown-item text-danger d-flex align-items-center gap-2 py-2" 
+                                            @click="await fetch('/api/v1/auth/logout', {method: 'POST'}); window.location.reload();">
+                                        <i class="bi bi-power"></i> Logout
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="/login" class="btn-modern-primary rounded-pill px-4 py-2">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 py-4" id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <style>
+        .main-nav {
+            background: rgba(var(--bs-body-bg-rgb), 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--bs-primary), #6f42c1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.3);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            font-size: 1.25rem;
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.7) !important;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .user-profile-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 5px 15px 5px 5px;
+            border-radius: 50px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            background: var(--bs-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu {
+            background: rgba(30, 30, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+
+        .dropdown-item {
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .shadow-2xl {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .animate.slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-modern-primary {
+            background: linear-gradient(135deg, var(--bs-primary), #6f42c1);
+            border: none;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(var(--bs-primary-rgb), 0.3);
+        }
+
+        .btn-modern-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(var(--bs-primary-rgb), 0.4);
+            color: white;
+        }
+    </style>
+
+    <footer class="footer mt-auto py-4 bg-body-tertiary border-top">
+        <div class="container text-center">
+            <p class="mb-0 text-body-secondary small">&copy; 2025 Python File Server</p>
+        </div>
+    </footer>
+    
+    {% include "partials/lightbox.html" %}
+
+    <script src="/static/js/bundle.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

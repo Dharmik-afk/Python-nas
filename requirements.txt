@@ -1,0 +1,5 @@
+apkutils2
+copyparty
+requests
+Pillow
+python-jose

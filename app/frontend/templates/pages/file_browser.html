@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="file-browser animate slide-in" hx-ext="class-tools">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-4">
+        <nav aria-label="breadcrumb" class="glass-breadcrumb-container flex-grow-1 px-4 py-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/" class="home-link" hx-get="/" hx-target="#main-content" hx-push-url="true">
+                        <i class="bi bi-house-door-fill"></i>
+                    </a>
+                </li>
+                {% set parts = path.strip('/').split('/') %}
+                {% set current_path = namespace(value='') %}
+                {% for part in parts %}
+                    {% if part %}
+                        {% set current_path.value = current_path.value + '/' + part %}
+                        {% if loop.last %}
+                            <li class="breadcrumb-item active text-white fw-bold" aria-current="page">{{ part }}</li>
+                        {% else %}
+                            <li class="breadcrumb-item">
+                                <a href="{{ current_path.value }}" 
+                                   hx-get="{{ current_path.value }}" 
+                                   hx-target="#main-content" 
+                                   hx-push-url="true">{{ part }}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+
+        {% if 'w' in pmask %}
+        <form id="upload-form" hx-encoding="multipart/form-data" hx-post="/upload/{{ path.strip('/') }}" hx-target="#file-list" hx-swap="innerHTML">
+            <label class="btn-modern-primary rounded-pill px-4 py-2 d-flex align-items-center gap-2 cursor-pointer shadow-lg">
+                <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
+                <span class="fw-bold small">UPLOAD FILES</span>
+                <input type="file" name="files" multiple style="display: none;" onchange="htmx.trigger(this.form, 'submit')">
+            </label>
+        </form>
+        {% endif %}
+    </div>
+
+    <div id="file-list" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4">
+        {% include "partials/file_browser_content.html" %}
+    </div>
+</div>
+
+<style>
+    .glass-breadcrumb-container {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1rem;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "\F285"; /* bootstrap-icons chevron-right */
+        font-family: "bootstrap-icons";
+        color: rgba(255,255,255,0.3);
+        font-size: 0.8rem;
+    }
+
+    .breadcrumb-item a {
+        color: rgba(255,255,255,0.6);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+    .breadcrumb-item a:hover {
+        color: white;
+    }
+
+    .home-link {
+        font-size: 1.1rem;
+        color: var(--bs-primary) !important;
+    }
+
+    .cursor-pointer { cursor: pointer; }
+</style>
+{% endblock %}
