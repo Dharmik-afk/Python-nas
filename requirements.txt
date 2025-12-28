@@ -3,3 +3,12 @@ copyparty
 requests
 Pillow
 python-jose
+fastapi
+uvicorn
+sqlalchemy
+alembic
+pydantic
+passlib[bcrypt]
+python-multipart
+httpx
+aiofiles

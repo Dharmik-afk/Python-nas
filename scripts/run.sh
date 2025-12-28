@@ -15,6 +15,9 @@ fi
 # Ensure storage directories exist
 mkdir -p storage/files storage/db storage/cache logs copyparty
 
+echo "Syncing configuration..."
+python3 -m app.core.user_sync
+
 echo "Starting Supervisor..."
 source venv/bin/activate
 python3 supervisor/supervisor.py

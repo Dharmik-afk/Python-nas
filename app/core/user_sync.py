@@ -1,6 +1,6 @@
 import logging
 from app.backend.database.session import SessionLocal
-from app.backend.models import User
+from app.backend.database.models import User
 from .config import settings
 
 logger = logging.getLogger(__name__)
@@ -80,3 +80,7 @@ def write_config_file(user_entries: list):
         f.write("\n".join(lines) + "\n")
     
     logger.info(f"Successfully synced {len(user_entries)} users to {conf_file}")
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    sync_users_to_copyparty()

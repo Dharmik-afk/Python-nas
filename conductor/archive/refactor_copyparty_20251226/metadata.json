@@ -1,8 +1,0 @@
-{
-"track_id": "refactor_copyparty_20251226",
-"type": "refactor",
-"status": "new",
-"created_at": "2025-12-26T00:00:00Z",
-"updated_at": "2025-12-26T00:00:00Z",
-"description": "Refactor the backend to fully leverage `copyparty` for file operations, thumbnail generation, and media streaming, ensuring maximum efficiency and removing redundant legacy code."
-}
