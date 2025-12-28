@@ -52,8 +52,21 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
         user_agent = request.headers.get("user-agent", "unknown")
         session = session_manager.create_session(client_ip, user_agent)
         
-        # Use the plain password for Copyparty authentication during debug
-        auth_header = get_basic_auth_header(user.username, form_data.password)
+        # Calculate internal proxy credential
+        internal_pw = hasher.get_internal_proxy_password(form_data.password)
+        
+        # New: Verify with Copyparty Backend
+        if not verify_with_copyparty(user.username, internal_pw):
+            logger.error(f"Login rejected: Copyparty backend did not authorize user '{user.username}'")
+            raise HTTPException(status_code=502, detail="Backend file server synchronization error.")
+
+        # Create a session to store the copyparty auth header (proxy requirement)
+        client_ip = request.client.host if request.client else "unknown"
+        user_agent = request.headers.get("user-agent", "unknown")
+        session = session_manager.create_session(client_ip, user_agent)
+        
+        # Use the internal proxy password for Copyparty authentication
+        auth_header = get_basic_auth_header(user.username, internal_pw)
         session.username = user.username
         session.auth_header = encrypt_string(auth_header)
         session.log_activity(f"User '{user.username}' logged in via API.")
@@ -104,8 +117,11 @@ async def login(
             if is_valid:
                 logger.info(f"DEBUG LOGIN SUCCESS: User '{username}' successfully authenticated.")
                 
+                # Calculate internal proxy credential
+                internal_pw = hasher.get_internal_proxy_password(password)
+
                 # New: Verify with Copyparty Backend
-                if not verify_with_copyparty(user.username, password):
+                if not verify_with_copyparty(user.username, internal_pw):
                     logger.error(f"Login rejected: Copyparty backend did not authorize user '{user.username}'")
                     raise HTTPException(status_code=502, detail="Backend file server synchronization error.")
 
@@ -116,8 +132,8 @@ async def login(
                     user_agent = request.headers.get("user-agent", "unknown")
                     session = session_manager.create_session(client_ip, user_agent)
                 
-                # For proxying to Copyparty, we use the plain password during debug
-                auth_header = get_basic_auth_header(user.username, password)
+                # For proxying to Copyparty, we use the internal proxy password
+                auth_header = get_basic_auth_header(user.username, internal_pw)
                 
                 session.username = user.username
                 session.auth_header = encrypt_string(auth_header)

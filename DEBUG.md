@@ -1,84 +1,66 @@
 # DEBUG.md — Project Debug Context
-**Version:** 3.1.0
-**Scope:** Py_server (FastAPI/HTMX Refactor)
+**Version:** 3.2.0
+**Scope:** Py_server (Architecture 2.0)
 **Target Agent:** Gemini CLI Agent
 
 ---
 
-## Purpose of This File
+## 1. Known Bugs & Issues (CRITICAL)
 
-This file defines **mandatory debugging protocols** for the Gemini CLI agent when working on this specific project.
+### Bug: Copyparty Hashing Mismatch
+- **Status:** **OPEN / WORKAROUND ACTIVE**
+- **Symptom:** When `Hasher.get_copyparty_hash()` is enabled, login handshakes fail with `invalid password: '%x...'` even with correct credentials.
+- **Root Cause:** Incompatibility between the Python implementation of the SHA-512 iteration loop and Copyparty's internal algorithm, or incorrect salt loading from `~/.config/copyparty/ah-salt.txt`.
+- **Workaround:** Both `Hasher.get_copyparty_hash()` and `Hasher.get_internal_proxy_password()` currently return the **raw input** (Plain Text).
+- **Security Impact:** Proxy traffic between FastAPI and Copyparty (port 8090) contains plain-text credentials. This is mitigated by Copyparty only listening on `127.0.0.1`.
 
-**When active, this file overrides the agent's default debugging behavior.**
+### Issue: Health Check Shadowing
+- **Status:** **FIXED**
+- **Root Cause:** The catch-all route in `frontend_routes.py` was defined before the `/health` endpoint, causing health checks to return 307 redirects to `/login`.
+- **Fix:** Moved `/health` endpoint definition above router inclusions in `app/main.py`.
 
 ---
 
-## 1. Project Execution Model (MANDATORY)
+## 2. Project Execution Model
 
 ### Language & Runtime Stack
+- Python 3.12 (FastAPI)
+- Jinja2 + HTMX + Alpine.js
 
-**Primary Language(s):**
-- Python 3.11+ (FastAPI)
-- HTML/CSS/JS (Jinja2, HTMX, Bootstrap 5)
-
-**Execution Environment:**
-- **Server:** Uvicorn (ASGI)
-- **Framework:** FastAPI
-- **Auth:** Session-based proxy to Copyparty
-- **Process Manager:** `CopyPartyManager` (Internal Python Service)
-- **Backend:** `copyparty` (Subprocess) configured via `data/copyparty.conf`
-
-### Execution Architecture
-
-**Control Flow Model:**
-- **Asynchronous (Frontend):** FastAPI handles web requests, authenticates via session cookies, and proxies to the backend.
-- **Subprocess (Backend):** `copyparty` runs on `127.0.0.1:8090`. It reads `data/copyparty.conf` for user accounts and volume permissions.
-- **Metrics:** Real-time tracking in `backend/app/core/metrics.py`.
+### Architecture
+- **Process 1:** FastAPI (Port 8000)
+- **Process 2:** Copyparty (Port 8090, Internal Only)
+- **Orchestrator:** `supervisor/supervisor.py`
 
 ### Entry Points
-
-1.  **Main Entry Point:** `run.sh --dir <path>`
-2.  **FastAPI Entry:** `backend/app/main.py`
-3.  **Test Suite:** `backend/tests/test_api.py` (Run with `pytest`)
+- `scripts/run.sh`: Main launcher.
+- `scripts/manage.py`: User management CLI.
+- `app/main.py`: FastAPI application.
 
 ---
 
-## 2. Debugging Protocol
+## 3. Debugging Protocol
 
-### Step 1: Verification via Tests
-Before fixing, attempt to reproduce the issue using a test case:
+### Step 1: Check Supervisor Logs
 ```bash
-cd backend && pytest
+tail -f logs/server.log
+```
+Look for `[Supervisor]` or `[Handshake]` prefixes.
+
+### Step 2: Test Handshake Manually
+If login fails, verify the internal proxy manually:
+```bash
+curl -u <user>:<pass> http://127.0.0.1:8090/?pmask
 ```
 
-### Step 2: Check Logs & Config
-1.  **FastAPI Logs:** `data/server.log`
-2.  **Backend Logs:** `data/copyparty.log`
-3.  **Metrics:** `data/metrics.json`
-4.  **Backend Config:** Check `data/copyparty.conf` to ensure users and paths are configured correctly.
-
-### Step 3: Auth Debugging
-- If **Login Fails**: Check `server.log` for authentication proxy errors.
-- If **Proxy Fails (403/401)**:
-    - Verify `data/copyparty.conf` contains the expected password hash.
-    - Check if `CopyPartyManager` was restarted after user changes (current limitation: requires restart).
-
----
-
-## 3. Success Metrics & Success Criteria
-
-**The project is considered "Healthy" when:**
-- `pytest` returns all passes.
-- `GET /api/v1/stats` returns valid JSON.
-- `copyparty` process is active (Check `ps aux | grep copyparty`).
-- `data/copyparty.conf` exists and is valid INI format.
-- No "Connection Refused" errors in `server.log`.
+### Step 3: Database Verification
+```bash
+python3 scripts/manage.py list-users
+```
 
 ---
 
 ## 4. Safety & Stability
-
-- ❌ Never disable `validate_and_resolve_path`.
-- ❌ Never hardcode paths; use `settings.SERVE_DIR`.
-- ✅ Always use `StreamingResponse` for proxied files.
-- ✅ Ensure `python-cryptography` is installed via `pkg` (Termux) or compiled correctly.
+- ✅ SQLite DB: `storage/db/server.db`
+- ✅ Session Persistence: `storage/db/sessions.json`
+- ✅ Internal Config: `copyparty/copyparty.conf` (Auto-generated)

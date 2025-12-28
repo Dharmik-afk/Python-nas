@@ -4,42 +4,47 @@ from datetime import datetime, timedelta
 from typing import Optional
 from pathlib import Path
 from jose import jwt
+from passlib.context import CryptContext
 from .config import settings
 
 class Hasher:
     """
-    Simplified manager for debugging. Hashing is disabled.
+    Unified hashing and token manager.
+    Step 1 Removal: Plain-text proxying to Copyparty.
     """
     def __init__(self):
-        pass
+        # Standard secure hashing for the SQLite DB (Keep this enabled)
+        self.pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
     def get_password_hash(self, password: str) -> str:
-        """Returns the password as-is (NO HASHING)."""
-        return password
+        """Hashes a plain password for DB storage."""
+        return self.pwd_context.hash(password)
 
-    def verify_password(self, plain_password: str, stored_password: str) -> bool:
-        """Performs direct string comparison."""
-        return plain_password == stored_password
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+        """Verifies a plain password against a hashed one."""
+        return self.pwd_context.verify(plain_password, hashed_password)
 
-    def get_copyparty_hash(self, text: str) -> str:
-        """Returns the text as-is (NO HASHING)."""
-        return text
+    def get_internal_proxy_password(self, plain_password: str) -> str:
+        """
+        Returns the raw password for internal proxying.
+        (Hashing removed for Step 1 of debugging)
+        """
+        return plain_password
+
+    def get_copyparty_hash(self, internal_pw: str) -> str:
+        """
+        Returns the password as-is.
+        (Copyparty custom hashing removed for Step 1 of debugging)
+        """
+        return internal_pw
 
     def derive_key(self, secret: str) -> bytes:
-        """Derives a 32-byte key using SHA-256."""
         return hashlib.sha256(secret.encode()).digest()
 
     def create_access_token(self, data: dict, expires_delta: Optional[timedelta] = None) -> str:
-        """Creates a JWT access token."""
         to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.utcnow() + expires_delta
-        else:
-            expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        
+        expire = datetime.utcnow() + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-        return encoded_jwt
+        return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
-# Singleton instance
 hasher = Hasher()
