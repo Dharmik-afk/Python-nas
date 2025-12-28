@@ -46,7 +46,7 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <button class="dropdown-item text-danger d-flex align-items-center gap-2 py-2" 
-                                            @click="await fetch('/api/v1/auth/logout', {method: 'POST'}); window.location.reload();">
+                                            @click="fetch('/api/v1/auth/logout', {method: 'POST'}).then(() => window.location.reload())">
                                         <i class="bi bi-power"></i> Logout
                                     </button>
                                 </li>

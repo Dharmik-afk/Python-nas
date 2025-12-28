@@ -2,6 +2,34 @@
 
 {% block content %}
 <div class="file-browser animate slide-in" hx-ext="class-tools">
+    <!-- New Account Section -->
+    <div class="account-status-banner mb-4 p-3 glass-card d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <div class="user-avatar-glow">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <div>
+                <div class="text-white-50 small text-uppercase fw-bold letter-spacing-1">Current User</div>
+                <h5 class="mb-0 fw-black text-white">
+                    {% if request.state.session.username %}
+                        {{ request.state.session.username }}
+                    {% else %}
+                        Unregistered
+                    {% endif %}
+                </h5>
+            </div>
+        </div>
+        {% if not request.state.session.username %}
+        <a href="/login" class="btn btn-sm btn-glass-primary rounded-pill px-4">
+            <i class="bi bi-box-arrow-in-right me-1"></i> LOGIN
+        </a>
+        {% else %}
+        <div class="status-badge online">
+            <span class="dot"></span> ONLINE
+        </div>
+        {% endif %}
+    </div>
+
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-4">
         <nav aria-label="breadcrumb" class="glass-breadcrumb-container flex-grow-1 px-4 py-2">
             <ol class="breadcrumb mb-0">
@@ -47,6 +75,67 @@
 </div>
 
 <style>
+    .account-status-banner {
+        background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        border: 1px solid rgba(255,255,255,0.08) !important;
+    }
+
+    .user-avatar-glow {
+        font-size: 2.5rem;
+        color: var(--bs-primary);
+        filter: drop-shadow(0 0 10px rgba(var(--bs-primary-rgb), 0.4));
+        display: flex;
+        align-items: center;
+    }
+
+    .fw-black { font-weight: 900; }
+    .letter-spacing-1 { letter-spacing: 1px; }
+
+    .btn-glass-primary {
+        background: rgba(var(--bs-primary-rgb), 0.1);
+        border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
+        color: var(--bs-primary);
+        font-weight: 700;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-glass-primary:hover {
+        background: var(--bs-primary);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 4px 12px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-badge.online {
+        background: rgba(25, 135, 84, 0.1);
+        color: #4cd137;
+        border: 1px solid rgba(25, 135, 84, 0.2);
+    }
+
+    .status-badge .dot {
+        width: 6px;
+        height: 6px;
+        background: currentColor;
+        border-radius: 50%;
+        box-shadow: 0 0 10px currentColor;
+        animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
     .glass-breadcrumb-container {
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(10px);

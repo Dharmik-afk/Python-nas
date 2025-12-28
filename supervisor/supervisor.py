@@ -6,12 +6,17 @@ import logging
 import urllib.request
 from pathlib import Path
 
+# Paths
+BASE_DIR = Path(__file__).resolve().parent.parent
+# Add project root to sys.path to allow importing app modules
+sys.path.append(str(BASE_DIR))
+
+from app.core.config import settings
+
 # Configure logging for Supervisor
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] [Supervisor] %(message)s")
 logger = logging.getLogger(__name__)
 
-# Paths
-BASE_DIR = Path(__file__).resolve().parent.parent
 VENV_PYTHON = BASE_DIR / "venv" / "bin" / "python3"
 COPYPARTY_CONF = BASE_DIR / "copyparty" / "copyparty.conf"
 
@@ -21,11 +26,12 @@ uvicorn_proc = None
 
 def start_copyparty():
     global copyparty_proc
-    # Ensure Copyparty is bound to localhost
+    # Ensure Copyparty is bound to localhost and the configured port
     cmd = [
         str(VENV_PYTHON), "-m", "copyparty",
         "-c", str(COPYPARTY_CONF),
-        "-i", "127.0.0.1" 
+        "-i", "127.0.0.1",
+        "-p", str(settings.COPYPARTY_PORT)
     ]
     
     logger.info(f"Starting Copyparty: {' '.join(cmd)}")

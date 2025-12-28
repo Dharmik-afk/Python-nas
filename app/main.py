@@ -1,5 +1,7 @@
 import logging
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from .core.config import settings
 from .core.logger import setup_logging
@@ -10,6 +12,14 @@ from app.backend.routes import download_routes, upload_routes, api_routes, auth_
 from app.frontend.routes import frontend_routes
 
 app = FastAPI(title="Python File Server")
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logging.error(f"Validation error for {request.url.path}: {exc.errors()}")
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"detail": exc.errors(), "body": str(exc.body)},
+    )
 
 # Mount static files (CSS, JS, Images)
 app.mount("/static", StaticFiles(directory=settings.BASE_DIR / "app" / "frontend" / "static"), name="static")
@@ -65,9 +75,6 @@ async def startup_event():
     """
     setup_logging()
     
-    # Sync users to backend (Optional: Move to Supervisor if preferred, but safe here)
-    sync_users_to_copyparty()
-    
     # Determine the IP for the user-facing message
     host_ip = get_lan_ip()
     
@@ -92,18 +99,12 @@ app.include_router(upload_routes.router)
 app.include_router(api_routes.router)
 # Include the Auth router
 app.include_router(auth_routes.router)
-# Include the router for serving HTML pages and handling frontend interactions
-# This must be included last because it contains a catch-all route
-app.include_router(frontend_routes.router)
-
-# The old root endpoint is now handled by the router, so it can be removed.
-# @app.get("/")
-# async def read_root():
-#     """A simple root endpoint to confirm the server is running."""
-#     return {"message": "Welcome to the new FastAPI-based File Server!"}
-
 @app.get("/health")
 async def health_check():
     """Health check endpoint for the supervisor."""
     return {"status": "ok"}
+
+# Include the router for serving HTML pages and handling frontend interactions
+# This must be included last because it contains a catch-all route
+app.include_router(frontend_routes.router)
 

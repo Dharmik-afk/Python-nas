@@ -1,6 +1,5 @@
 import logging
 import urllib.parse
-import requests
 from fastapi import APIRouter, Request, HTTPException, Depends
 from pathlib import Path
 from app.core.config import settings

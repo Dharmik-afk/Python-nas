@@ -1,6 +1,5 @@
 import logging
 import requests
-import base64
 from fastapi import HTTPException, UploadFile, Request
 from fastapi.responses import StreamingResponse
 from starlette.background import BackgroundTask

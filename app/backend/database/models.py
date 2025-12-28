@@ -10,6 +10,3 @@ class User(Base):
     cp_hash = Column(String, nullable=True)         # SHA-512 hash for Copyparty
     permissions = Column(String, default="r") 
     is_active = Column(Boolean, default=True)
-
-    # In the future, you could add relationships here, for example:
-    # items = relationship("Item", back_populates="owner")

@@ -8,7 +8,6 @@ from app.core.config import settings
 from app.core.file_security import validate_and_resolve_path, is_path_forbidden
 from app.core.metrics import metrics
 from app.core.templates import templates
-from app.core.auth import decrypt_string
 from app.backend.services.copyparty_service import get_pmask
 
 router = APIRouter()

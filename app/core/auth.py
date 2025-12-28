@@ -1,12 +1,11 @@
 import base64
-import hashlib
 from typing import Optional
 from fastapi import Request, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from cryptography.fernet import Fernet
 from .config import settings
-from .security import get_password_hash as hash_password, verify_password, get_copyparty_hash
+from .security import hasher
 from .session_manager import session_manager, Session
 
 # OAuth2 scheme for Swagger UI and API clients
@@ -19,7 +18,7 @@ def get_basic_auth_header(username, password):
 
 def _get_fernet() -> Fernet:
     """Derives a 32-byte key from the SECRET_KEY for Fernet encryption."""
-    key = hashlib.sha256(settings.SECRET_KEY.encode()).digest()
+    key = hasher.derive_key(settings.SECRET_KEY)
     return Fernet(base64.urlsafe_b64encode(key))
 
 def encrypt_string(text: str) -> str:
@@ -48,7 +47,6 @@ async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_
     session = getattr(request.state, "session", None)
     
     # 1. JWT Authentication
-    # Check "access_token" cookie if header token is missing
     if not token:
         token = request.cookies.get("access_token")
 
@@ -59,21 +57,19 @@ async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_
             if session_id:
                 jwt_session = session_manager.get_session(session_id)
                 if jwt_session and jwt_session.auth_header:
-                    request.state.session = jwt_session # Update state
+                    request.state.session = jwt_session
                     return jwt_session
         except JWTError:
-            pass # Invalid token, fall through to other methods
+            pass
 
-    # 2. Existing Session Middleware (Legacy/Fallback)
-    # If middleware already attached a valid logged-in session, use it
+    # 2. Existing Session Middleware
     if session and session.auth_header:
         return session
 
-    # 3. Basic Auth (Fallback for scripts/curl)
+    # 3. Basic Auth (Fallback)
     auth_header = request.headers.get("Authorization")
     if auth_header and auth_header.startswith("Basic "):
         try:
-            import base64
             from app.backend.database.session import SessionLocal
             from app.backend.database.models import User
             
@@ -84,9 +80,7 @@ async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_
             db = SessionLocal()
             try:
                 user = db.query(User).filter(User.username == username, User.is_active == True).first()
-                if user and verify_password(password, user.hashed_password):
-                    # Valid Basic Auth!
-                    # Create or update session
+                if user and hasher.verify_password(password, user.hashed_password):
                     if not session:
                          client_ip = request.client.host if request.client else "unknown"
                          user_agent = request.headers.get("user-agent", "unknown")
@@ -94,7 +88,8 @@ async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_
                          request.state.session = session
                     
                     session.username = username
-                    session.auth_header = encrypt_string(auth_header)
+                    proxy_auth_header = get_basic_auth_header(username, user.hashed_password)
+                    session.auth_header = encrypt_string(proxy_auth_header)
                     return session
             finally:
                 db.close()

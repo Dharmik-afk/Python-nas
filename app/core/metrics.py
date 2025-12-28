@@ -62,4 +62,4 @@ class MetricsManager:
         with self.lock:
             return self.data.copy()
 
-metrics = MetricsManager(settings.BASE_DIR / "data" / "metrics.json")
+metrics = MetricsManager(settings.BASE_DIR / "storage" / "db" / "metrics.json")

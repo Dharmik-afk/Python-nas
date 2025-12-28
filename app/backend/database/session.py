@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
 # The database URL is read from the configuration
-# For SQLite, it will look like: "sqlite:///./data/server.db"
+# For SQLite, it will look like: "sqlite:///./storage/db/server.db"
 engine = create_engine(
     settings.DATABASE_URL,
     # connect_args is needed only for SQLite to allow multi-threaded access

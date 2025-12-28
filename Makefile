@@ -56,6 +56,10 @@ delete-user:
 	@if [ -z "$(user)" ]; then echo "Usage: make delete-user user=<name>"; exit 1; fi
 	$(PYTHON) scripts/manage.py delete-user $(user)
 
+change-password:
+	@if [ -z "$(user)" ]; then echo "Usage: make change-password user=<name>"; exit 1; fi
+	$(PYTHON) scripts/manage.py change-password $(user)
+
 sync-users:
 	$(PYTHON) scripts/manage.py sync
 
@@ -68,6 +72,8 @@ clean:
 	pkill -f uvicorn || true
 	pkill -f copyparty || true
 
+clean-log:
+	 rm -f logs/*.log storage/db/*.log
 # Hard clean (everything including venv and DB)
 clean-all: clean
 	@echo "WARNING: This will delete the virtual environment and the database."
