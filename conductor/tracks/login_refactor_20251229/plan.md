@@ -2,7 +2,7 @@
 
 This plan outlines the steps to refactor the authentication system for better integration with `copyparty`, including permission enforcement and dynamic UI adjustments.
 
-## Phase 1: Hash Harmonization & Discovery
+## Phase 1: Hash Harmonization & Discovery [checkpoint: 1d1e7d5]
 Goal: Fix the "Copyparty Hashing Mismatch" bug and ensure credentials are correctly hashed for proxying.
 
 - [x] **Task 1: Audit Copyparty Hashing Algorithm**
