@@ -1,30 +1,14 @@
-# Product Guidelines - Python FastAPI File Server
+# Product Guidelines: Python FastAPI File Server
 
-## Visual Identity
-- **Theme:** Modern Dark Mode with high-contrast elements.
-- **Design Language:** Glassmorphism (translucent, blurred backgrounds) to create depth and hierarchy.
-- **Color Palette:**
-  - **Primary:** Gradient (Bootstrap Primary to Purple `#6f42c1`)
-  - **Background:** Dark body background with animated "blobs" for visual interest.
-  - **Accents:** White text with varying opacity for hierarchy (100%, 70%, 50%).
-- **Typography:** Clean, sans-serif fonts. Headings use heavy weights (Bold/Black) for impact.
-- **Iconography:** Bootstrap Icons (`bi-`) used extensively for visual cues.
+## Communication Style
+*   **Documentation:** All technical documentation, administrative manuals, and developer guides must be **Professional & Concise**. They should prioritize clarity, directness, and accurate technical information while avoiding unnecessary jargon or conversational fluff.
+*   **User-Facing Text:** Labels, tooltips, and instructional text within the web interface should be **Minimalist**. Provide only the essential information required for a user to perform an action, ensuring the UI remains uncluttered and efficient.
 
-## User Experience (UX)
-- **Navigation:** Sticky top navbar with glass effect. Breadcrumbs for directory traversal.
-- **Interactivity:**
-  - **HTMX:** Used for server-driven UI updates (navigation, file listings) without full page reloads.
-  - **Alpine.js:** Handles client-side state (Lightbox, Login form validation, Dropdowns).
-- **Feedback:** Loading spinners, hover effects (transform, shadow), and toast notifications for actions like copying links.
-- **Responsiveness:** Mobile-first design using Bootstrap's grid system. Touch gestures (swipe) supported in the lightbox.
+## Visual Identity & UI Design
+*   **Clean & Modern:** The user interface should emphasize **whitespace, clear typography, and a consistent color palette**. This approach ensures that the application feels lightweight and is easy to navigate on both desktop and mobile devices.
+*   **Visual Consistency:** Utilize a cohesive design system (based on Bootstrap) to maintain uniformity in components like buttons, cards, and navigation menus.
 
-## Component Library
-- **Cards:** Glass-effect cards for files/folders with hover lift and shadow animations.
-- **Lightbox:** Full-screen modal for media preview (Image, Video, Text) with keyboard and touch navigation.
-- **Forms:** Modern input fields with animated focus borders and custom checkboxes.
-- **Buttons:** Gradient pills with shadow effects and transform animations on hover.
-
-## Code Style (Frontend)
-- **HTML:** Semantic structure, accessible attributes (ARIA where needed).
-- **CSS:** Scoped styles within templates (for now) or bundled via `bundle.css`. Utility-first classes (Bootstrap) preferred over custom CSS where possible.
-- **JS:** Minimal inline JavaScript; prefer declarative directives (HTMX, Alpine) over imperative logic.
+## Messaging & Terminology
+*   **Functional & Literal:** Use clear, descriptive, and literal terms for all features and actions.
+    *   *Examples:* Use "File Browser" instead of "Explore", "Downloads" instead of "My Stuff", and "User Settings" instead of "Profile Hub".
+*   **Consistency:** Once a term is defined for a feature, it must be used consistently across the entire application and all levels of documentation.

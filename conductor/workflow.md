@@ -44,17 +44,21 @@ All tasks follow a strict lifecycle:
    - Add dated note explaining the change
    - Resume implementation
 
-8. **Verify Task Completion:**
-   - Ensure all acceptance criteria are met.
-   - Verify tests pass and coverage is adequate.
+8. **Commit Code Changes:**
+   - Stage all code changes related to the task.
+   - Propose a clear, concise commit message e.g, `feat(ui): Create basic HTML structure for calculator`.
+   - Perform the commit.
 
-9. **Mark Task as Complete:**
-   - **Step 9.1: Update Plan:** Read `plan.md`, find the line for the completed task, and update its status from `[~]` to `[x]`.
-   - **Step 9.2: Write Plan:** Write the updated content back to `plan.md`.
+9. **Record Task Summary in Commit Message:**
+   - **Step 9.1: Draft Summary Content:** Create a detailed summary for the completed task. This should include the task name, a summary of changes, a list of all created/modified files, and the core "why" for the change.
+   - **Step 9.2: Commit with Summary:** Ensure the summary is included in the commit message body.
 
-10. **Commit Plan Update:**
-    - **Action:** Stage the modified `plan.md` file.
-    - **Action:** Commit this change with a descriptive message (e.g., `conductor(plan): Mark task 'Create user model' as complete`).
+10. **Get and Record Task Commit SHA:**
+    - **Step 10.1: Update Plan:** Read `plan.md`, find the line for the completed task, update its status from `[~]` to `[x]`, and append the first 7 characters of the *just-completed commit's* commit hash.
+    - **Step 10.2: Write Plan:** Write the updated content back to `plan.md`.
+
+11. **Commit Plan Update (Phase End Only):**
+    - **Note:** If this task concludes a phase, proceed to the "Phase Completion Verification and Checkpointing Protocol". Otherwise, continue to the next task.
 
 ### Phase Completion Verification and Checkpointing Protocol
 

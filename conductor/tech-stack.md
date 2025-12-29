@@ -1,26 +1,30 @@
-# Technology Stack - Python FastAPI File Server
+# Technology Stack: Python FastAPI File Server
 
 ## Backend
-- **Language:** Python 3.10+
-- **Web Framework:** FastAPI (High performance, modern ASGI framework)
-- **ASGI Server:** Uvicorn
-- **Environment Management:** `python-dotenv`
-- **File Engine:** `copyparty` (Primary backend for all file operations, thumbnails, streaming, and upload handling to maximize efficiency)
-- **Authentication:** Basic Auth / OAuth2 (using `passlib` with `bcrypt`)
-
-## Database & Persistence
-- **ORM:** SQLAlchemy (with SQLite backend)
-- **Migrations:** Alembic
-- **Configuration:** Pydantic (Settings management via Environment Variables)
+*   **Programming Language:** Python 3.x
+*   **Web Framework:** FastAPI (with Uvicorn as the ASGI server)
+*   **Logic & Orchestration:** 
+    *   Unified frontend architecture serving as a management layer.
+    *   **Core Engine:** Deep integration with `copyparty` for file-serving operations, indexing, and management.
+    *   **Process Management:** Supervisor model managing the FastAPI and `copyparty` subprocesses.
 
 ## Frontend
-- **Templating:** Jinja2 (Server-side rendering)
-- **Dynamic Interactivity:** HTMX (Low-complexity, high-interactivity AJAX)
-- **Client-side Logic:** Alpine.js (Lightweight reactive framework)
-- **Styling:** Bootstrap 5 (Responsive grid and utility classes)
-- **Icons:** Bootstrap Icons
+*   **Template Engine:** Jinja2 (Server-side rendering)
+*   **UI Framework:** Bootstrap (CSS/Layout)
+*   **Interactivity:** htmx (Providing dynamic, single-page application behavior)
+*   **Icons:** Custom SVG icon set and Bootstrap Icons.
 
-## Development & Infrastructure
-- **Testing:** Pytest, HTTPX (API testing)
-- **Environment:** Android (Termux)
-- **Build System:** Makefile / Bash scripts (`run.sh`)
+## Database & Persistence
+*   **Database:** SQLite (for user accounts, session persistence, and metadata)
+*   **ORM:** SQLAlchemy
+*   **Migrations:** Alembic
+
+## Security & Authentication
+*   **Unified Auth:** 
+    *   Hybrid authentication system utilizing `passlib` (bcrypt) and `python-jose` (JWT).
+    *   **Copyparty Integration:** The login system is partially derived from or integrated with `copyparty`'s authentication mechanisms to ensure seamless proxying and access control.
+*   **Dependencies:** `python-multipart`, `requests`, `httpx`.
+
+## Infrastructure & Tooling
+*   **Execution:** `make` (via `Makefile`), `scripts/run.sh`.
+*   **Package Management:** `requirements.txt`.
