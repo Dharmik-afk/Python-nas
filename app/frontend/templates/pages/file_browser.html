@@ -62,7 +62,7 @@
         <form id="upload-form" hx-encoding="multipart/form-data" hx-post="/upload/{{ path.strip('/') }}" hx-target="#file-list" hx-swap="innerHTML">
             <label class="btn-modern-primary rounded-pill px-4 py-2 d-flex align-items-center gap-2 cursor-pointer shadow-lg">
                 <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
-                <span class="fw-bold small">UPLOAD FILES</span>
+                <span class="fw-bold small d-none d-md-inline">UPLOAD FILES</span>
                 <input type="file" name="files" multiple style="display: none;" onchange="htmx.trigger(this.form, 'submit')">
             </label>
         </form>
@@ -73,99 +73,4 @@
         {% include "partials/file_browser_content.html" %}
     </div>
 </div>
-
-<style>
-    .account-status-banner {
-        background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-        border: 1px solid rgba(255,255,255,0.08) !important;
-    }
-
-    .user-avatar-glow {
-        font-size: 2.5rem;
-        color: var(--bs-primary);
-        filter: drop-shadow(0 0 10px rgba(var(--bs-primary-rgb), 0.4));
-        display: flex;
-        align-items: center;
-    }
-
-    .fw-black { font-weight: 900; }
-    .letter-spacing-1 { letter-spacing: 1px; }
-
-    .btn-glass-primary {
-        background: rgba(var(--bs-primary-rgb), 0.1);
-        border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
-        color: var(--bs-primary);
-        font-weight: 700;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
-    }
-
-    .btn-glass-primary:hover {
-        background: var(--bs-primary);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .status-badge {
-        font-size: 0.7rem;
-        font-weight: 800;
-        padding: 4px 12px;
-        border-radius: 50px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .status-badge.online {
-        background: rgba(25, 135, 84, 0.1);
-        color: #4cd137;
-        border: 1px solid rgba(25, 135, 84, 0.2);
-    }
-
-    .status-badge .dot {
-        width: 6px;
-        height: 6px;
-        background: currentColor;
-        border-radius: 50%;
-        box-shadow: 0 0 10px currentColor;
-        animation: blink 2s infinite;
-    }
-
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-
-    .glass-breadcrumb-container {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 1rem;
-    }
-
-    .breadcrumb-item + .breadcrumb-item::before {
-        content: "\F285"; /* bootstrap-icons chevron-right */
-        font-family: "bootstrap-icons";
-        color: rgba(255,255,255,0.3);
-        font-size: 0.8rem;
-    }
-
-    .breadcrumb-item a {
-        color: rgba(255,255,255,0.6);
-        text-decoration: none;
-        transition: all 0.2s ease;
-        font-weight: 500;
-    }
-
-    .breadcrumb-item a:hover {
-        color: white;
-    }
-
-    .home-link {
-        font-size: 1.1rem;
-        color: var(--bs-primary) !important;
-    }
-
-    .cursor-pointer { cursor: pointer; }
-</style>
 {% endblock %}

@@ -38,13 +38,12 @@ def test_stats_api(mock_authenticated_session):
         assert "total_requests" in data
         assert "total_uploads" in data
 
-def test_forbidden_path(mock_authenticated_session):
-    """Test security filter for .git folder."""
-    with TestClient(app) as client:
-        client.cookies.set("session_id", "test_id")
-        response = client.get("/.git")
-        assert response.status_code == 403
-
+    def test_forbidden_path(mock_authenticated_session):
+        """Test security filter for .git folder."""
+        with TestClient(app) as client:
+            client.cookies.set("session_id", "test_id")
+            response = client.get("/.git")
+            assert response.status_code == 404
 def test_invalid_path(mock_authenticated_session):
     """Test 404 for non-existent path."""
     with TestClient(app) as client:

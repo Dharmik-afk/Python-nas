@@ -3,9 +3,9 @@ from unittest.mock import MagicMock, patch, mock_open
 from app.core.user_sync import sync_users_to_copyparty
 from app.backend.database.models import User
 
-@patch("app.core.user_sync.SessionLocal")
+@patch("scripts.manage.SessionLocal")
 @patch("builtins.open", new_callable=mock_open)
-@patch("app.core.user_sync.settings")
+@patch("scripts.manage.settings")
 def test_sync_users_to_copyparty(mock_settings, mock_file, mock_session_local):
     # Setup mock settings
     mock_settings.BASE_DIR = MagicMock()
@@ -18,7 +18,9 @@ def test_sync_users_to_copyparty(mock_settings, mock_file, mock_session_local):
     mock_path_copyparty.__truediv__.return_value = mock_path_conf
     
     # Mock SERVE_PATH
-    mock_settings.SERVE_PATH.resolve.return_value = "/mock/serve/path"
+    mock_serve_path = MagicMock()
+    mock_settings.SERVE_PATH.resolve.return_value = mock_serve_path
+    mock_serve_path.__str__.return_value = "/mock/serve/path"
 
     # Setup mock DB session
     mock_db = MagicMock()

@@ -26,17 +26,27 @@ class Hasher:
 
     def get_internal_proxy_password(self, plain_password: str) -> str:
         """
-        Returns the raw password for internal proxying.
-        (Hashing removed for Step 1 of debugging)
+        Returns the SHA-256 hex digest of the password for internal proxying.
+        This ensures the raw plain password is not sent directly to Copyparty.
         """
-        return plain_password
+        return hashlib.sha256(plain_password.encode()).hexdigest()
 
     def get_copyparty_hash(self, internal_pw: str) -> str:
         """
-        Returns the password as-is.
-        (Copyparty custom hashing removed for Step 1 of debugging)
+        Returns the Copyparty-compatible SHA-512 iterated hash.
+        This matches Copyparty's custom 'sha2' algorithm.
         """
-        return internal_pw
+        # Default parameters from Copyparty
+        salt = "HOnOz0yVP8H4WJncIu6Y8qof"
+        iterations = 424242
+        
+        bplain = internal_pw.encode("utf-8")
+        bsalt = salt.encode("utf-8")
+        ret = b"\n"
+        for _ in range(iterations):
+            ret = hashlib.sha512(bsalt + bplain + ret).digest()
+
+        return "+" + base64.urlsafe_b64encode(ret[:24]).decode("utf-8")
 
     def derive_key(self, secret: str) -> bytes:
         return hashlib.sha256(secret.encode()).digest()

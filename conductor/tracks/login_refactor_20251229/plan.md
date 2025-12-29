@@ -5,13 +5,13 @@ This plan outlines the steps to refactor the authentication system for better in
 ## Phase 1: Hash Harmonization & Discovery
 Goal: Fix the "Copyparty Hashing Mismatch" bug and ensure credentials are correctly hashed for proxying.
 
-- [ ] **Task 1: Audit Copyparty Hashing Algorithm**
-    - [ ] Sub-task: Analyze `copyparty` source or documentation to identify the exact SHA-512 iteration parameters.
-    - [ ] Sub-task: Create a standalone Python script to reproduce the mismatch reported in `DEBUG.md`.
-- [ ] **Task 2: Fix `Hasher.get_copyparty_hash()`**
-    - [ ] Sub-task: Write tests in `tests/test_security.py` that expect the correct hashed output for a known input.
-    - [ ] Sub-task: Implement the correct SHA-512 iteration loop in `app/core/security.py`.
-    - [ ] Sub-task: Update `Hasher.get_internal_proxy_password()` to use the new hashing logic.
+- [x] **Task 1: Audit Copyparty Hashing Algorithm**
+    - [x] Sub-task: Analyze `copyparty` source or documentation to identify the exact SHA-512 iteration parameters.
+    - [x] Sub-task: Create a standalone Python script to reproduce the mismatch reported in `DEBUG.md`.
+- [x] **Task 2: Fix `Hasher.get_copyparty_hash()`**
+    - [x] Sub-task: Write tests in `tests/test_security.py` that expect the correct hashed output for a known input.
+    - [x] Sub-task: Implement the correct SHA-512 iteration loop in `app/core/security.py`.
+    - [x] Sub-task: Update `Hasher.get_internal_proxy_password()` to use the new hashing logic.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 1: Hash Harmonization & Discovery' (Protocol in workflow.md)**
 
 ## Phase 2: Permission Verification Engine

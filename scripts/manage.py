@@ -39,6 +39,11 @@ def write_config_file(user_entries: list):
     lines.append("# Format: one CLI argument per line")
     lines.append("")
 
+    # 0. Global Settings
+    lines.append("--ah-alg sha2,424242")
+    lines.append("--ah-salt HOnOz0yVP8H4WJncIu6Y8qof")
+    lines.append("")
+
     # 1. Add Accounts
     for entry in user_entries:
         lines.append(f"-a {entry['username']}:{entry['hash']}")
