@@ -12,7 +12,7 @@ Goal: Fix the "Copyparty Hashing Mismatch" bug and ensure credentials are correc
     - [x] Sub-task: Write tests in `tests/test_security.py` that expect the correct hashed output for a known input.
     - [x] Sub-task: Implement the correct SHA-512 iteration loop in `app/core/security.py`.
     - [x] Sub-task: Update `Hasher.get_internal_proxy_password()` to use the new hashing logic.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 1: Hash Harmonization & Discovery' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 1: Hash Harmonization & Discovery' (Protocol in workflow.md)****
 
 ## Phase 2: Permission Verification Engine
 Goal: Implement the ability to query `copyparty` for user-specific permissions.

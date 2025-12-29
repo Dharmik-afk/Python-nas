@@ -10,7 +10,7 @@ __pycache__/
 /copyparty/.gitkeep
 /logs/
 /storage/
-
+/data/
 # Legacy (Root level folders are gone, but keeping patterns for safety if they reappear)
 /zip/
 /docs/
