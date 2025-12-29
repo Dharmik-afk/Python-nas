@@ -17,6 +17,9 @@ A lightweight, extendable Python-based file server optimized for private network
 ## Key Features
 - **Modern UI:** Responsive, single-page feel using FastAPI, Jinja2, and HTMX.
 - **Media Gallery:** Immersive preview and streaming for images, videos, and music.
+- **Jail Security:** Strict filesystem confinement to the configured stream directory.
+- **Path Obfuscation:** Security-through-obscurity by returning 404 for restricted paths.
+- **Environment-Driven:** Fully configurable via `.env` for easy deployment in Termux.
 - **Copyparty Backend:** Robust file handling and thumbnail generation.
 - **Private Network Security:** Designed for secure access within a LAN.
 

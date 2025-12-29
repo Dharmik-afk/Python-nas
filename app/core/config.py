@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     # Server Configuration
     PORT: int = 8000
     HOST: str = "0.0.0.0"
+    DEBUG: bool = False
     LOG_LEVEL: str = "DEBUG"
     LOG_FILE: Path = BASE_DIR / "logs" / "server.log"
     # Secret key for signing tokens
@@ -25,17 +26,37 @@ class Settings(BaseSettings):
     DATABASE_URL: str = f"sqlite:///{Path(__file__).resolve().parent.parent.parent}/storage/db/server.db"
 
     # Copyparty Backend Configuration
+    COPYPARTY_HOST: str = "127.0.0.1"
     COPYPARTY_PORT: int = 8090
     COPYPARTY_ADMIN_USER: str = "admin"
-    COPYPARTY_ADMIN_PASS: str = "admin_pass_a7b3c9d1e5f"
+    COPYPARTY_ADMIN_PASS: Optional[str] = None
 
     # Directory to serve files from
-    CUSTOM_SERVE_DIR: Optional[str] = os.getenv("CUSTOM_SERVE_DIR")
+    CUSTOM_SERVE_DIR: Optional[str] = None
     SERVE_DIR: str = ""
+
+    # Path Security
+    RESTRICTED_DIRS: list[Path] = []
+    ALLOWED_OVERRIDE_DIRS: list[Path] = []
 
     @property
     def SERVE_PATH(self) -> Path:
         return Path(self.SERVE_DIR)
+
+    @validator("RESTRICTED_DIRS", always=True, pre=True)
+    def set_restricted_dirs(cls, v, values):
+        base_dir = values.get("BASE_DIR") or Path(__file__).resolve().parent.parent.parent
+        return [
+            base_dir,
+            Path("/data/data/com.termux/files/usr/")
+        ]
+
+    @validator("ALLOWED_OVERRIDE_DIRS", always=True, pre=True)
+    def set_allowed_override_dirs(cls, v, values):
+        base_dir = values.get("BASE_DIR") or Path(__file__).resolve().parent.parent.parent
+        return [
+            base_dir / "storage" / "files"
+        ]
 
     @validator("SECRET_KEY", always=True, pre=True)
     def set_secret_key(cls, v, values):
@@ -61,10 +82,10 @@ class Settings(BaseSettings):
 
     @validator("SERVE_DIR", always=True, pre=True)
     def set_serve_dir(cls, v, values):
-        # Prioritize CUSTOM_SERVE_DIR from environment or values
-        custom = values.get("CUSTOM_SERVE_DIR") or os.getenv("CUSTOM_SERVE_DIR")
+        # Prioritize CUSTOM_SERVE_DIR loaded by Pydantic from .env/env
+        custom = values.get("CUSTOM_SERVE_DIR")
         if custom:
-            return str(Path(custom.strip()).resolve())
+            return str(Path(custom.strip()).expanduser().resolve())
         # Default to media folder in project root
         base_dir = Path(__file__).resolve().parent.parent.parent
         return str((base_dir / "storage" / "files").resolve())

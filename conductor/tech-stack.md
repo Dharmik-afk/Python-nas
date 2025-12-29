@@ -4,13 +4,14 @@
 - **Language:** Python 3.10+
 - **Web Framework:** FastAPI (High performance, modern ASGI framework)
 - **ASGI Server:** Uvicorn
+- **Environment Management:** `python-dotenv`
 - **File Engine:** `copyparty` (Primary backend for all file operations, thumbnails, streaming, and upload handling to maximize efficiency)
 - **Authentication:** Basic Auth / OAuth2 (using `passlib` with `bcrypt`)
 
 ## Database & Persistence
 - **ORM:** SQLAlchemy (with SQLite backend)
 - **Migrations:** Alembic
-- **Configuration:** Pydantic (Settings management)
+- **Configuration:** Pydantic (Settings management via Environment Variables)
 
 ## Frontend
 - **Templating:** Jinja2 (Server-side rendering)

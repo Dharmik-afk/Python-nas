@@ -34,6 +34,22 @@ db-init:
 run:
 	./scripts/run.sh
 
+# Run with custom serve directory
+# Usage: make run-custom dir=/path/to/media
+run-custom:
+	@if [ -z "$(dir)" ]; then echo "Usage: make run-custom dir=<path>"; exit 1; fi
+	CUSTOM_SERVE_DIR="$(dir)" ./scripts/run.sh
+
+# Set persistent serve directory in .env
+# Usage: make set-dir dir=/path/to/media
+set-dir:
+	@if [ -z "$(dir)" ]; then echo "Usage: make set-dir dir=<path>"; exit 1; fi
+	@sed -i 's|^CUSTOM_SERVE_DIR=.*|CUSTOM_SERVE_DIR=$(dir)|' .env || echo "CUSTOM_SERVE_DIR=$(dir)" >> .env
+	@echo "Updated .env with CUSTOM_SERVE_DIR=$(dir)"
+
+run-default:
+	echo "setting stream directory to default (storage/files/)"
+	CUSTOM_SERVE_DIR=
 # Run tests
 test:
 	$(PYTHON) -m pytest app/tests

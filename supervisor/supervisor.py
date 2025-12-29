@@ -26,11 +26,11 @@ uvicorn_proc = None
 
 def start_copyparty():
     global copyparty_proc
-    # Ensure Copyparty is bound to localhost and the configured port
+    # Bind Copyparty to the configured host (e.g., 0.0.0.0 for UI access)
     cmd = [
         str(VENV_PYTHON), "-m", "copyparty",
         "-c", str(COPYPARTY_CONF),
-        "-i", "127.0.0.1",
+        "-i", settings.COPYPARTY_HOST,
         "-p", str(settings.COPYPARTY_PORT)
     ]
     
