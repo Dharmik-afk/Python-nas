@@ -25,16 +25,16 @@ Goal: Implement the ability to query `copyparty` for user-specific permissions.
     - [x] Sub-task: Update the login route to store retrieved permissions in the `SessionManager` and the encrypted session cookie.
 - [x] **Task: Conductor - User Manual Verification 'Phase 2: Permission Verification Engine' (Protocol in workflow.md)** [5cbfa9b]
 
-## Phase 3: Dynamic UI Enforcement
+## Phase 3: Dynamic UI Enforcement [checkpoint: 012127f]
 Goal: Adjust the frontend UI based on the user's retrieved permissions.
 
 - [x] **Task 1: Expose Permissions to Jinja2 Templates** [e1a2ca1]
     - [x] Sub-task: Write tests ensuring the template context includes the user's permission set.
     - [x] Sub-task: Update `app/core/templates.py` or add a context processor to make permissions globally available to templates.
-- [~] **Task 2: Conditional UI Rendering**
-    - [ ] Sub-task: Update `app/frontend/templates/partials/file_browser_content.html` to hide/show action buttons (Upload, Create Folder, Delete) based on permissions.
-    - [ ] Sub-task: Update the file browser route in `app/frontend/routes/frontend_routes.py` to filter available actions.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 3: Dynamic UI Enforcement' (Protocol in workflow.md)**
+- [x] **Task 2: Conditional UI Rendering** [02d4d74]
+    - [x] Sub-task: Update `app/frontend/templates/partials/file_browser_content.html` to hide/show action buttons (Upload, Create Folder, Delete) based on permissions.
+    - [x] Sub-task: Update the file browser route in `app/frontend/routes/frontend_routes.py` to filter available actions.
+- [x] **Task: Conductor - User Manual Verification 'Phase 3: Dynamic UI Enforcement' (Protocol in workflow.md)** [012127f]
 
 ## Phase 4: Transparent Proxying & Session Sync
 Goal: Finalize the session synchronization and ensure all proxied requests are correctly authenticated.
