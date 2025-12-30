@@ -8,7 +8,7 @@ from app.core.file_security import validate_and_resolve_path, is_path_forbidden
 from app.core.constants import PREVIEWABLE_EXTENSIONS, VIDEO_EXTENSIONS, TEXT_EXTENSIONS
 from app.core.auth import auth_required, decrypt_string
 from app.core.templates import templates
-from app.backend.services.copyparty_service import get_pmask
+from app.backend.services.copyparty_service import get_pmask, get_proxy_headers
 
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)

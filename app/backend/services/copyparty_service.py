@@ -68,7 +68,7 @@ def _get_proxy_url(relative_path: Path) -> str:
     proxy_url = f"http://127.0.0.1:{settings.COPYPARTY_PORT}/{url_path}"
     return proxy_url
 
-def _get_proxy_headers(request: Request) -> dict:
+def get_proxy_headers(request: Request) -> dict:
     """Constructs the necessary headers for proxying, using current user credentials."""
     session = getattr(request.state, "session", None)
     client_host = request.client.host if request.client else "unknown"
@@ -101,7 +101,7 @@ def proxy_upload_request(request: Request, relative_path: Path, file: UploadFile
         raise HTTPException(status_code=400, detail="Filename is required.")
 
     target_url = _get_proxy_url(relative_path / Path(file.filename))
-    headers = _get_proxy_headers(request)
+    headers = get_proxy_headers(request)
     
     logger.info(f"Proxying upload of '{file.filename}' to {target_url}")
 
@@ -117,7 +117,7 @@ def proxy_upload_request(request: Request, relative_path: Path, file: UploadFile
 async def proxy_api_request(request: Request, relative_path: Path, params: dict = None) -> dict:
     """Proxies a request to the copyparty backend expecting a JSON response."""
     url = _get_proxy_url(relative_path)
-    headers = _get_proxy_headers(request)
+    headers = get_proxy_headers(request)
     headers["Accept"] = "application/json"
 
     try:
@@ -137,7 +137,7 @@ def get_pmask(request: Request, relative_path: Path) -> str:
     else:
         url += "?pmask"
         
-    headers = _get_proxy_headers(request)
+    headers = get_proxy_headers(request)
     
     # Log the attempt
     session = getattr(request.state, "session", None)
@@ -171,7 +171,7 @@ def get_pmask(request: Request, relative_path: Path) -> str:
 async def proxy_stream_request(request: Request, relative_path: Path, params: dict = None, request_headers: dict = None):
     """Proxies a file download or directory zip request to the copyparty backend."""
     url = _get_proxy_url(relative_path)
-    headers = _get_proxy_headers(request)
+    headers = get_proxy_headers(request)
     
     clean_params = {k: v for k, v in params.items()} if params else {}
 

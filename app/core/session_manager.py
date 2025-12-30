@@ -142,6 +142,13 @@ class SessionManager:
         with self._lock:
             if session_id in self._sessions:
                 session = self._sessions[session_id]
+                
+                # Check for expiry
+                if time.time() - session.last_seen > self.timeout_seconds:
+                    logger.info(f"Session {session_id} expired.")
+                    del self._sessions[session_id]
+                    return None
+                    
                 self._sessions.move_to_end(session_id)
                 session.touch()
                 return session

@@ -39,10 +39,10 @@ Goal: Adjust the frontend UI based on the user's retrieved permissions.
 ## Phase 4: Transparent Proxying & Session Sync
 Goal: Finalize the session synchronization and ensure all proxied requests are correctly authenticated.
 
-- [ ] **Task 1: Audit Proxy Header Propagation**
-    - [ ] Sub-task: Write integration tests verifying that requests to `/api/raw/` contain the correct `Authorization` headers.
-    - [ ] Sub-task: Refactor `app/backend/routes/download_routes.py` and `upload_routes.py` to use a centralized header generation helper.
-- [ ] **Task 2: Final Session Persistence Audit**
-    - [ ] Sub-task: Test login persistence across server restarts and browser refreshes.
-    - [ ] Sub-task: Verify that session expiry in FastAPI triggers a corresponding logout or re-auth with `copyparty`.
+- [x] **Task 1: Audit Proxy Header Propagation** [e5fb6b1]
+    - [x] Sub-task: Write integration tests verifying that requests to `/api/raw/` contain the correct `Authorization` headers.
+    - [x] Sub-task: Refactor `app/backend/routes/download_routes.py` and `upload_routes.py` to use a centralized header generation helper.
+- [x] **Task 2: Final Session Persistence Audit** [012127f]
+    - [x] Sub-task: Test login persistence across server restarts and browser refreshes.
+    - [x] Sub-task: Verify that session expiry in FastAPI triggers a corresponding logout or re-auth with `copyparty`.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 4: Transparent Proxying & Session Sync' (Protocol in workflow.md)**

@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     # Secret key for signing tokens
     SECRET_KEY: str = "your-secret-key-here"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440 # 24 hours
 
     # Session Configuration
     SESSION_MAX_COUNT: int = 1000
