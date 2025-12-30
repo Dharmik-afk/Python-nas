@@ -18,14 +18,14 @@ Goal: Modularize core UI elements into reusable Jinja2 partials and standardize 
 ## Phase 2: Action Feedback System (Toasts)
 Goal: Implement a notification system to provide immediate feedback for file operations.
 
-- [ ] **Task 1: Notification Container & Logic**
-    - [ ] Sub-task: Add a global toast container to `app/frontend/templates/layouts/base.html`.
-    - [ ] Sub-task: Implement a lightweight JavaScript or Alpine.js listener for `show-toast` events.
-- [ ] **Task 2: Triggering Toasts via HTMX/Backend**
-    - [ ] Sub-task: Update backend routes (`api_routes.py`, `upload_routes.py`) to include `HX-Trigger` headers with success/error messages.
-    - [ ] Sub-task: Write integration tests to verify that API responses contain the expected HTMX trigger headers.
-    - [ ] Sub-task: Verify that notifications appear correctly for mkdir, upload, rename, and delete actions.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 2: Action Feedback System (Toasts)' (Protocol in workflow.md)**
+- [x] **Task 1: Notification Container & Logic** [02c0d0c]
+    - [x] Sub-task: Add a global toast container to `app/frontend/templates/layouts/base.html`.
+    - [x] Sub-task: Implement a lightweight JavaScript or Alpine.js listener for `show-toast` events.
+- [x] **Task 2: Triggering Toasts via HTMX/Backend** [fee7c59]
+    - [x] Sub-task: Update backend routes (`api_routes.py`, `upload_routes.py`) to include `HX-Trigger` headers with success/error messages.
+    - [x] Sub-task: Write integration tests to verify that API responses contain the expected HTMX trigger headers.
+    - [x] Sub-task: Verify that notifications appear correctly for mkdir, upload, rename, and delete actions.
+- [~] **Task: Conductor - User Manual Verification 'Phase 2: Action Feedback System (Toasts)' (Protocol in workflow.md)**
 
 ## Phase 3: Mobile UX Audit & Optimization
 Goal: Ensure the interface is fully optimized for touch interactions and small screens.
