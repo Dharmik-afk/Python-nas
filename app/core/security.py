@@ -14,7 +14,8 @@ class Hasher:
     """
     def __init__(self):
         # Standard secure hashing for the SQLite DB (Keep this enabled)
-        self.pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
+        # Upgraded to SHA-512 to match Copyparty defaults, with backward compatibility for SHA-256
+        self.pwd_context = CryptContext(schemes=["sha512_crypt", "sha256_crypt"], deprecated="auto")
 
     def get_password_hash(self, password: str) -> str:
         """Hashes a plain password for DB storage."""
