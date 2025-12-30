@@ -1,6 +1,6 @@
 {% set rel_path = (path.strip('/') + '/' + item.name) if path.strip('/') else item.name %}
 {% set is_previewable = item.is_file() and item.suffix.lower() in ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.bmp', '.mp4', '.mkv', '.webm', '.avi', '.mov', '.3gp', '.3g2', '.txt', '.md', '.py', '.js', '.html', '.css', '.json', '.yml', '.yaml', '.xml', '.sh', '.sql', '.log', '.ini', '.conf', '.bat', '.bash') %}
-<div class="col animate fade-in" style="animation-delay: {{ loop.index0 * 0.05 }}s">
+<div class="col animate fade-in" style="animation-delay: {{ (index0 if index0 is defined else 0) * 0.05 }}s">
     <div class="card h-100 glass-card file-card position-relative border-0 shadow-sm"
          {% if item.is_dir() %}
          hx-get="/{{ rel_path }}" 
@@ -28,6 +28,9 @@
 
             <div class="text-center w-100">
                 <h6 class="file-title mb-0 text-break" title="{{ item.name }}">{{ item.name }}</h6>
+                {% if item.path and item.path != item.name %}
+                    <small class="text-white-50 d-block text-truncate small" style="max-width: 100%;">{{ item.path }}</small>
+                {% endif %}
             </div>
         </div>
 
