@@ -5,7 +5,7 @@ This plan details the steps to resolve the hashing mismatch and implement search
 ## Phase 1: Authentication Hashing Resolution
 Goal: Align the internal hashing with Copyparty to secure the proxy connection.
 
-- [ ] **Task 1: Implement Correct SHA-512 Iteration**
+- [x] **Task 1: Implement Correct SHA-512 Iteration** [24da13f]
     - [ ] Sub-task: Write a unit test in `app/tests/test_security.py` using a known Copyparty hash/password pair.
     - [ ] Sub-task: Update `Hasher.get_copyparty_hash` in `app/core/security.py` with the correct iteration logic.
     - [ ] Sub-task: Remove the plain-text workaround in `Hasher.get_internal_proxy_password`.
