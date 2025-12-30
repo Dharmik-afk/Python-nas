@@ -23,7 +23,7 @@ Goal: Add recursive file search to the file browser.
     - [x] Sub-task: Use HTMX to trigger searches and swap the `#file-list` content.
 - [x] **Task: Conductor - User Manual Verification 'Phase 2: File Search Functionality' (Protocol in workflow.md)** [f678caa]
 
-## Phase 3: File and Folder Renaming
+## Phase 3: File and Folder Renaming [checkpoint: 52cde52]
 Goal: Allow users to rename items within the browser.
 
 - [x] **Task 1: Backend Rename Proxy** [5a1ac61]
@@ -33,4 +33,4 @@ Goal: Allow users to rename items within the browser.
 - [x] **Task 2: Frontend Rename UI** [c7e2245]
     - [x] Sub-task: Add a rename button to the action overlay in `app/frontend/templates/partials/file_browser_content.html`.
     - [x] Sub-task: Implement a simple rename prompt or modal using Alpine.js or vanilla JS.
-- [~] **Task: Conductor - User Manual Verification 'Phase 3: File and Folder Renaming' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 3: File and Folder Renaming' (Protocol in workflow.md)** [52cde52]
