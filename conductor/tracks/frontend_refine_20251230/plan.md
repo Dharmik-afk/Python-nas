@@ -2,7 +2,7 @@
 
 This plan outlines the steps to refactor frontend components and enhance the user experience with mobile optimizations and action feedback.
 
-## Phase 1: Component Refactoring & Standardization
+## Phase 1: Component Refactoring & Standardization [checkpoint: c0d917a]
 Goal: Modularize core UI elements into reusable Jinja2 partials and standardize action controls.
 
 - [x] **Task 1: Refactor File Browser Cards** [0c005ae]
@@ -13,7 +13,7 @@ Goal: Modularize core UI elements into reusable Jinja2 partials and standardize 
     - [x] Sub-task: Extract Action Buttons (Create, Upload) into `app/frontend/templates/partials/components/action_bar.html`.
     - [x] Sub-task: Extract Action Overlays (Rename, Delete) into a reusable partial or macro.
     - [x] Sub-task: Verify visual consistency across different browser views.
-- [~] **Task: Conductor - User Manual Verification 'Phase 1: Component Refactoring & Standardization' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 1: Component Refactoring & Standardization' (Protocol in workflow.md)** [c0d917a]
 
 ## Phase 2: Action Feedback System (Toasts)
 Goal: Implement a notification system to provide immediate feedback for file operations.
