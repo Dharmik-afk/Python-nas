@@ -127,6 +127,7 @@ function galleryHandler() {
                 }
 
                 document.body.style.overflow = 'hidden';
+                this.prefetchAdjacent();
             } catch (e) {
                 console.error("Failed to load gallery info", e);
                 // Don't close or redirect automatically, just show the specific item if possible
@@ -146,6 +147,7 @@ function galleryHandler() {
             if (this.currentItem?.type === 'text') {
                 await this.loadText();
             }
+            this.prefetchAdjacent();
         },
         async prev() {
             if (this.items.length === 0) return;
@@ -154,6 +156,7 @@ function galleryHandler() {
             if (this.currentItem?.type === 'text') {
                 await this.loadText();
             }
+            this.prefetchAdjacent();
         },
         async loadText() {
             try {
@@ -164,6 +167,30 @@ function galleryHandler() {
                 this.textContent = "Error loading text content.";
                 this.isLoading = false;
             }
+        },
+        prefetchAdjacent() {
+            if (this.items.length <= 1) return;
+            
+            // Calculate next and previous indices
+            const nextIndex = (this.currentIndex + 1) % this.items.length;
+            const prevIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
+            
+            [nextIndex, prevIndex].forEach(index => {
+                const item = this.items[index];
+                if (!item || item.type === 'text') return;
+
+                let prefetchUrl = item.url;
+                if (item.type === 'video') {
+                    // Only prefetch thumbnails for videos to save bandwidth
+                    prefetchUrl += '?thumb=400';
+                } else if (item.type === 'image') {
+                    // Prefetch full media for images
+                    prefetchUrl += '?media';
+                }
+
+                // Use fetch with low priority to populate Service Worker cache
+                fetch(prefetchUrl, { priority: 'low' }).catch(() => {});
+            });
         },
         handleSwipe(endX) {
             const threshold = 50;
