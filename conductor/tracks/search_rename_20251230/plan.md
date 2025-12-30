@@ -43,3 +43,14 @@ Goal: Fix login failures caused by hash mismatch (SHA-256 vs SHA-512).
     - [x] Sub-task: Update `app/core/security.py` or `auth_routes.py` to correctly verify legacy hashes.
     - [x] Sub-task: Verify that new users (SHA-512) and old users (SHA-256) can both login.
 - [x] **Task: Conductor - User Manual Verification 'Phase 4: Login Regression Fix' (Protocol in workflow.md)** [64a7acb]
+
+## Phase 5: Frontend Refinement & Component Fixes
+Goal: Resolve template errors and refactor UI components for better maintainability.
+
+- [x] **Task 1: Resolve 'loop' is undefined Error** [e324efa]
+    - [x] Sub-task: Update `file_card.html` to use `index0` variable.
+    - [x] Sub-task: Pass `index0` from parent loops in `file_browser_content.html` and `search_results.html`.
+- [x] **Task 2: Refactor UI into Modular Components** [e324efa]
+    - [x] Sub-task: Extract Action Bar and Action Overlay into reusable partials.
+    - [x] Sub-task: Implement global toast notification system.
+- [ ] **Task: Conductor - User Manual Verification 'Phase 5: Frontend Refinement & Component Fixes' (Protocol in workflow.md)**

@@ -21,7 +21,7 @@
 
 ## Security & Authentication
 *   **Unified Auth:** 
-    *   Hybrid authentication system utilizing `passlib` (bcrypt) and `python-jose` (JWT).
+    *   Hybrid authentication system utilizing `passlib` (SHA-512/SHA-256) and `python-jose` (JWT).
     *   **Copyparty Integration:** The login system is partially derived from or integrated with `copyparty`'s authentication mechanisms to ensure seamless proxying and access control.
 *   **Dependencies:** `python-multipart`, `requests`, `httpx`.
 
