@@ -1,7 +1,7 @@
 import logging
 from fastapi import FastAPI, Request, Response, status
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from .core.config import settings
 from .core.logger import setup_logging
@@ -98,6 +98,13 @@ app.include_router(upload_routes.router)
 app.include_router(api_routes.router)
 # Include the Auth router
 app.include_router(auth_routes.router)
+
+@app.get("/sw.js")
+async def get_service_worker():
+    """Serves the Service Worker file from the root for maximum scope."""
+    sw_path = settings.BASE_DIR / "app" / "frontend" / "static" / "js" / "sw.js"
+    return FileResponse(sw_path, media_type="application/javascript")
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint for the supervisor."""
