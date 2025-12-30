@@ -726,6 +726,11 @@ main {
 
 /* Mobile Adjustments for touch targets */
 @media (max-width: 576px) {
+    .g-4 {
+        --bs-gutter-y: 0.75rem;
+        --bs-gutter-x: 0.75rem;
+    }
+
     .action-btn, .delete-btn {
         width: 48px; /* Slightly larger for mobile */
         height: 48px;
