@@ -7,6 +7,7 @@ from app.core.config import settings
 from app.core.file_security import validate_and_resolve_path, is_path_forbidden
 from app.core.constants import PREVIEWABLE_EXTENSIONS, VIDEO_EXTENSIONS, TEXT_EXTENSIONS
 from app.core.auth import auth_required, decrypt_string
+from app.core.templates import templates
 from app.backend.services.copyparty_service import get_pmask
 
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
@@ -34,6 +35,8 @@ async def delete_file_or_dir(request: Request, full_path: str):
         parent_dir = resolved_path.parent.relative_to(base_serve_dir) if resolved_path != base_serve_dir else Path("")
         pmask = get_pmask(request, parent_dir)
         
+        logger.info(f"DELETE Request: User='{request.state.session.username if request.state.session else 'anon'}', Path='{resolved_path}', Pmask='{pmask}'")
+        
         if 'd' not in pmask:
             logger.warning(f"Delete denied for user in {parent_dir}: Missing 'd' permission in pmask '{pmask}'")
             raise HTTPException(status_code=403, detail="Delete permission denied")
@@ -52,6 +55,56 @@ async def delete_file_or_dir(request: Request, full_path: str):
         raise
     except Exception as e:
         logger.error(f"Error deleting {full_path}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.post("/fs/mkdir/{full_path:path}")
+async def create_directory(request: Request, full_path: str):
+    """
+    Creates a new directory if the user has 'w' permission.
+    """
+    base_serve_dir = settings.SERVE_PATH
+    
+    try:
+        full_path = urllib.parse.unquote(full_path)
+        resolved_path = validate_and_resolve_path(
+            requested_path=Path(full_path),
+            base_dir=base_serve_dir,
+            client_host=request.client.host
+        )
+
+        if resolved_path.exists():
+            raise HTTPException(status_code=400, detail="Directory already exists")
+            
+        # Check permissions in parent directory
+        parent_dir = resolved_path.parent.relative_to(base_serve_dir) if resolved_path != base_serve_dir else Path("")
+        pmask = get_pmask(request, parent_dir)
+        
+        logger.info(f"MKDIR Request: User='{request.state.session.username if request.state.session else 'anon'}', Path='{resolved_path}', Pmask='{pmask}'")
+        
+        if 'w' not in pmask:
+            logger.warning(f"Mkdir denied for user in {parent_dir}: Missing 'w' permission in pmask '{pmask}'")
+            raise HTTPException(status_code=403, detail="Write permission denied")
+
+        resolved_path.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Created directory: {resolved_path}")
+
+        # Refresh directory listing for HTMX
+        contents = sorted(resolved_path.parent.iterdir(), key=lambda f: (not f.is_dir(), f.name.lower()))
+        filtered_contents = [item for item in contents if not is_path_forbidden(item)]
+        
+        context = {
+            "request": request,
+            "path": str(parent_dir),
+            "contents": filtered_contents,
+            "pmask": pmask
+        }
+        
+        return templates.TemplateResponse("partials/file_browser_content.html", context)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating directory {full_path}: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/gallery/{full_path:path}")

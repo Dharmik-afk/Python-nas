@@ -131,21 +131,39 @@ async def proxy_api_request(request: Request, relative_path: Path, params: dict 
 def get_pmask(request: Request, relative_path: Path) -> str:
     """Fetches the permission mask for the current user in the target directory."""
     url = _get_proxy_url(relative_path)
+    # Manually append ?pmask to ensure it is sent as a flag, not a key-value pair
+    if "?" in url:
+        url += "&pmask"
+    else:
+        url += "?pmask"
+        
     headers = _get_proxy_headers(request)
-    params = {"pmask": None}
+    
+    # Log the attempt
+    session = getattr(request.state, "session", None)
+    username = session.username if session else "anonymous"
+    logger.debug(f"Querying pmask for user '{username}' at '{url}'")
 
     try:
-        r = requests.get(url, headers=headers, params=params, timeout=5)
+        r = requests.get(url, headers=headers, timeout=5)
         if r.status_code == 200:
-            return r.text.strip()
-        
-        logger.warning(f"Backend pmask request returned {r.status_code}, falling back to session permissions.")
+            pmask = r.text.strip()
+            # Validate that we didn't get an HTML error page or directory listing
+            if pmask.lower().startswith("<!doctype") or "<html" in pmask.lower():
+                logger.error(f"Received HTML response instead of pmask for '{username}'. Response starts with: {pmask[:50]}")
+                # Fallback required
+            else:
+                logger.info(f"Retrieved pmask for '{username}': '{pmask}'")
+                return pmask
+        else:
+             logger.warning(f"Backend pmask request returned {r.status_code}, falling back to session permissions.")
+
     except Exception as e:
         logger.error(f"Failed to fetch pmask for {relative_path}: {e}, falling back to session permissions.")
     
     # Fallback to session permissions if backend is unreachable or returns error
-    session = getattr(request.state, "session", None)
     if session and session.permissions:
+        logger.info(f"Falling back to session permissions for '{username}': {session.permissions}")
         return session.permissions
         
     return "r"

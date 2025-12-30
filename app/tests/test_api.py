@@ -81,3 +81,32 @@ def test_delete_file_forbidden(mock_resolve, mock_get_pmask, mock_authenticated_
         response = client.delete("/api/v1/fs/test.txt")
         assert response.status_code == 403
 
+@patch("app.backend.routes.api_routes.get_pmask")
+@patch("app.backend.routes.api_routes.validate_and_resolve_path")
+def test_mkdir_success(mock_resolve, mock_get_pmask, mock_authenticated_session):
+    """Test successful creation of a directory."""
+    mock_dir = MagicMock()
+    mock_dir.exists.return_value = False
+    mock_resolve.return_value = mock_dir
+    mock_get_pmask.return_value = "rw"
+    
+    with TestClient(app) as client:
+        client.cookies.set("session_id", "test_id")
+        response = client.post("/api/v1/fs/mkdir/new_folder")
+        assert response.status_code == 200 # Returns refreshed partial
+        mock_dir.mkdir.assert_called_once_with(parents=True, exist_ok=True)
+
+@patch("app.backend.routes.api_routes.get_pmask")
+@patch("app.backend.routes.api_routes.validate_and_resolve_path")
+def test_mkdir_forbidden(mock_resolve, mock_get_pmask, mock_authenticated_session):
+    """Test mkdir failure when 'w' permission is missing."""
+    mock_dir = MagicMock()
+    mock_dir.exists.return_value = False
+    mock_resolve.return_value = mock_dir
+    mock_get_pmask.return_value = "r"
+    
+    with TestClient(app) as client:
+        client.cookies.set("session_id", "test_id")
+        response = client.post("/api/v1/fs/mkdir/new_folder")
+        assert response.status_code == 403
+
