@@ -48,6 +48,39 @@ def test_search_files_success(mock_proxy, mock_authenticated_session):
         # args[1] should be the relative path, for global search it might be "." or ""
         assert kwargs["params"]["q"] == "test"
 
+@patch("app.backend.services.copyparty_service.proxy_api_request")
+def test_search_ui_success(mock_proxy, mock_authenticated_session):
+    """Test successful search UI rendering."""
+    mock_proxy.return_value = {
+        "hits": [
+            {"p": "folder1/file1.txt", "s": 1024, "t": 1600000000},
+        ]
+    }
+    
+    with TestClient(app) as client:
+        client.cookies.set("session_id", "test_id")
+        response = client.get("/api/v1/fs/search/ui?q=test")
+        
+        assert response.status_code == 200
+        assert "file1.txt" in response.text
+        assert "folder1/file1.txt" in response.text
+
+@patch("app.backend.routes.api_routes.validate_and_resolve_path")
+def test_search_ui_empty_query(mock_resolve, mock_authenticated_session):
+    """Test search UI returns directory listing when query is empty."""
+    mock_path = MagicMock()
+    mock_path.is_dir.return_value = True
+    mock_path.iterdir.return_value = []
+    mock_resolve.return_value = mock_path
+    
+    with TestClient(app) as client:
+        client.cookies.set("session_id", "test_id")
+        response = client.get("/api/v1/fs/search/ui?q=&path=testdir")
+        
+        assert response.status_code == 200
+        # Should render file_browser_content.html (empty state)
+        assert "No items found" in response.text
+
 def test_search_files_no_query(mock_authenticated_session):
     """Test search fails without query."""
     with TestClient(app) as client:

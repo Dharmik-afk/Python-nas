@@ -14,14 +14,14 @@ Goal: Align the internal hashing with Copyparty to secure the proxy connection.
 ## Phase 2: File Search Functionality
 Goal: Add recursive file search to the file browser.
 
-- [ ] **Task 1: Backend Search Proxy**
-    - [ ] Sub-task: Write integration tests for the search endpoint.
-    - [ ] Sub-task: Implement `search_files` in `copyparty_service.py`.
-    - [ ] Sub-task: Add `/api/v1/fs/search` route in `api_routes.py`.
-- [ ] **Task 2: Frontend Search UI**
-    - [ ] Sub-task: Add a search bar to `app/frontend/templates/pages/file_browser.html`.
-    - [ ] Sub-task: Use HTMX to trigger searches and swap the `#file-list` content.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 2: File Search Functionality' (Protocol in workflow.md)**
+- [x] **Task 1: Backend Search Proxy** [a6e1a05]
+    - [x] Sub-task: Write integration tests for the search endpoint.
+    - [x] Sub-task: Implement `search_files` in `copyparty_service.py`.
+    - [x] Sub-task: Add `/api/v1/fs/search` route in `api_routes.py`.
+- [x] **Task 2: Frontend Search UI** [30cf2bc]
+    - [x] Sub-task: Add a search bar to `app/frontend/templates/pages/file_browser.html`.
+    - [x] Sub-task: Use HTMX to trigger searches and swap the `#file-list` content.
+- [~] **Task: Conductor - User Manual Verification 'Phase 2: File Search Functionality' (Protocol in workflow.md)**
 
 ## Phase 3: File and Folder Renaming
 Goal: Allow users to rename items within the browser.
