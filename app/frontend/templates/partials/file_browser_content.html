@@ -39,6 +39,13 @@
                     <i class="bi bi-download"></i>
                 </a>
                 {% endif %}
+
+                {% if 'm' in pmask %}
+                <button class="action-btn rename-btn" title="Rename"
+                        @click.stop="const newName = prompt('Enter new name for {{ item.name }}:', '{{ item.name }}'); if(newName && newName !== '{{ item.name }}') { htmx.ajax('POST', '/api/v1/fs/rename/{{ rel_path|urlencode }}?new_name=' + encodeURIComponent(newName), { target: '#main-content', swap: 'innerHTML' }) }">
+                    <i class="bi bi-pencil-square"></i>
+                </button>
+                {% endif %}
                 
                 {% if 'd' in pmask %}
                 <button class="delete-btn" title="Delete"

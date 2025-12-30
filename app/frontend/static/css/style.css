@@ -696,6 +696,14 @@ main {
     color: white;
 }
 
+.rename-btn {
+    background: rgba(255, 193, 7, 0.8);
+}
+
+.rename-btn:hover {
+    background: #ffc107;
+}
+
 .delete-btn {
     width: 32px;
     height: 32px;
