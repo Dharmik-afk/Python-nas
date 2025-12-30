@@ -36,7 +36,7 @@ Goal: Adjust the frontend UI based on the user's retrieved permissions.
     - [x] Sub-task: Update the file browser route in `app/frontend/routes/frontend_routes.py` to filter available actions.
 - [x] **Task: Conductor - User Manual Verification 'Phase 3: Dynamic UI Enforcement' (Protocol in workflow.md)** [012127f]
 
-## Phase 4: Transparent Proxying & Session Sync
+## Phase 4: Transparent Proxying & Session Sync [checkpoint: b8ab53a]
 Goal: Finalize the session synchronization and ensure all proxied requests are correctly authenticated.
 
 - [x] **Task 1: Audit Proxy Header Propagation** [e5fb6b1]
@@ -45,4 +45,4 @@ Goal: Finalize the session synchronization and ensure all proxied requests are c
 - [x] **Task 2: Final Session Persistence Audit** [012127f]
     - [x] Sub-task: Test login persistence across server restarts and browser refreshes.
     - [x] Sub-task: Verify that session expiry in FastAPI triggers a corresponding logout or re-auth with `copyparty`.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 4: Transparent Proxying & Session Sync' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 4: Transparent Proxying & Session Sync' (Protocol in workflow.md)** [b8ab53a]
