@@ -25,6 +25,66 @@ async def search(request: Request, q: str = None):
     # For now, search from root.
     return await search_files(request, q)
 
+@router.get("/fs/search/ui")
+async def search_ui(request: Request, q: str = None, path: str = ""):
+    """
+    Returns search results as rendered HTML partial.
+    If q is empty, returns the normal directory listing for 'path'.
+    """
+    if not q:
+        # Return normal directory listing
+        base_serve_dir = settings.SERVE_PATH
+        full_path = urllib.parse.unquote(path)
+        resolved_path = validate_and_resolve_path(
+            requested_path=Path(full_path),
+            base_dir=base_serve_dir,
+            client_host=request.client.host
+        )
+        
+        if not resolved_path.is_dir():
+            raise HTTPException(status_code=404, detail="Directory not found")
+
+        contents = sorted(resolved_path.iterdir(), key=lambda f: (not f.is_dir(), f.name.lower()))
+        filtered_contents = [item for item in contents if not is_path_forbidden(item)]
+        
+        context = {
+            "request": request,
+            "path": path,
+            "contents": filtered_contents,
+            "pmask": get_pmask(request, Path(path))
+        }
+        return templates.TemplateResponse("partials/file_browser_content.html", context)
+    
+    results = await search_files(request, q)
+    hits = results.get("hits", [])
+    
+    # We need to transform hits into something the template can handle
+    # hits: [{"p": "path/to/file", "s": size, "t": mtime}, ...]
+    
+    transformed_hits = []
+    for hit in hits:
+        path_str = hit["p"]
+        name = path_str.split("/")[-1]
+        
+        # We'll create a dummy object that mimics a Path object for the template
+        # or we could create a new template for search results.
+        # A new template is cleaner because search results need to show full paths.
+        transformed_hits.append({
+            "name": name,
+            "path": path_str,
+            "is_dir": path_str.endswith("/"), # Copyparty usually ends dirs with /
+            "ext": name.split(".")[-1].lower() if "." in name else ""
+        })
+    
+    context = {
+        "request": request,
+        "query": q,
+        "hits": transformed_hits,
+        "pmask": "r" # Search results are usually read-only in this view
+    }
+    
+    return templates.TemplateResponse("partials/search_results.html", context)
+
 @router.delete("/fs/{full_path:path}")
 async def delete_file_or_dir(request: Request, full_path: str):
     """

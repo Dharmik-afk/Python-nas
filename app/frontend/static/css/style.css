@@ -752,3 +752,27 @@ main {
 
 /* --- Partials / Lightbox --- */
 .hover-opacity-100:hover { opacity: 1 !important; }
+
+/* HTMX Indicator */
+.htmx-indicator {
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+    display: none;
+}
+.htmx-request .htmx-indicator {
+    display: inline-block;
+    opacity: 1;
+}
+.htmx-request.htmx-indicator {
+    display: inline-block;
+    opacity: 1;
+}
+
+/* Search bar refinements */
+.glass-card input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.glass-card input:focus {
+    color: white;
+}

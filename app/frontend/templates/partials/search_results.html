@@ -1,0 +1,57 @@
+{% for item in hits %}
+    {% set rel_path = item.path.strip('/') %}
+    {% set is_previewable = not item.is_dir and item.ext in ('png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'ico', 'bmp', 'mp4', 'mkv', 'webm', 'avi', 'mov', '3gp', '3g2', 'txt', 'md', 'py', 'js', 'html', 'css', 'json', 'yml', 'yaml', 'xml', 'sh', 'sql', 'log', 'ini', 'conf', 'bat', 'bash') %}
+    <div class="col animate fade-in" style="animation-delay: {{ loop.index0 * 0.05 }}s">
+        <div class="card h-100 glass-card file-card position-relative border-0 shadow-sm"
+             {% if item.is_dir %}
+             hx-get="/{{ rel_path }}" 
+             hx-target="#main-content" 
+             hx-push-url="true"
+             {% elif is_previewable %}
+             @click.stop="$dispatch('open-preview', { path: '{{ rel_path }}' })"
+             {% else %}
+             @click="window.location.href='/download/{{ rel_path }}'"
+             {% endif %}>
+            
+            <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                <div class="icon-wrapper mb-3">
+                    {% if item.is_dir %}
+                        <img src="/static/icons/folder.svg" alt="Folder" class="main-icon">
+                    {% else %}
+                        <img src="/static/icons/{{ item.ext if item.ext else 'default' }}.svg" alt="{{ item.ext }}" class="main-icon" onerror="this.src='/static/icons/default.svg'">
+                    {% endif %}
+                    
+                    {% if not item.is_dir %}
+                        <div class="file-badge">{{ item.ext|upper if item.ext else 'FILE' }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="text-center w-100">
+                    <h6 class="file-title mb-1 text-break" title="{{ item.name }}">{{ item.name }}</h6>
+                    <small class="text-white-50 d-block text-truncate small" style="max-width: 100%;">{{ item.path }}</small>
+                </div>
+            </div>
+
+            <!-- Hover Action Overlay -->
+            <div class="card-overlay d-flex gap-2">
+                {% if not item.is_dir %}
+                <a href="/download/{{ rel_path }}" class="action-btn" title="Download" @click.stop>
+                    <i class="bi bi-download"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+{% if not hits %}
+    <div class="col-12 animate zoom-in">
+        <div class="empty-state text-center py-5 glass-card">
+            <div class="empty-icon-bg mb-4">
+                <i class="bi bi-search display-3 text-white-50"></i>
+            </div>
+            <h4 class="fw-bold">No results found</h4>
+            <p class="text-white-50">Try a different search term.</p>
+        </div>
+    </div>
+{% endif %}
