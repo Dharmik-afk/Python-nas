@@ -28,10 +28,10 @@ Goal: Implement the ability to query `copyparty` for user-specific permissions.
 ## Phase 3: Dynamic UI Enforcement
 Goal: Adjust the frontend UI based on the user's retrieved permissions.
 
-- [~] **Task 1: Expose Permissions to Jinja2 Templates**
-    - [ ] Sub-task: Write tests ensuring the template context includes the user's permission set.
-    - [ ] Sub-task: Update `app/core/templates.py` or add a context processor to make permissions globally available to templates.
-- [ ] **Task 2: Conditional UI Rendering**
+- [x] **Task 1: Expose Permissions to Jinja2 Templates** [e1a2ca1]
+    - [x] Sub-task: Write tests ensuring the template context includes the user's permission set.
+    - [x] Sub-task: Update `app/core/templates.py` or add a context processor to make permissions globally available to templates.
+- [~] **Task 2: Conditional UI Rendering**
     - [ ] Sub-task: Update `app/frontend/templates/partials/file_browser_content.html` to hide/show action buttons (Upload, Create Folder, Delete) based on permissions.
     - [ ] Sub-task: Update the file browser route in `app/frontend/routes/frontend_routes.py` to filter available actions.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: Dynamic UI Enforcement' (Protocol in workflow.md)**

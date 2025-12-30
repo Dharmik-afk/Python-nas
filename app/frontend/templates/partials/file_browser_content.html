@@ -33,11 +33,18 @@
             </div>
 
             <!-- Hover Action Overlay -->
-            <div class="card-overlay">
+            <div class="card-overlay d-flex gap-2">
                 {% if not item.is_dir() %}
                 <a href="/download/{{ rel_path }}" class="action-btn" title="Download" @click.stop>
                     <i class="bi bi-download"></i>
                 </a>
+                {% endif %}
+                
+                {% if 'd' in pmask %}
+                <button class="delete-btn" title="Delete"
+                        @click.stop="if(confirm('Are you sure you want to delete {{ item.name }}?')) { $el.closest('.col').remove(); htmx.ajax('DELETE', '/api/v1/fs/{{ rel_path|urlencode }}', {swap:'none'}) }">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
                 {% endif %}
             </div>
         </div>

@@ -1,6 +1,7 @@
 import logging
 import urllib.parse
-from fastapi import APIRouter, Request, HTTPException, Depends
+import shutil
+from fastapi import APIRouter, Request, HTTPException, Depends, Response
 from pathlib import Path
 from app.core.config import settings
 from app.core.file_security import validate_and_resolve_path, is_path_forbidden
@@ -10,6 +11,48 @@ from app.backend.services.copyparty_service import get_pmask
 
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)
+
+@router.delete("/fs/{full_path:path}")
+async def delete_file_or_dir(request: Request, full_path: str):
+    """
+    Deletes a file or directory if the user has 'd' permission.
+    """
+    base_serve_dir = settings.SERVE_PATH
+    
+    try:
+        full_path = urllib.parse.unquote(full_path)
+        resolved_path = validate_and_resolve_path(
+            requested_path=Path(full_path),
+            base_dir=base_serve_dir,
+            client_host=request.client.host
+        )
+
+        if not resolved_path.exists():
+            raise HTTPException(status_code=404, detail="Path not found")
+            
+        # Check permissions
+        parent_dir = resolved_path.parent.relative_to(base_serve_dir) if resolved_path != base_serve_dir else Path("")
+        pmask = get_pmask(request, parent_dir)
+        
+        if 'd' not in pmask:
+            logger.warning(f"Delete denied for user in {parent_dir}: Missing 'd' permission in pmask '{pmask}'")
+            raise HTTPException(status_code=403, detail="Delete permission denied")
+
+        if resolved_path.is_dir():
+            logger.info(f"Deleting directory: {resolved_path}")
+            shutil.rmtree(resolved_path)
+        else:
+            logger.info(f"Deleting file: {resolved_path}")
+            resolved_path.unlink()
+
+        # Return empty response for HTMX to remove the element
+        return Response(status_code=204)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting {full_path}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/gallery/{full_path:path}")
 async def get_gallery_metadata(request: Request, full_path: str):

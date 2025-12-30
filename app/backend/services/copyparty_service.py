@@ -136,10 +136,19 @@ def get_pmask(request: Request, relative_path: Path) -> str:
 
     try:
         r = requests.get(url, headers=headers, params=params, timeout=5)
-        return r.text.strip()
+        if r.status_code == 200:
+            return r.text.strip()
+        
+        logger.warning(f"Backend pmask request returned {r.status_code}, falling back to session permissions.")
     except Exception as e:
-        logger.error(f"Failed to fetch pmask for {relative_path}: {e}")
-        return "r"
+        logger.error(f"Failed to fetch pmask for {relative_path}: {e}, falling back to session permissions.")
+    
+    # Fallback to session permissions if backend is unreachable or returns error
+    session = getattr(request.state, "session", None)
+    if session and session.permissions:
+        return session.permissions
+        
+    return "r"
 
 async def proxy_stream_request(request: Request, relative_path: Path, params: dict = None, request_headers: dict = None):
     """Proxies a file download or directory zip request to the copyparty backend."""

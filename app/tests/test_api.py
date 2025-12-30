@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from app.main import app
 from app.core.auth import auth_required
@@ -50,4 +50,34 @@ def test_invalid_path(mock_authenticated_session):
         client.cookies.set("session_id", "test_id")
         response = client.get("/this/path/does/not/exist")
         assert response.status_code == 404
+
+@patch("app.backend.routes.api_routes.get_pmask")
+@patch("app.backend.routes.api_routes.validate_and_resolve_path")
+def test_delete_file_success(mock_resolve, mock_get_pmask, mock_authenticated_session):
+    """Test successful deletion of a file."""
+    mock_file = MagicMock()
+    mock_file.exists.return_value = True
+    mock_file.is_dir.return_value = False
+    mock_resolve.return_value = mock_file
+    mock_get_pmask.return_value = "rwd"
+    
+    with TestClient(app) as client:
+        client.cookies.set("session_id", "test_id")
+        response = client.delete("/api/v1/fs/test.txt")
+        assert response.status_code == 204
+        mock_file.unlink.assert_called_once()
+
+@patch("app.backend.routes.api_routes.get_pmask")
+@patch("app.backend.routes.api_routes.validate_and_resolve_path")
+def test_delete_file_forbidden(mock_resolve, mock_get_pmask, mock_authenticated_session):
+    """Test deletion failure when 'd' permission is missing."""
+    mock_file = MagicMock()
+    mock_file.exists.return_value = True
+    mock_resolve.return_value = mock_file
+    mock_get_pmask.return_value = "rw"
+    
+    with TestClient(app) as client:
+        client.cookies.set("session_id", "test_id")
+        response = client.delete("/api/v1/fs/test.txt")
+        assert response.status_code == 403
 

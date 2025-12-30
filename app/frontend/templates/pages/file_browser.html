@@ -11,15 +11,15 @@
             <div>
                 <div class="text-white-50 small text-uppercase fw-bold letter-spacing-1">Current User</div>
                 <h5 class="mb-0 fw-black text-white">
-                    {% if request.state.session.username %}
-                        {{ request.state.session.username }}
+                    {% if username %}
+                        {{ username }} <span class="badge rounded-pill bg-glass-secondary ms-2 small fw-normal">{{ user_permissions }}</span>
                     {% else %}
                         Unregistered
                     {% endif %}
                 </h5>
             </div>
         </div>
-        {% if not request.state.session.username %}
+        {% if not username %}
         <a href="/login" class="btn btn-sm btn-glass-primary rounded-pill px-4">
             <i class="bi bi-box-arrow-in-right me-1"></i> LOGIN
         </a>
