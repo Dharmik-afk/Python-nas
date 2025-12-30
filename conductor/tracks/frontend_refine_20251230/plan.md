@@ -15,7 +15,7 @@ Goal: Modularize core UI elements into reusable Jinja2 partials and standardize 
     - [x] Sub-task: Verify visual consistency across different browser views.
 - [x] **Task: Conductor - User Manual Verification 'Phase 1: Component Refactoring & Standardization' (Protocol in workflow.md)** [c0d917a]
 
-## Phase 2: Action Feedback System (Toasts)
+## Phase 2: Action Feedback System (Toasts) [checkpoint: 0f7d672]
 Goal: Implement a notification system to provide immediate feedback for file operations.
 
 - [x] **Task 1: Notification Container & Logic** [02c0d0c]
@@ -25,7 +25,7 @@ Goal: Implement a notification system to provide immediate feedback for file ope
     - [x] Sub-task: Update backend routes (`api_routes.py`, `upload_routes.py`) to include `HX-Trigger` headers with success/error messages.
     - [x] Sub-task: Write integration tests to verify that API responses contain the expected HTMX trigger headers.
     - [x] Sub-task: Verify that notifications appear correctly for mkdir, upload, rename, and delete actions.
-- [~] **Task: Conductor - User Manual Verification 'Phase 2: Action Feedback System (Toasts)' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 2: Action Feedback System (Toasts)' (Protocol in workflow.md)** [0f7d672]
 
 ## Phase 3: Mobile UX Audit & Optimization
 Goal: Ensure the interface is fully optimized for touch interactions and small screens.
