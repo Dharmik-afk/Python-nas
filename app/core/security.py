@@ -26,10 +26,11 @@ class Hasher:
 
     def get_internal_proxy_password(self, plain_password: str) -> str:
         """
-        Returns the SHA-256 hex digest of the password for internal proxying.
-        This ensures the raw plain password is not sent directly to Copyparty.
+        Returns the password for internal proxying.
+        We now pass the plain password to Copyparty (or use it for hashing)
+        as the previous SHA-256 workaround prevented correct hash alignment.
         """
-        return hashlib.sha256(plain_password.encode()).hexdigest()
+        return plain_password
 
     def get_copyparty_hash(self, internal_pw: str) -> str:
         """
