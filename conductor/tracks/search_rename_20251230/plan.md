@@ -11,7 +11,7 @@ Goal: Align the internal hashing with Copyparty to secure the proxy connection.
     - [ ] Sub-task: Remove the plain-text workaround in `Hasher.get_internal_proxy_password`.
 - [x] **Task: Conductor - User Manual Verification 'Phase 1: Authentication Hashing Resolution' (Protocol in workflow.md)** [32224c0]
 
-## Phase 2: File Search Functionality
+## Phase 2: File Search Functionality [checkpoint: f678caa]
 Goal: Add recursive file search to the file browser.
 
 - [x] **Task 1: Backend Search Proxy** [a6e1a05]
@@ -21,7 +21,7 @@ Goal: Add recursive file search to the file browser.
 - [x] **Task 2: Frontend Search UI** [30cf2bc]
     - [x] Sub-task: Add a search bar to `app/frontend/templates/pages/file_browser.html`.
     - [x] Sub-task: Use HTMX to trigger searches and swap the `#file-list` content.
-- [~] **Task: Conductor - User Manual Verification 'Phase 2: File Search Functionality' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 2: File Search Functionality' (Protocol in workflow.md)** [f678caa]
 
 ## Phase 3: File and Folder Renaming
 Goal: Allow users to rename items within the browser.
