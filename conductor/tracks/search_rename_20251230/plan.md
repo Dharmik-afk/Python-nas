@@ -26,11 +26,11 @@ Goal: Add recursive file search to the file browser.
 ## Phase 3: File and Folder Renaming
 Goal: Allow users to rename items within the browser.
 
-- [ ] **Task 1: Backend Rename Proxy**
-    - [ ] Sub-task: Write integration tests for renaming files and directories.
-    - [ ] Sub-task: Implement `rename_item` in `copyparty_service.py` (using Copyparty's `move` API).
-    - [ ] Sub-task: Add `/api/v1/fs/rename` route in `api_routes.py`.
-- [ ] **Task 2: Frontend Rename UI**
-    - [ ] Sub-task: Add a rename button to the action overlay in `app/frontend/templates/partials/file_browser_content.html`.
-    - [ ] Sub-task: Implement a simple rename prompt or modal using Alpine.js or vanilla JS.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 3: File and Folder Renaming' (Protocol in workflow.md)**
+- [x] **Task 1: Backend Rename Proxy** [5a1ac61]
+    - [x] Sub-task: Write integration tests for renaming files and directories.
+    - [x] Sub-task: Implement `rename_item` in `copyparty_service.py` (using Copyparty's `move` API).
+    - [x] Sub-task: Add `/api/v1/fs/rename` route in `api_routes.py`.
+- [x] **Task 2: Frontend Rename UI** [c7e2245]
+    - [x] Sub-task: Add a rename button to the action overlay in `app/frontend/templates/partials/file_browser_content.html`.
+    - [x] Sub-task: Implement a simple rename prompt or modal using Alpine.js or vanilla JS.
+- [~] **Task: Conductor - User Manual Verification 'Phase 3: File and Folder Renaming' (Protocol in workflow.md)**
