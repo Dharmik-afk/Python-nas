@@ -128,6 +128,16 @@ async def proxy_api_request(request: Request, relative_path: Path, params: dict 
         logger.error(f"Proxy API request failed: {e}")
         raise HTTPException(status_code=502, detail=f"Backend API failed: {str(e)}")
 
+async def search_files(request: Request, query: str, relative_path: Path = Path("")) -> dict:
+    """
+    Performs a recursive search using the copyparty backend.
+    """
+    params = {
+        "q": query,
+        "json": ""  # Copyparty uses &json to return JSON results
+    }
+    return await proxy_api_request(request, relative_path, params=params)
+
 def get_pmask(request: Request, relative_path: Path) -> str:
     """Fetches the permission mask for the current user in the target directory."""
     url = _get_proxy_url(relative_path)

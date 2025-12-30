@@ -8,10 +8,22 @@ from app.core.file_security import validate_and_resolve_path, is_path_forbidden
 from app.core.constants import PREVIEWABLE_EXTENSIONS, VIDEO_EXTENSIONS, TEXT_EXTENSIONS
 from app.core.auth import auth_required, decrypt_string
 from app.core.templates import templates
-from app.backend.services.copyparty_service import get_pmask, get_proxy_headers
+from app.backend.services.copyparty_service import get_pmask, get_proxy_headers, search_files
 
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)
+
+@router.get("/fs/search")
+async def search(request: Request, q: str = None):
+    """
+    Proxies search request to copyparty.
+    """
+    if not q:
+        raise HTTPException(status_code=400, detail="Query parameter 'q' is required")
+    
+    # Optional: could also take a 'path' parameter to limit search scope
+    # For now, search from root.
+    return await search_files(request, q)
 
 @router.delete("/fs/{full_path:path}")
 async def delete_file_or_dir(request: Request, full_path: str):
