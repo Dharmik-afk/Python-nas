@@ -14,21 +14,21 @@ Goal: Fix the "Copyparty Hashing Mismatch" bug and ensure credentials are correc
     - [x] Sub-task: Update `Hasher.get_internal_proxy_password()` to use the new hashing logic.
 - [x] **Task: Conductor - User Manual Verification 'Phase 1: Hash Harmonization & Discovery' (Protocol in workflow.md)****
 
-## Phase 2: Permission Verification Engine
+## Phase 2: Permission Verification Engine [checkpoint: 5cbfa9b]
 Goal: Implement the ability to query `copyparty` for user-specific permissions.
 
 - [x] **Task 1: Implement Permission Fetching in `copyparty_service.py`** [5dee577]
     - [x] Sub-task: Write tests for a new method `get_user_permissions_from_config(username)`.
     - [x] Sub-task: Implement `get_user_permissions_from_config` to parse `copyparty/copyparty.conf` and extract permissions for the root volume.
-- [~] **Task 2: Update Authentication Flow**
-    - [ ] Sub-task: Write tests for `app/backend/routes/auth_routes.py` to ensure permissions are fetched upon successful login.
-    - [ ] Sub-task: Update the login route to store retrieved permissions in the `SessionManager` and the encrypted session cookie.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 2: Permission Verification Engine' (Protocol in workflow.md)**
+- [x] **Task 2: Update Authentication Flow** [5cbfa9b]
+    - [x] Sub-task: Write tests for `app/backend/routes/auth_routes.py` to ensure permissions are fetched upon successful login.
+    - [x] Sub-task: Update the login route to store retrieved permissions in the `SessionManager` and the encrypted session cookie.
+- [x] **Task: Conductor - User Manual Verification 'Phase 2: Permission Verification Engine' (Protocol in workflow.md)** [5cbfa9b]
 
 ## Phase 3: Dynamic UI Enforcement
 Goal: Adjust the frontend UI based on the user's retrieved permissions.
 
-- [ ] **Task 1: Expose Permissions to Jinja2 Templates**
+- [~] **Task 1: Expose Permissions to Jinja2 Templates**
     - [ ] Sub-task: Write tests ensuring the template context includes the user's permission set.
     - [ ] Sub-task: Update `app/core/templates.py` or add a context processor to make permissions globally available to templates.
 - [ ] **Task 2: Conditional UI Rendering**
