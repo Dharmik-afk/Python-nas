@@ -10,7 +10,37 @@
     <script defer src="/static/js/alpine.min.js"></script>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
-<body class="bg-body min-vh-100 d-flex flex-column" x-data="{}">
+<body class="bg-body min-vh-100 d-flex flex-column" x-data="{ 
+    toasts: [],
+    addToast(message, type = 'info') {
+        const id = Date.now();
+        this.toasts.push({ id, message, type });
+        setTimeout(() => {
+            this.toasts = this.toasts.filter(t => t.id !== id);
+        }, 5000);
+    }
+}" @show-toast.window="addToast($event.detail.message, $event.detail.type)">
+    <!-- Global Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 3000;">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div class="toast show mb-2 glass-card border-0 animate slide-in" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-transparent border-0 text-white">
+                    <strong class="me-auto d-flex align-items-center gap-2">
+                        <i class="bi" :class="{
+                            'bi-info-circle-fill text-info': toast.type === 'info',
+                            'bi-check-circle-fill text-success': toast.type === 'success',
+                            'bi-exclamation-triangle-fill text-warning': toast.type === 'warning',
+                            'bi-exclamation-octagon-fill text-danger': toast.type === 'error'
+                        }"></i>
+                        <span x-text="toast.type.toUpperCase()"></span>
+                    </strong>
+                    <button type="button" class="btn-close btn-close-white shadow-none" @click="toasts = toasts.filter(t => t.id !== toast.id)"></button>
+                </div>
+                <div class="toast-body text-white-50" x-text="toast.message"></div>
+            </div>
+        </template>
+    </div>
+
     <nav class="navbar navbar-expand-lg sticky-top main-nav">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="/">
