@@ -44,7 +44,7 @@ Goal: Fix login failures caused by hash mismatch (SHA-256 vs SHA-512).
     - [x] Sub-task: Verify that new users (SHA-512) and old users (SHA-256) can both login.
 - [x] **Task: Conductor - User Manual Verification 'Phase 4: Login Regression Fix' (Protocol in workflow.md)** [64a7acb]
 
-## Phase 5: Frontend Refinement & Component Fixes
+## Phase 5: Frontend Refinement & Component Fixes [checkpoint: 91feb6f]
 Goal: Resolve template errors and refactor UI components for better maintainability.
 
 - [x] **Task 1: Resolve 'loop' is undefined Error** [e324efa]
@@ -53,4 +53,4 @@ Goal: Resolve template errors and refactor UI components for better maintainabil
 - [x] **Task 2: Refactor UI into Modular Components** [e324efa]
     - [x] Sub-task: Extract Action Bar and Action Overlay into reusable partials.
     - [x] Sub-task: Implement global toast notification system.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 5: Frontend Refinement & Component Fixes' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 5: Frontend Refinement & Component Fixes' (Protocol in workflow.md)** [91feb6f]
