@@ -14,10 +14,21 @@ The primary audience for this server consists of **home users** who require a re
 *   **Dedicated Client Applications:** Develop native client-side applications for mobile and desktop platforms to offer offline access, background file synchronization, and a more integrated OS experience.
 
 ## Key Features
+
 *   **Mobile-First Design:** A fully responsive user interface ensuring a seamless experience across mobile phones, tablets, and desktop computers.
+
 *   **Unified Frontend:** Acts as a modern wrapper and management layer for the robust `copyparty` file-serving engine.
 
+*   **Granular Access Control:** Transparently enforces `copyparty` permissions (Read, Write, Delete) through a dynamic UI that adapts to the user's authorization level.
+
+*   **Integrated File Management:** Supports core file operations including browsing, downloading, multi-file uploading, and folder creation.
+
+
+
 ## User Experience (UX) Design
+
 The application aims for a dual-layered experience:
+
 *   **Standard Users:** A **fast, lightweight, and modern** interface. It uses a clean design to minimize loading times and prioritize ease of navigation.
-*   **Administrative Users:** While maintaining the modern aesthetic, administrators have access to a **highly functional and detailed** interface for advanced file management, system configuration, and monitoring.
+
+*   **Context-Aware Interface:** The UI dynamically hides or shows management features (like Upload, Create Folder, or Delete) based on the current user's verified permissions, ensuring a clean and secure experience.
