@@ -53,3 +53,33 @@ def test_folder_card_component_rendering():
     assert "folder.svg" in rendered
     assert "rename-btn" in rendered # Should be visible with pmask 'm'
     assert "delete-btn" in rendered # Should be visible with pmask 'd'
+
+def test_action_bar_rendering():
+    context = {
+        "pmask": "rw",
+        "path": "test"
+    }
+    rendered = templates.get_template("partials/components/action_bar.html").render(context)
+    assert "CREATE FOLDER" in rendered
+    assert "UPLOAD FILES" in rendered
+
+def test_action_bar_read_only():
+    context = {
+        "pmask": "r",
+        "path": "test"
+    }
+    rendered = templates.get_template("partials/components/action_bar.html").render(context)
+    assert "CREATE FOLDER" not in rendered
+    assert "UPLOAD FILES" not in rendered
+
+def test_action_overlay_rendering():
+    context = {
+        "item": MagicMock(is_dir=lambda: False),
+        "rel_path": "file.txt",
+        "pmask": "rwdm"
+    }
+    rendered = templates.get_template("partials/components/action_overlay.html").render(context)
+    assert "bi-download" in rendered
+    assert "rename-btn" in rendered
+    assert "delete-btn" in rendered
+

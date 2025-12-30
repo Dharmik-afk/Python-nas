@@ -58,23 +58,7 @@
             </ol>
         </nav>
 
-        <div class="d-flex gap-2">
-            {% if 'w' in pmask %}
-            <button class="btn btn-glass-secondary rounded-pill px-4 py-2 d-flex align-items-center gap-2 shadow-lg"
-                    @click="const name = prompt('Enter folder name:'); if(name) { htmx.ajax('POST', '/api/v1/fs/mkdir/{{ (path.strip('/') + '/') if path.strip('/') else '' }}' + encodeURIComponent(name), {target: '#file-list', swap: 'innerHTML'}) }">
-                <i class="bi bi-folder-plus fs-5"></i>
-                <span class="fw-bold small d-none d-md-inline">CREATE FOLDER</span>
-            </button>
-
-            <form id="upload-form" hx-encoding="multipart/form-data" hx-post="/upload/{{ path.strip('/') }}" hx-target="#file-list" hx-swap="innerHTML">
-                <label class="btn-modern-primary rounded-pill px-4 py-2 d-flex align-items-center gap-2 cursor-pointer shadow-lg">
-                    <i class="bi bi-cloud-arrow-up-fill fs-5"></i>
-                    <span class="fw-bold small d-none d-md-inline">UPLOAD FILES</span>
-                    <input type="file" name="files" multiple style="display: none;" onchange="htmx.trigger(this.form, 'submit')">
-                </label>
-            </form>
-            {% endif %}
-        </div>
+        {% include "partials/components/action_bar.html" %}
     </div>
 
     <!-- Search Section -->
