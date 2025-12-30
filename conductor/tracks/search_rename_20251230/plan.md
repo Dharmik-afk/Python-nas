@@ -34,3 +34,12 @@ Goal: Allow users to rename items within the browser.
     - [x] Sub-task: Add a rename button to the action overlay in `app/frontend/templates/partials/file_browser_content.html`.
     - [x] Sub-task: Implement a simple rename prompt or modal using Alpine.js or vanilla JS.
 - [x] **Task: Conductor - User Manual Verification 'Phase 3: File and Folder Renaming' (Protocol in workflow.md)** [52cde52]
+
+## Phase 4: Login Regression Fix [checkpoint: b80d980]
+Goal: Fix login failures caused by hash mismatch (SHA-256 vs SHA-512).
+
+- [x] **Task 1: Reproduce and Fix Hash Verification** [64a7acb]
+    - [x] Sub-task: Create a reproduction test case in `app/tests/test_auth_routes.py` with a legacy SHA-256 hash.
+    - [x] Sub-task: Update `app/core/security.py` or `auth_routes.py` to correctly verify legacy hashes.
+    - [x] Sub-task: Verify that new users (SHA-512) and old users (SHA-256) can both login.
+- [x] **Task: Conductor - User Manual Verification 'Phase 4: Login Regression Fix' (Protocol in workflow.md)** [64a7acb]
