@@ -128,6 +128,19 @@ async def proxy_api_request(request: Request, relative_path: Path, params: dict 
         logger.error(f"Proxy API request failed: {e}")
         raise HTTPException(status_code=502, detail=f"Backend API failed: {str(e)}")
 
+async def proxy_post_request(request: Request, relative_path: Path, params: dict = None, data: dict = None) -> bool:
+    """Proxies a POST request to the copyparty backend."""
+    url = _get_proxy_url(relative_path)
+    headers = get_proxy_headers(request)
+    
+    try:
+        r = requests.post(url, headers=headers, params=params, data=data, timeout=10)
+        r.raise_for_status()
+        return True
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Proxy POST request failed: {e}")
+        raise HTTPException(status_code=502, detail=f"Backend POST failed: {str(e)}")
+
 async def search_files(request: Request, query: str, relative_path: Path = Path("")) -> dict:
     """
     Performs a recursive search using the copyparty backend.
@@ -137,6 +150,22 @@ async def search_files(request: Request, query: str, relative_path: Path = Path(
         "json": ""  # Copyparty uses &json to return JSON results
     }
     return await proxy_api_request(request, relative_path, params=params)
+
+async def rename_item(request: Request, relative_path: Path, new_name: str) -> bool:
+    """
+    Renames a file or directory using copyparty's move API.
+    """
+    # The 'move' parameter expects the full destination path
+    # relative to the volume root.
+    parent_dir = relative_path.parent
+    new_path = parent_dir / new_name
+    
+    # Copyparty API: POST /src?move=/dst
+    params = {
+        "move": "/" + str(new_path.as_posix()).lstrip('/')
+    }
+    
+    return await proxy_post_request(request, relative_path, params=params)
 
 def get_pmask(request: Request, relative_path: Path) -> str:
     """Fetches the permission mask for the current user in the target directory."""

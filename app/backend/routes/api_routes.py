@@ -8,7 +8,7 @@ from app.core.file_security import validate_and_resolve_path, is_path_forbidden
 from app.core.constants import PREVIEWABLE_EXTENSIONS, VIDEO_EXTENSIONS, TEXT_EXTENSIONS
 from app.core.auth import auth_required, decrypt_string
 from app.core.templates import templates
-from app.backend.services.copyparty_service import get_pmask, get_proxy_headers, search_files
+from app.backend.services.copyparty_service import get_pmask, get_proxy_headers, search_files, rename_item
 
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)
@@ -84,6 +84,52 @@ async def search_ui(request: Request, q: str = None, path: str = ""):
     }
     
     return templates.TemplateResponse("partials/search_results.html", context)
+
+@router.post("/fs/rename/{full_path:path}")
+async def rename(request: Request, full_path: str, new_name: str = None):
+    """
+    Renames a file or directory.
+    """
+    if not new_name:
+        raise HTTPException(status_code=400, detail="Query parameter 'new_name' is required")
+    
+    base_serve_dir = settings.SERVE_PATH
+    
+    try:
+        full_path = urllib.parse.unquote(full_path)
+        # Validate source path
+        resolved_path = validate_and_resolve_path(
+            requested_path=Path(full_path),
+            base_dir=base_serve_dir,
+            client_host=request.client.host
+        )
+
+        if not resolved_path.exists():
+            raise HTTPException(status_code=404, detail="Source path not found")
+            
+        # Check permissions in parent directory
+        # Copyparty 'm' permission is required for move/rename
+        parent_dir = resolved_path.parent.relative_to(base_serve_dir) if resolved_path != base_serve_dir else Path("")
+        pmask = get_pmask(request, parent_dir)
+        
+        if 'm' not in pmask:
+            logger.warning(f"Rename denied for user in {parent_dir}: Missing 'm' permission in pmask '{pmask}'")
+            raise HTTPException(status_code=403, detail="Rename permission denied")
+
+        # Perform rename via proxy
+        await rename_item(request, Path(full_path), new_name)
+        
+        logger.info(f"Renamed {full_path} to {new_name}")
+        
+        # Return success (200 OK)
+        # Frontend will likely trigger a reload of the directory
+        return {"status": "success", "message": f"Renamed to {new_name}"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error renaming {full_path}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.delete("/fs/{full_path:path}")
 async def delete_file_or_dir(request: Request, full_path: str):
