@@ -5,8 +5,12 @@ import time
 import subprocess
 from pathlib import Path
 
+# Add project root to sys.path to allow importing app modules
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from app.core.config import settings
+
 # Configuration
-BASE_URL = "http://localhost:8000"
+BASE_URL = f"http://localhost:{settings.FRONTEND_PORT}"
 USERNAME = "restricted"
 PASSWORD = "restricted"
 TEST_FILE = "reproduce_test.txt"
@@ -94,7 +98,7 @@ if __name__ == "__main__":
     try:
         requests.get(f"{BASE_URL}/health", timeout=1)
     except requests.exceptions.ConnectionError:
-        print("\n[!] Server does not appear to be running on port 8000.")
+        print(f"\n[!] Server does not appear to be running on port {settings.FRONTEND_PORT}.")
         print("    Please start the server in a separate terminal using: make run")
         sys.exit(1)
         

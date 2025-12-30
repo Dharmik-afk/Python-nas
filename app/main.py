@@ -5,13 +5,12 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from .core.config import settings
 from .core.logger import setup_logging
-from .core.utils import get_lan_ip
 from .core.session_manager import session_manager
 from .core.user_sync import sync_users_to_copyparty
 from app.backend.routes import download_routes, upload_routes, api_routes, auth_routes
 from app.frontend.routes import frontend_routes
 
-app = FastAPI(title="Python File Server")
+app = FastAPI(title="Media Vault")
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -76,7 +75,7 @@ async def startup_event():
     setup_logging()
     
     # Determine the IP for the user-facing message
-    host_ip = get_lan_ip()
+    host_ip = settings.FRONTEND_IP
     
     logging.info(f"FastAPI Worker starting...")
     logging.info(f"Serving files from: {settings.SERVE_DIR}")

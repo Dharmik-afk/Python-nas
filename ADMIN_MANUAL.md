@@ -30,8 +30,8 @@ The system relies on a `.env` file in the project root for configuration. This f
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `PORT` | 8000 | The public port for the main interface. |
-| `HOST` | 0.0.0.0 | Network binding (0.0.0.0 for LAN access). |
+| `FRONTEND_PORT` | 8000 | The public port for the main interface. |
+| `FRONTEND_HOST` | 0.0.0.0 | Network binding (0.0.0.0 for LAN access). |
 | `CUSTOM_SERVE_DIR` | (Empty) | **Critical:** The absolute path to the directory you want to stream. Defaults to `storage/files`. |
 | `COPYPARTY_HOST` | 127.0.0.1 | Set to `0.0.0.0` to expose the backend UI for debugging. |
 | `DEBUG` | False | Set to `True` for verbose logs and backend exposure. |

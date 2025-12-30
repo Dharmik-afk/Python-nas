@@ -1,4 +1,4 @@
-.PHONY: all setup run test clean clean-all install setup-sys db-init list-users add-user delete-user change-password sync-users
+.PHONY: all setup run test clean clean-all install setup-sys db-init list-users add-user delete-user change-password sync-users set-debug
 
 VENV = venv
 VENV_BIN = $(VENV)/bin
@@ -47,7 +47,12 @@ set-dir:
 	@sed -i 's|^CUSTOM_SERVE_DIR=.*|CUSTOM_SERVE_DIR=$(dir)|' .env || echo "CUSTOM_SERVE_DIR=$(dir)" >> .env
 	@echo "Updated .env with CUSTOM_SERVE_DIR=$(dir)"
 
-run-default:
+# Set debug mode in .env
+# Usage: make set-debug debug=<True|False>
+set-debug:
+	@if [ -z "$(debug)" ]; then echo "Usage: make set-debug debug=<True|False>"; exit 1; fi
+	@grep -q "^DEBUG=" .env && sed -i 's|^DEBUG=.*|DEBUG=$(debug)|' .env || echo "DEBUG=$(debug)" >> .env
+	@echo "Updated .env with DEBUG=$(debug)"
 	echo "setting stream directory to default (storage/files/)"
 	CUSTOM_SERVE_DIR=
 # Run tests

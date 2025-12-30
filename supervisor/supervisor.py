@@ -42,15 +42,17 @@ def start_uvicorn():
     cmd = [
         str(VENV_PYTHON), "-m", "uvicorn",
         "app.main:app",
-        "--host", "0.0.0.0",
-        "--port", "8000"
+        "--host", settings.FRONTEND_HOST,
+        "--port", str(settings.FRONTEND_PORT)
     ]
     logger.info(f"Starting Uvicorn: {' '.join(cmd)}")
     uvicorn_proc = subprocess.Popen(cmd)
 
 def check_health():
     try:
-        with urllib.request.urlopen("http://127.0.0.1:8000/health", timeout=2) as response:
+        # Use the configured host for health check
+        health_url = f"http://{settings.FRONTEND_HOST}:{settings.FRONTEND_PORT}/health"
+        with urllib.request.urlopen(health_url, timeout=2) as response:
             if response.status == 200:
                 return True
     except Exception:

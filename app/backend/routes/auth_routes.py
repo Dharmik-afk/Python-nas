@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def verify_with_copyparty(username: str, internal_pw: str) -> bool:
     """Performs a handshake verification with the Copyparty backend."""
     try:
-        url = f"http://127.0.0.1:{settings.COPYPARTY_PORT}/?pmask"
+        url = f"http://{settings.COPYPARTY_HOST}:{settings.COPYPARTY_PORT}/?pmask"
         auth = (username, internal_pw)
         response = requests.get(url, auth=auth, timeout=5)
         return response.status_code == 200

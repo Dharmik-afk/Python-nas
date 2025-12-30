@@ -65,7 +65,7 @@ def get_user_permissions(username: str, password: str) -> str:
 def _get_proxy_url(relative_path: Path) -> str:
     """Constructs the full URL to proxy a request to the copyparty backend."""
     url_path = str(relative_path.as_posix()).lstrip('/')
-    proxy_url = f"http://127.0.0.1:{settings.COPYPARTY_PORT}/{url_path}"
+    proxy_url = f"http://{settings.COPYPARTY_HOST}:{settings.COPYPARTY_PORT}/{url_path}"
     return proxy_url
 
 def get_proxy_headers(request: Request) -> dict:

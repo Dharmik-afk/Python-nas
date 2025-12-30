@@ -3,14 +3,40 @@ import secrets
 from pydantic import BaseSettings, validator
 from pathlib import Path
 from typing import Optional
+from .utils import get_lan_ip
 
 class Settings(BaseSettings):
     # Project base directory
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
-    # Server Configuration
-    PORT: int = 8000
-    HOST: str = "0.0.0.0"
+    
+    # Debug Mode
     DEBUG: bool = False
+
+    # Server Configuration
+    FRONTEND_PORT: int = 8000
+    FRONTEND_HOST: str = "0.0.0.0"
+
+    @validator("FRONTEND_HOST", always=True, pre=True)
+    def set_frontend_host(cls, v, values):
+        # If explicitly set in .env and it's not the generic 0.0.0.0, respect it
+        if v and v != "0.0.0.0":
+            return v
+            
+        # Default based on DEBUG: localhost for debug, LAN IP for production
+        if values.get("DEBUG"):
+            return "127.0.0.1"
+        else:
+            return get_lan_ip()
+
+    @property
+    def FRONTEND_IP(self) -> str:
+        """
+        Returns the LAN IP for production or 127.0.0.1 for debug mode.
+        """
+        if self.DEBUG:
+            return "127.0.0.1"
+        return get_lan_ip()
+
     LOG_LEVEL: str = "DEBUG"
     LOG_FILE: Path = BASE_DIR / "logs" / "server.log"
     # Secret key for signing tokens
