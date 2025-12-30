@@ -70,7 +70,10 @@ async def upload_files(
         }
         
         # Return the updated file grid
-        return templates.TemplateResponse("partials/file_browser_content.html", context)
+        # Include HX-Trigger for toast notification
+        response = templates.TemplateResponse("partials/file_browser_content.html", context)
+        response.headers["HX-Trigger"] = f'{{"show-toast": {{"message": "Successfully uploaded {success_count} files", "type": "success"}}}}'
+        return response
 
     except HTTPException as e:
         raise e

@@ -2,6 +2,7 @@ import logging
 import urllib.parse
 import shutil
 from fastapi import APIRouter, Request, HTTPException, Depends, Response
+from fastapi.responses import JSONResponse
 from pathlib import Path
 from app.core.config import settings
 from app.core.file_security import validate_and_resolve_path, is_path_forbidden
@@ -123,7 +124,10 @@ async def rename(request: Request, full_path: str, new_name: str = None):
         
         # Return success (200 OK)
         # Frontend will likely trigger a reload of the directory
-        return {"status": "success", "message": f"Renamed to {new_name}"}
+        return JSONResponse(
+            content={"status": "success", "message": f"Renamed to {new_name}"},
+            headers={"HX-Trigger": '{"show-toast": {"message": "Item renamed successfully", "type": "success"}}'}
+        )
 
     except HTTPException:
         raise
@@ -167,7 +171,10 @@ async def delete_file_or_dir(request: Request, full_path: str):
             resolved_path.unlink()
 
         # Return empty response for HTMX to remove the element
-        return Response(status_code=204)
+        # Include HX-Trigger for toast notification
+        response = Response(status_code=204)
+        response.headers["HX-Trigger"] = '{"show-toast": {"message": "Item deleted successfully", "type": "success"}}'
+        return response
 
     except HTTPException:
         raise
@@ -217,7 +224,9 @@ async def create_directory(request: Request, full_path: str):
             "pmask": pmask
         }
         
-        return templates.TemplateResponse("partials/file_browser_content.html", context)
+        response = templates.TemplateResponse("partials/file_browser_content.html", context)
+        response.headers["HX-Trigger"] = '{"show-toast": {"message": "Folder created successfully", "type": "success"}}'
+        return response
 
     except HTTPException:
         raise
