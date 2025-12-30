@@ -10,6 +10,58 @@ from app.core.auth import decrypt_string
 
 logger = logging.getLogger(__name__)
 
+def get_user_permissions_from_config(username: str) -> str:
+    """
+    Parses copyparty/copyparty.conf to retrieve the user's permission mask 
+    for the root volume.
+    """
+    conf_path = settings.BASE_DIR / "copyparty" / "copyparty.conf"
+    if not conf_path.exists():
+        logger.warning(f"Copyparty config not found at {conf_path}")
+        return ""
+
+    try:
+        with open(conf_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line.startswith("-v "):
+                    continue
+                
+                # Format: -v src:dst:perm1,u1,u2:perm2,u3
+                parts = line.split(":")
+                if len(parts) < 3:
+                    continue
+                
+                # Destination must be root '/'
+                if parts[1] != "/":
+                    continue
+                
+                # Check each permission group (starting from index 2)
+                for group in parts[2:]:
+                    # Group format: perms,user1,user2...
+                    sub_parts = group.split(",")
+                    if len(sub_parts) < 2:
+                        continue
+                    
+                    perms = sub_parts[0]
+                    users = sub_parts[1:]
+                    if username in users:
+                        logger.info(f"Parsed permissions for '{username}' from config: {perms}")
+                        return perms
+        
+        logger.warning(f"User '{username}' not found in any root volume in {conf_path}")
+        return ""
+    except Exception as e:
+        logger.error(f"Error parsing copyparty.conf: {e}")
+        return ""
+
+def get_user_permissions(username: str, password: str) -> str:
+    """
+    DEPRECATED: Use get_user_permissions_from_config instead.
+    Kept for compatibility during transition.
+    """
+    return get_user_permissions_from_config(username)
+
 def _get_proxy_url(relative_path: Path) -> str:
     """Constructs the full URL to proxy a request to the copyparty backend."""
     url_path = str(relative_path.as_posix()).lstrip('/')

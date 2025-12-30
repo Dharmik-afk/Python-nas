@@ -11,21 +11,17 @@ from app.core.session_manager import session_manager
 from app.backend.database.session import SessionLocal
 from app.backend.database.models import User
 from app.backend.models.user_schemas import Token
+from app.backend.services.copyparty_service import get_user_permissions_from_config
 
 router = APIRouter(prefix="/api/v1/auth")
 logger = logging.getLogger(__name__)
 
-def verify_with_copyparty(username: str, hashed_pw: str) -> bool:
+def verify_with_copyparty(username: str, internal_pw: str) -> bool:
     """Performs a handshake verification with the Copyparty backend."""
     try:
         url = f"http://127.0.0.1:{settings.COPYPARTY_PORT}/?pmask"
-        auth = (username, hashed_pw)
+        auth = (username, internal_pw)
         response = requests.get(url, auth=auth, timeout=5)
-        
-        print(f"\n[Handshake] Copyparty Verification for '{username}':")
-        print(f" > Status: {response.status_code}")
-        print(f" > Body: {response.text.strip()}")
-        
         return response.status_code == 200
     except Exception as e:
         logger.error(f"Copyparty handshake failed: {e}")
@@ -42,23 +38,19 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
         if not user or not hasher.verify_password(form_data.password, user.hashed_password):
             raise HTTPException(status_code=401, detail="Incorrect username or password")
         
-        # New: Verify with Copyparty Backend
-        if not verify_with_copyparty(user.username, user.hashed_password):
-            logger.error(f"Login rejected: Copyparty backend did not authorize user '{user.username}'")
-            raise HTTPException(status_code=502, detail="Backend file server synchronization error.")
-
-        # Create a session to store the copyparty auth header (proxy requirement)
-        client_ip = request.client.host if request.client else "unknown"
-        user_agent = request.headers.get("user-agent", "unknown")
-        session = session_manager.create_session(client_ip, user_agent)
-        
         # Calculate internal proxy credential
         internal_pw = hasher.get_internal_proxy_password(form_data.password)
-        
-        # New: Verify with Copyparty Backend
+
+        # 1. Verify with Copyparty Backend (Handshake)
         if not verify_with_copyparty(user.username, internal_pw):
-            logger.error(f"Login rejected: Copyparty backend did not authorize user '{user.username}'")
+            logger.error(f"Login rejected: Copyparty backend handshake failed for user '{user.username}'")
             raise HTTPException(status_code=502, detail="Backend file server synchronization error.")
+
+        # 2. Get permissions from config file
+        permissions = get_user_permissions_from_config(user.username)
+        if not permissions:
+            logger.error(f"Login rejected: User '{user.username}' has no permissions in copyparty.conf")
+            raise HTTPException(status_code=403, detail="User has no assigned permissions in the backend.")
 
         # Create a session to store the copyparty auth header (proxy requirement)
         client_ip = request.client.host if request.client else "unknown"
@@ -68,12 +60,17 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
         # Use the internal proxy password for Copyparty authentication
         auth_header = get_basic_auth_header(user.username, internal_pw)
         session.username = user.username
+        session.permissions = permissions
         session.auth_header = encrypt_string(auth_header)
-        session.log_activity(f"User '{user.username}' logged in via API.")
+        session.log_activity(f"User '{user.username}' logged in via API. Permissions: {permissions}")
         session_manager.save_sessions()
 
         # Create JWT pointing to this session
-        access_token = hasher.create_access_token(data={"sub": user.username, "session_id": session.session_id})
+        access_token = hasher.create_access_token(data={
+            "sub": user.username, 
+            "session_id": session.session_id,
+            "permissions": permissions
+        })
         return {"access_token": access_token, "token_type": "bearer"}
     finally:
         db.close()
@@ -120,10 +117,16 @@ async def login(
                 # Calculate internal proxy credential
                 internal_pw = hasher.get_internal_proxy_password(password)
 
-                # New: Verify with Copyparty Backend
+                # 1. Verify with Copyparty Backend (Handshake)
                 if not verify_with_copyparty(user.username, internal_pw):
-                    logger.error(f"Login rejected: Copyparty backend did not authorize user '{user.username}'")
+                    logger.error(f"Login rejected: Copyparty backend handshake failed for user '{user.username}'")
                     raise HTTPException(status_code=502, detail="Backend file server synchronization error.")
+
+                # 2. Get permissions from config file
+                permissions = get_user_permissions_from_config(user.username)
+                if not permissions:
+                    logger.error(f"Login rejected: User '{user.username}' has no permissions in copyparty.conf")
+                    raise HTTPException(status_code=403, detail="User has no assigned permissions in the backend.")
 
                 # Reuse existing session if possible, or create new
                 session = getattr(request.state, "session", None)
@@ -136,15 +139,25 @@ async def login(
                 auth_header = get_basic_auth_header(user.username, internal_pw)
                 
                 session.username = user.username
+                session.permissions = permissions
                 session.auth_header = encrypt_string(auth_header)
-                session.log_activity(f"User '{user.username}' logged in.")
+                session.log_activity(f"User '{user.username}' logged in. Permissions: {permissions}")
                 
                 session_manager.save_sessions()
                 
-                # Generate JWT
-                access_token = hasher.create_access_token(data={"sub": user.username, "session_id": session.session_id})
+                # Generate JWT with permissions
+                access_token = hasher.create_access_token(data={
+                    "sub": user.username, 
+                    "session_id": session.session_id,
+                    "permissions": permissions
+                })
                 
-                response = JSONResponse(content={"message": "Login successful", "username": user.username, "token": access_token})
+                response = JSONResponse(content={
+                    "message": "Login successful", 
+                    "username": user.username, 
+                    "token": access_token,
+                    "permissions": permissions
+                })
                 
                 # Robust boolean check
                 is_remember = remember_me and remember_me.lower() in ("true", "on", "1", "yes")

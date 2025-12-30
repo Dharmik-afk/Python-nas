@@ -33,6 +33,7 @@ class UserInDB(UserInDBBase):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    permissions: Optional[str] = None
 
 class TokenData(BaseModel):
     username: Optional[str] = None

@@ -17,10 +17,10 @@ Goal: Fix the "Copyparty Hashing Mismatch" bug and ensure credentials are correc
 ## Phase 2: Permission Verification Engine
 Goal: Implement the ability to query `copyparty` for user-specific permissions.
 
-- [ ] **Task 1: Implement Permission Fetching in `copyparty_service.py`**
-    - [ ] Sub-task: Write tests for a new method `get_user_permissions(username, password)`.
-    - [ ] Sub-task: Implement `get_user_permissions` using `httpx` to query `copyparty`'s internal API or check its configuration.
-- [ ] **Task 2: Update Authentication Flow**
+- [x] **Task 1: Implement Permission Fetching in `copyparty_service.py`** [5dee577]
+    - [x] Sub-task: Write tests for a new method `get_user_permissions_from_config(username)`.
+    - [x] Sub-task: Implement `get_user_permissions_from_config` to parse `copyparty/copyparty.conf` and extract permissions for the root volume.
+- [~] **Task 2: Update Authentication Flow**
     - [ ] Sub-task: Write tests for `app/backend/routes/auth_routes.py` to ensure permissions are fetched upon successful login.
     - [ ] Sub-task: Update the login route to store retrieved permissions in the `SessionManager` and the encrypted session cookie.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 2: Permission Verification Engine' (Protocol in workflow.md)**

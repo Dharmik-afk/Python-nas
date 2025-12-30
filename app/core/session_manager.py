@@ -24,6 +24,7 @@ class Session:
         self.activity: List[str] = []
         self._auth_header: Optional[str] = None # Encrypted Basic Auth string
         self._username: Optional[str] = None
+        self._permissions: str = ""
         self.modified: bool = False
 
     @property
@@ -34,6 +35,16 @@ class Session:
     def username(self, value):
         if self._username != value:
             self._username = value
+            self.modified = True
+
+    @property
+    def permissions(self):
+        return self._permissions
+
+    @permissions.setter
+    def permissions(self, value):
+        if self._permissions != value:
+            self._permissions = value
             self.modified = True
 
     @property
@@ -67,6 +78,7 @@ class Session:
             'activity': self.activity,
             'auth_header': self.auth_header,
             'username': self.username,
+            'permissions': self.permissions,
         }
 
     @classmethod
@@ -78,6 +90,7 @@ class Session:
         session.activity = data['activity']
         session._auth_header = data.get('auth_header')
         session._username = data.get('username')
+        session._permissions = data.get('permissions', "")
         session.modified = False
         return session
 
