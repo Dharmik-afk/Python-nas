@@ -1,0 +1,8 @@
+{
+  "track_id": "media_preview_20251230",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2025-12-30T18:30:00Z",
+  "updated_at": "2025-12-30T18:30:00Z",
+  "description": "Improved media preview system for photos and videos, featuring Google Photos inspired UI, MX Player inspired video controls, and performance enhancements like Service Worker caching and prefetching."
+}
