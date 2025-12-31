@@ -2,7 +2,7 @@
 
 This plan follows the Test-Driven Development (TDD) workflow and the Phase Completion Verification and Checkpointing Protocol defined in `conductor/workflow.md`.
 
-## Phase 1: Custom Minimalist UI Foundation
+## Phase 1: Custom Minimalist UI Foundation [checkpoint: 603e8b4]
 Goal: Replace native browser controls with a custom-styled, functional control bar.
 
 - [x] Task: Scaffolding - Create the base HTML structure and CSS for the custom video player. ded3976
