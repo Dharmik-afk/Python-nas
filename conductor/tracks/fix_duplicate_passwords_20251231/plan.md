@@ -2,7 +2,7 @@
 
 This plan addresses the "duplicate password" error by ensuring password hashes are unique per user using standard salting techniques, primarily focusing on the `passlib` configuration and the `user_sync` logic.
 
-## Phase 1: Reproduce and Diagnose (Red Phase)
+## Phase 1: Reproduce and Diagnose (Red Phase) [checkpoint: fef5a1a]
 - [x] Task: Create a reproduction script or test in `app/tests/test_duplicate_passwords.py`.
 - [x] Task: Verify that creating two users with the same password and attempting login triggers the `copyparty` error.
 - [x] Task: Analyze current hashing implementation in `app/core/security.py` and `scripts/manage.py`.
