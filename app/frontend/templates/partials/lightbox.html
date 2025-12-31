@@ -150,10 +150,19 @@ function galleryHandler() {
                 if (!response.ok) throw new Error("Gallery API failed");
                 
                 const data = await response.json();
-                this.items = data.items;
                 
-                // Find index using absolute comparison
-                this.currentIndex = this.items.findIndex(item => item.path === path);
+                // RESTRICTION: Document Isolation
+                const targetItem = data.items.find(item => item.path === path);
+                if (targetItem && targetItem.type === 'text') {
+                    // If it's a document, isolate it (only show this one item)
+                    this.items = [targetItem];
+                    this.currentIndex = 0;
+                } else {
+                    // If it's media, filter to ONLY media items for this session
+                    this.items = data.items.filter(item => item.type === 'image' || item.type === 'video');
+                    this.currentIndex = this.items.findIndex(item => item.path === path);
+                }
+
                 if (this.currentIndex === -1) this.currentIndex = 0;
                 
                 if (this.currentItem?.type === 'text') {
@@ -232,12 +241,34 @@ function galleryHandler() {
                 fetch(prefetchUrl, { priority: 'low' }).catch(() => {});
             });
         },
-        handleSwipe(endX) {
+        handleSwipe(endX, endY) {
+            const diffX = this.touchStartX - endX;
+            const diffY = this.touchStartY - endY;
             const threshold = 50;
-            if (this.touchStartX - endX > threshold) {
-                this.next();
-            } else if (endX - this.touchStartX > threshold) {
-                this.prev();
+
+            // Priority: Vertical swipe to exit
+            if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > threshold) {
+                // Swipe down to close (Google Photos style)
+                if (diffY < 0) {
+                    this.close();
+                    return;
+                }
+            }
+
+            // Horizontal swipe for navigation
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+                // RESTRICTION: Only swipe if current item is media (image/video)
+                // AND next/prev items are media. If it's a doc, no swiping.
+                if (this.currentItem?.type === 'text') {
+                    console.log("Swiping disabled for documents");
+                    return;
+                }
+
+                if (diffX > 0) {
+                    this.next();
+                } else {
+                    this.prev();
+                }
             }
         },
         async copyLink() {
