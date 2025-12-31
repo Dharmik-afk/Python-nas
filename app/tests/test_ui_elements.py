@@ -7,7 +7,6 @@ def test_lightbox_has_google_photos_ui():
     content = template_path.read_text()
     
     assert "btn-glass" in content
-    assert "bottom-sheet" in content
+    assert "lightbox-popover" in content
     assert "showDetails" in content
-    assert "toggleDetails()" in content
     assert "detail-item" in content

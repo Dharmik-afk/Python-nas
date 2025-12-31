@@ -32,7 +32,7 @@ Goal: Implement the advanced video streaming experience with content-focused ges
 - [x] **Task 2: Video Gestures** (07686f1)
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: MX Player Inspired Video Player' (Protocol in workflow.md)**
 
-## Phase 4: Metadata & Adaptive Actions [checkpoint: f10b89d]
+## Phase 4: Metadata & Adaptive Actions [checkpoint: 5161315]
 Goal: Connect the UI to media metadata and enforce permission-based controls.
 
 - [x] **Task 1: Client-side Metadata Extraction** (67a66f6)

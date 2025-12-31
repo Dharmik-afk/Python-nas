@@ -12,7 +12,7 @@ def test_video_player_refinements():
     assert "formatTime" in content
     
     # UI Visibility Logic
-    assert "x-show=\"currentItem?.type !== 'video' || !playing || showControls\"" in content
+    assert "x-show=\"currentItem?.type !== 'video' || !playing\"" in content
     
     # Corrected Gestures (Inverted Y)
     # Swipe UP (negative deltaY in logic, but positive effect) -> Volume UP
