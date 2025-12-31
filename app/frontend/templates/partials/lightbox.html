@@ -94,9 +94,64 @@
                         <img :src="currentItem.url + '?media'" @load="isLoading = false" class="lightbox-media" :alt="currentItem.name">
                     </template>
 
-                    <!-- Video -->
+                    <!-- Video (Custom Player) -->
                     <template x-if="currentItem?.type === 'video'">
-                        <video :src="currentItem.url + '?media'" @loadeddata="isLoading = false" controls autoplay class="lightbox-media"></video>
+                        <div class="video-player-container position-relative w-100 h-100 d-flex align-items-center justify-content-center"
+                             x-data="{
+                                 playing: true,
+                                 showControls: false,
+                                 controlsTimeout: null,
+                                 initVideo() {
+                                     this.$refs.video.play().catch(() => this.playing = false);
+                                     this.showControls = true;
+                                     this.resetControlsTimer();
+                                 },
+                                 togglePlay() {
+                                     if (this.$refs.video.paused) {
+                                         this.$refs.video.play();
+                                         this.playing = true;
+                                     } else {
+                                         this.$refs.video.pause();
+                                         this.playing = false;
+                                     }
+                                     this.showControls = true;
+                                     this.resetControlsTimer();
+                                 },
+                                 resetControlsTimer() {
+                                     clearTimeout(this.controlsTimeout);
+                                     this.showControls = true;
+                                     if (this.playing) {
+                                         this.controlsTimeout = setTimeout(() => this.showControls = false, 3000);
+                                     }
+                                 }
+                             }"
+                             @mousemove="resetControlsTimer()"
+                             @click="togglePlay()">
+                             
+                            <video x-ref="video" 
+                                   :src="currentItem.url + '?media'" 
+                                   @loadeddata="isLoading = false; initVideo()"
+                                   @ended="playing = false; showControls = true"
+                                   @play="playing = true"
+                                   @pause="playing = false"
+                                   class="lightbox-media"
+                                   playsinline>
+                            </video>
+
+                            <!-- Center Play/Pause Overlay -->
+                            <div class="position-absolute top-50 start-50 translate-middle" 
+                                 x-show="showControls"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-50"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-50">
+                                <button class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
+                                    <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                                </button>
+                            </div>
+                        </div>
                     </template>
 
                     <!-- Text/Code -->
