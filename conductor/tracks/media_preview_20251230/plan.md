@@ -25,16 +25,11 @@ Goal: Build the core gallery UI and implement navigation gestures.
     - [ ] Sub-task: Implement logic to isolate document viewing (no swiping into/out of docs).
 - [ ] **Task: Conductor - User Manual Verification 'Phase 2: Unified Lightbox & Gesture Navigation' (Protocol in workflow.md)**
 
-## Phase 3: MX Player Inspired Video Player
+## Phase 3: MX Player Inspired Video Player [checkpoint: cba5912]
 Goal: Implement the advanced video streaming experience with content-focused gestures.
 
-- [ ] **Task 1: Custom Video Player Integration**
-    - [ ] Sub-task: Integrate a lightweight player (e.g., Plyr) or extend native `<video>` with custom controls.
-    - [ ] Sub-task: Style the UI with auto-hiding controls and centered Play/Pause.
-- [ ] **Task 2: Video Gestures**
-    - [ ] Sub-task: Implement vertical swipe on the left side for brightness (CSS overlay).
-    - [ ] Sub-task: Implement vertical swipe on the right side for volume.
-    - [ ] Sub-task: Implement horizontal swipe for seeking.
+- [x] **Task 1: Custom Video Player Integration** (2491986)
+- [x] **Task 2: Video Gestures** (07686f1)
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: MX Player Inspired Video Player' (Protocol in workflow.md)**
 
 ## Phase 4: Metadata & Adaptive Actions
