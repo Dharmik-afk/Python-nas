@@ -15,13 +15,11 @@ Goal: Establish the caching and prefetching foundation for a "zero-loading" expe
     - [ ] Sub-task: Create logic to fetch only thumbnails for adjacent videos.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 1: Performance Infrastructure' (Protocol in workflow.md)**
 
-## Phase 2: Unified Lightbox & Gesture Navigation
+## Phase 2: Unified Lightbox & Gesture Navigation [checkpoint: 6345bf1]
 Goal: Build the core gallery UI and implement navigation gestures.
 
-- [ ] **Task 1: Google Photos Inspired UI**
-    - [ ] Sub-task: Design the fullscreen overlay with glassmorphism and minimalist icons.
-    - [ ] Sub-task: Implement the slide-up "Bottom Sheet" for file details.
-- [ ] **Task 2: Content-Aware Gestures**
+- [x] **Task 1: Google Photos Inspired UI** (965de57)
+- [x] **Task 2: Content-Aware Gestures** (1b61a6e)
     - [ ] Sub-task: Implement horizontal swipe navigation restricted to image/video content.
     - [ ] Sub-task: Implement vertical "swipe-to-exit" on the background overlay.
     - [ ] Sub-task: Implement logic to isolate document viewing (no swiping into/out of docs).
