@@ -7,6 +7,8 @@ def test_lightbox_has_content_aware_gestures():
     content = template_path.read_text()
     
     assert "Math.abs(diffY) > Math.abs(diffX)" in content
+    assert "verticalThreshold" in content
+    assert "150" in content # Check for increased threshold
     assert "this.close()" in content # Vertical swipe close
     assert "Document Isolation" in content
     assert "item.type === 'text'" in content

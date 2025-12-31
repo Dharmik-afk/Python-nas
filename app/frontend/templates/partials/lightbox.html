@@ -257,10 +257,11 @@ function galleryHandler() {
         handleSwipe(endX, endY) {
             const diffX = this.touchStartX - endX;
             const diffY = this.touchStartY - endY;
-            const threshold = 50;
+            const horizontalThreshold = 50;
+            const verticalThreshold = 150; // Increased slack to prevent accidental closing
 
             // Priority: Vertical swipe to exit
-            if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > threshold) {
+            if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > verticalThreshold) {
                 // Swipe down to close (Google Photos style)
                 if (diffY < 0) {
                     this.close();
@@ -269,7 +270,7 @@ function galleryHandler() {
             }
 
             // Horizontal swipe for navigation
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > horizontalThreshold) {
                 // RESTRICTION: Only swipe if current item is media (image/video)
                 // AND next/prev items are media. If it's a doc, no swiping.
                 if (this.currentItem?.type === 'text') {
