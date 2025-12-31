@@ -530,47 +530,119 @@
             
             
             
-                        <!-- Bottom Footer (Actions) -->
+                                    <!-- Bottom Footer (Actions) -->
             
-                        <div class="lightbox-footer"
             
-                             x-show="currentItem?.type !== 'video' || !playing"
             
-                             x-transition.opacity.duration.300ms>
+                                    <div class="lightbox-footer"
             
-                            <button @click="copyLink()" class="btn-glass-text">
             
-                                <i class="bi bi-share"></i>
             
-                                <span>Share</span>
+                                         x-show="currentItem?.type !== 'video' || !playing"
             
-                            </button>
             
-                            <button class="btn-glass-text text-warning" title="Rename (Not implemented yet)">
             
-                                <i class="bi bi-pencil"></i>
+                                         x-transition.opacity.duration.300ms>
             
-                                <span>Rename</span>
             
-                            </button>
             
-                            <button class="btn-glass-text text-danger" title="Delete (Not implemented yet)">
+                                        <button @click="copyLink()" class="btn-glass-text">
             
-                                <i class="bi bi-trash"></i>
             
-                                <span>Delete</span>
             
-                            </button>
+                                            <i class="bi bi-share"></i>
             
-                            <a :href="currentItem?.url" download class="btn-glass-text text-decoration-none text-white">
             
-                                <i class="bi bi-download"></i>
             
-                                <span>Save</span>
+                                            <span>Share</span>
             
-                            </a>
             
-                        </div>
+            
+                                        </button>
+            
+            
+            
+                                        
+            
+            
+            
+                                        <template x-if="pmask.includes('m')">
+            
+            
+            
+                                            <button class="btn-glass-text text-warning" @click="handleRename()">
+            
+            
+            
+                                                <i class="bi bi-pencil"></i>
+            
+            
+            
+                                                <span>Rename</span>
+            
+            
+            
+                                            </button>
+            
+            
+            
+                                        </template>
+            
+            
+            
+                        
+            
+            
+            
+                                        <template x-if="pmask.includes('d')">
+            
+            
+            
+                                            <button class="btn-glass-text text-danger" @click="handleDelete()">
+            
+            
+            
+                                                <i class="bi bi-trash"></i>
+            
+            
+            
+                                                <span>Delete</span>
+            
+            
+            
+                                            </button>
+            
+            
+            
+                                        </template>
+            
+            
+            
+                        
+            
+            
+            
+                                        <a :href="currentItem?.url" download class="btn-glass-text text-decoration-none text-white">
+            
+            
+            
+                                            <i class="bi bi-download"></i>
+            
+            
+            
+                                            <span>Save</span>
+            
+            
+            
+                                        </a>
+            
+            
+            
+                                    </div>
+            
+            
+            
+                        
             
             
         </div>
@@ -585,6 +657,7 @@ function galleryHandler() {
         isLoading: false,
         showDetails: false,
         mediaMetadata: { width: null, height: null, duration: null },
+        pmask: '',
         items: [],
         currentIndex: 0,
         touchStartX: 0,
@@ -623,6 +696,7 @@ function galleryHandler() {
                 if (!response.ok) throw new Error("Gallery API failed");
                 
                 const data = await response.json();
+                this.pmask = data.pmask || 'r';
                 
                 // Document Isolation Logic
                 const targetItem = data.items.find(item => item.path === path);
@@ -858,6 +932,65 @@ function galleryHandler() {
                     await navigator.clipboard.writeText(url);
                     alert("Link copied!");
                 } catch (err) { console.error('Copy failed', err); }
+            }
+        },
+
+        async handleRename() {
+            if (!this.currentItem) return;
+            const newName = prompt("Enter new name:", this.currentItem.name);
+            if (!newName || newName === this.currentItem.name) return;
+
+            try {
+                const encodedPath = encodeURIComponent(this.currentItem.path);
+                const res = await fetch(`/api/v1/fs/rename/${encodedPath}?new_name=${encodeURIComponent(newName)}`, {
+                    method: 'POST'
+                });
+                
+                if (res.ok) {
+                    // Update local state
+                    this.currentItem.name = newName;
+                    // Trigger a refresh of the file browser in the background
+                    if (window.htmx) htmx.trigger('body', 'refresh-files');
+                } else {
+                    const data = await res.json();
+                    alert("Rename failed: " + (data.detail || "Unknown error"));
+                }
+            } catch (e) {
+                console.error("Rename error", e);
+                alert("An error occurred during rename.");
+            }
+        },
+
+        async handleDelete() {
+            if (!this.currentItem) return;
+            if (!confirm(`Are you sure you want to delete '${this.currentItem.name}'?`)) return;
+
+            try {
+                const encodedPath = encodeURIComponent(this.currentItem.path);
+                const res = await fetch(`/api/v1/fs/${encodedPath}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    // Remove item from local list
+                    const deletedIndex = this.currentIndex;
+                    this.items.splice(deletedIndex, 1);
+                    
+                    if (this.items.length === 0) {
+                        this.close();
+                    } else {
+                        // Move to next item or previous if it was the last one
+                        this.currentIndex = deletedIndex % this.items.length;
+                    }
+                    
+                    if (window.htmx) htmx.trigger('body', 'refresh-files');
+                } else {
+                    const data = await res.json();
+                    alert("Delete failed: " + (data.detail || "Unknown error"));
+                }
+            } catch (e) {
+                console.error("Delete error", e);
+                alert("An error occurred during deletion.");
             }
         }
     }
