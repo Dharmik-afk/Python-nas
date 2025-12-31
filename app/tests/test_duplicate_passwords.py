@@ -9,12 +9,13 @@ def test_duplicate_password_hashing_collision():
     password = "MySecurePassword123!"
     
     # Generate hash for User A
-    hash_a = hasher.get_copyparty_hash(password)
+    hash_a = hasher.get_copyparty_hash(password, user_salt="userA")
     
     # Generate hash for User B
-    hash_b = hasher.get_copyparty_hash(password)
+    hash_b = hasher.get_copyparty_hash(password, user_salt="userB")
     
-    # CURRENT BEHAVIOR: They are identical because the salt is hardcoded.
-    # We want to change this behavior so that they are unique.
-    # Therefore, this test SHOULD FAIL until we implement unique salting.
-    assert hash_a != hash_b, "Hashes for the same password should be unique (salted)"
+    # After fix: They should be DIFFERENT because they are salted by username.
+    assert hash_a != hash_b, "Hashes for the same password should be unique (salted by username)"
+    
+    # Also verify that it's deterministic for the same user
+    assert hash_a == hasher.get_copyparty_hash(password, user_salt="userA")

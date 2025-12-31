@@ -33,17 +33,25 @@ class Hasher:
         """
         return plain_password
 
-    def get_copyparty_hash(self, internal_pw: str) -> str:
+    def get_copyparty_hash(self, internal_pw: str, user_salt: Optional[str] = None) -> str:
         """
         Returns the Copyparty-compatible SHA-512 iterated hash.
         This matches Copyparty's custom 'sha2' algorithm.
+        If user_salt is provided, it is combined with the default salt
+        to ensure unique hashes for identical passwords across users.
         """
         # Default parameters from Copyparty
-        salt = "HOnOz0yVP8H4WJncIu6Y8qof"
+        base_salt = "HOnOz0yVP8H4WJncIu6Y8qof"
+        
+        # Combine base salt with user-specific salt if provided
+        combined_salt = base_salt
+        if user_salt:
+            combined_salt += user_salt
+            
         iterations = 424242
         
         bplain = internal_pw.encode("utf-8")
-        bsalt = salt.encode("utf-8")
+        bsalt = combined_salt.encode("utf-8")
         ret = b"\n"
         for _ in range(iterations):
             ret = hashlib.sha512(bsalt + bplain + ret).digest()
