@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="{{ url_for('static', path='css/video_player.css') }}">
+<script src="{{ url_for('static', path='js/video_player.js') }}"></script>
+
+<div class="video-player-container" 
+     x-data="videoPlayer($refs.video)" 
+     @mousemove="resetControlsTimer()" 
+     @touchstart="resetControlsTimer()"
+     :class="{ 'controls-hidden': !showControls }">
+    
+    <video x-ref="video" 
+           class="main-video"
+           :src="currentItem.url + '?media'"
+           @loadedmetadata="initPlayer()"
+           @timeupdate="updateTime()"
+           @progress="updateBuffer()"
+           @waiting="isBuffering = true"
+           @playing="isBuffering = false; playing = true"
+           @pause="playing = false"
+           @ended="onEnded()"
+           playsinline>
+    </video>
+
+    <!-- Buffering Spinner -->
+    <template x-if="isBuffering">
+        <div class="video-spinner">
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </template>
+
+    <!-- Custom Controls Bar -->
+    <div class="video-controls" @click.stop>
+        <!-- Progress Bar -->
+        <div class="progress-container" 
+             @mousedown="startScrubbing($event)"
+             @mousemove="scrub($event)"
+             @mouseup="stopScrubbing()"
+             @touchstart="startScrubbing($event)"
+             @touchmove="scrub($event)"
+             @touchend="stopScrubbing()">
+            <div class="progress-bar-bg">
+                <div class="progress-buffer" :style="{ width: bufferPercent + '%' }"></div>
+                <div class="progress-current" :style="{ width: progressPercent + '%' }"></div>
+            </div>
+            <div class="progress-handle" :style="{ left: progressPercent + '%' }"></div>
+        </div>
+
+        <div class="controls-main">
+            <div class="controls-left">
+                <button @click="togglePlay()" class="control-btn" aria-label="Play/Pause">
+                    <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                </button>
+                <div class="time-display">
+                    <span x-text="formatTime(currentTime)"></span> / <span x-text="formatTime(duration)"></span>
+                </div>
+            </div>
+
+            <div class="controls-right">
+                <div class="volume-container">
+                    <button @click="toggleMute()" class="control-btn" aria-label="Mute/Unmute">
+                        <i class="bi" :class="muted || volume === 0 ? 'bi-volume-mute-fill' : 'bi-volume-up-fill'"></i>
+                    </button>
+                    <input type="range" min="0" max="1" step="0.05" x-model="volume" @input="updateVolume()" class="volume-slider">
+                </div>
+                
+                <!-- Manual Rotation Toggle (Mobile) -->
+                <button @click="toggleOrientation()" class="control-btn d-md-none" aria-label="Rotate">
+                    <i class="bi bi-phone-landscape"></i>
+                </button>
+
+                <button @click="toggleFullscreen()" class="control-btn" aria-label="Fullscreen">
+                    <i class="bi" :class="isFullscreen ? 'bi-fullscreen-exit' : 'bi-fullscreen'"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
