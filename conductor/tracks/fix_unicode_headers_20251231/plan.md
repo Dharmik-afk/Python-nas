@@ -7,7 +7,7 @@ This plan addresses the `UnicodeEncodeError` in `StreamingResponse` by ensuring 
 - [x] Task: Verify that the test fails with `UnicodeEncodeError` when using a filename with non-ASCII characters (e.g., `Boys പൊളിയാ.mp4`).
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Reproduce and Validate' (Protocol in workflow.md) b41808f
 
-## Phase 2: Implementation (Green Phase)
+## Phase 2: Implementation (Green Phase) [checkpoint: 1f6c8cf]
 - [x] Task: Modify `app/backend/services/copyparty_service.py` to sanitize headers.
     - [x] Sub-task: Identify headers containing non-ASCII characters (e.g., `Set-Cookie`, `Content-Disposition`).
     - [x] Sub-task: Implement a helper to URL-encode or remove problematic characters from sensitive headers before passing them to `StreamingResponse`.
