@@ -88,7 +88,11 @@ async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_
                          request.state.session = session
                     
                     session.username = username
-                    proxy_auth_header = get_basic_auth_header(username, user.hashed_password)
+                    
+                    # Fix: Calculate internal proxy credential from the raw password
+                    internal_pw = hasher.get_internal_proxy_password(password)
+                    proxy_auth_header = get_basic_auth_header(username, internal_pw)
+                    
                     session.auth_header = encrypt_string(proxy_auth_header)
                     return session
             finally:
