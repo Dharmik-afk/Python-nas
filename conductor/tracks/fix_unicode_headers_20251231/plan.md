@@ -2,7 +2,7 @@
 
 This plan addresses the `UnicodeEncodeError` in `StreamingResponse` by ensuring headers passed from `copyparty_service` to FastAPI are properly sanitized and encoded.
 
-## Phase 1: Reproduce and Validate (Red Phase)
+## Phase 1: Reproduce and Validate (Red Phase) [checkpoint: 352f596]
 - [x] Task: Create a reproduction test case in `app/tests/test_download_unicode.py`.
 - [x] Task: Verify that the test fails with `UnicodeEncodeError` when using a filename with non-ASCII characters (e.g., `Boys പൊളിയാ.mp4`).
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Reproduce and Validate' (Protocol in workflow.md) b41808f
