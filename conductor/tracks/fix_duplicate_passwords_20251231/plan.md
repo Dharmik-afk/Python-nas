@@ -15,7 +15,7 @@ This plan addresses the "duplicate password" error by ensuring password hashes a
 - [x] Task: Verify that the reproduction test now passes (two users with same password can coexist).
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Implement Salted Hashing' (Protocol in workflow.md) 4778a7b
 
-## Phase 3: Migration and Cleanup
+## Phase 3: Migration and Cleanup [checkpoint: ff6315c]
 - [x] Task: Implement a check to handle legacy (unsalted) hashes for existing users if necessary, or decide on a re-hash strategy.
 - [x] Task: Perform a final verification with `make add-user` and manual login for two identical-password accounts.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Migration and Cleanup' (Protocol in workflow.md) d187350
