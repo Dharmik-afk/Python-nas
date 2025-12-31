@@ -11,12 +11,23 @@ function videoPlayer(videoEl) {
         bufferPercent: 0,
         isFullscreen: false,
         isScrubbing: false,
+        aspectRatio: null,
+        isLandscape: false,
         controlsTimeout: null,
 
         initPlayer() {
             this.duration = videoEl.duration || 0;
             this.volume = videoEl.volume;
             this.muted = videoEl.muted;
+            
+            // Phase 2: Aspect Ratio Detection
+            if (videoEl.videoWidth && videoEl.videoHeight) {
+                this.aspectRatio = videoEl.videoWidth / videoEl.videoHeight;
+                // Horizontal if ratio > 1.2 (covers 4:3 which is 1.33)
+                this.isLandscape = this.aspectRatio > 1.2;
+                console.log(`Video detected as ${this.isLandscape ? 'Landscape' : 'Portrait'} (${this.aspectRatio.toFixed(2)})`);
+            }
+
             this.resetControlsTimer();
         },
 
@@ -83,22 +94,49 @@ function videoPlayer(videoEl) {
             this.resetControlsTimer();
         },
 
-        toggleFullscreen() {
+        async toggleFullscreen() {
             const container = videoEl.closest('.video-player-container');
             if (!document.fullscreenElement) {
-                container.requestFullscreen().catch(err => {
+                try {
+                    await container.requestFullscreen();
+                    this.isFullscreen = true;
+                    
+                    // Phase 2: Auto-rotate horizontal videos on mobile
+                    if (this.isLandscape && screen.orientation && screen.orientation.lock) {
+                        try {
+                            await screen.orientation.lock('landscape');
+                        } catch (err) {
+                            console.warn("Screen orientation lock failed:", err.message);
+                        }
+                    }
+                } catch (err) {
                     console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-                });
-                this.isFullscreen = true;
+                }
             } else {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
                 document.exitFullscreen();
                 this.isFullscreen = false;
             }
         },
 
-        toggleOrientation() {
-            // Placeholder for Phase 2
-            console.log("Orientation toggle clicked");
+        async toggleOrientation() {
+            // Phase 2: Manual Rotation Button
+            if (screen.orientation && screen.orientation.lock) {
+                try {
+                    const currentType = screen.orientation.type;
+                    if (currentType.includes('portrait')) {
+                        await screen.orientation.lock('landscape');
+                    } else {
+                        await screen.orientation.lock('portrait');
+                    }
+                } catch (err) {
+                    console.warn("Manual orientation lock failed:", err.message);
+                }
+            } else {
+                alert("Orientation locking is not supported on this browser/device.");
+            }
         },
 
         resetControlsTimer() {
