@@ -32,14 +32,11 @@ Goal: Implement the advanced video streaming experience with content-focused ges
 - [x] **Task 2: Video Gestures** (07686f1)
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: MX Player Inspired Video Player' (Protocol in workflow.md)**
 
-## Phase 4: Metadata & Adaptive Actions
+## Phase 4: Metadata & Adaptive Actions [checkpoint: f10b89d]
 Goal: Connect the UI to media metadata and enforce permission-based controls.
 
-- [ ] **Task 1: Client-side Metadata Extraction**
-    - [ ] Sub-task: Implement Alpine.js/JS logic to probe `naturalWidth`/`videoHeight` once media loads.
-    - [ ] Sub-task: Create a formatting utility for file sizes and dates (already in the UI, but needed for the sheet).
-    - [ ] Sub-task: Wire the "Details" button to display this extracted info in the bottom sheet.
-- [ ] **Task 2: Permission-Aware Action Bar**
+- [x] **Task 1: Client-side Metadata Extraction** (67a66f6)
+- [x] **Task 2: Permission-Aware Action Bar** (dbb47fb)
     - [ ] Sub-task: Dynamically show/hide Download, Rename, and Delete based on `pmask`.
     - [ ] Sub-task: Ensure HTMX triggers are correctly wired for Management actions within the lightbox.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 4: Metadata & Adaptive Actions' (Protocol in workflow.md)**
