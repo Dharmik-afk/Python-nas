@@ -23,18 +23,18 @@ Goal: Replace native browser controls with a custom-styled, functional control b
 ## Phase 2: Intelligent Mobile Orientation & Scaling
 Goal: Implement orientation locking/triggering and aspect-ratio-aware scaling for mobile devices.
 
-- [ ] Task: Aspect Ratio Detection (TDD) - Implement logic to detect video dimensions and categorize aspect ratio.
-    - [ ] Red Phase: Write tests that verify detection of 16:9, 4:3, and 2.39:1 videos.
-    - [ ] Green Phase: Implement `loadedmetadata` event handler to calculate ratio.
-- [ ] Task: Orientation Trigger Logic (TDD) - Automatically suggest/trigger landscape for horizontal videos on mobile.
-    - [ ] Red Phase: Mock Screen Orientation API and verify orientation change calls for horizontal videos.
-    - [ ] Green Phase: Implement orientation lock/request logic using Screen Orientation API.
-- [ ] Task: Manual Rotation Button (TDD) - Add a UI button to manually rotate the view.
-    - [ ] Red Phase: Write tests for the manual override button state and orientation toggle.
-    - [ ] Green Phase: Implement the manual rotation button and associated CSS transforms/orientation calls.
-- [ ] Task: Responsive Scaling (CSS) - Ensure the video container scales correctly for all horizontal formats.
-    - [ ] Implement CSS for letterboxing/pillarboxing using object-fit and flexbox.
-    - [ ] Verify 4:3 and ultra-wide (2.39:1) rendering on mobile viewports.
+- [x] Task: Aspect Ratio Detection (TDD) - Implement logic to detect video dimensions and categorize aspect ratio. ac37efd
+    - [x] Red Phase: Write tests that verify detection of 16:9, 4:3, and 2.39:1 videos.
+    - [x] Green Phase: Implement `loadedmetadata` event handler to calculate ratio.
+- [x] Task: Orientation Trigger Logic (TDD) - Automatically suggest/trigger landscape for horizontal videos on mobile. ac37efd
+    - [x] Red Phase: Mock Screen Orientation API and verify orientation change calls for horizontal videos.
+    - [x] Green Phase: Implement orientation lock/request logic using Screen Orientation API.
+- [x] Task: Manual Rotation Button (TDD) - Add a UI button to manually rotate the view. ac37efd
+    - [x] Red Phase: Write tests for the manual override button state and orientation toggle.
+    - [x] Green Phase: Implement the manual rotation button and associated CSS transforms/orientation calls.
+- [x] Task: Responsive Scaling (CSS) - Ensure the video container scales correctly for all horizontal formats. ac37efd
+    - [x] Implement CSS for letterboxing/pillarboxing using object-fit and flexbox.
+    - [x] Verify 4:3 and ultra-wide (2.39:1) rendering on mobile viewports.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Intelligent Mobile Orientation & Scaling' (Protocol in workflow.md)
 
 ## Phase 3: Visual Polish & UX Refinement
