@@ -23,6 +23,17 @@ async def login_page(request: Request):
     """Renders the login page."""
     return templates.TemplateResponse("pages/login.html", {"request": request})
 
+@router.get("/video-test", response_class=HTMLResponse)
+async def video_test(request: Request):
+    """A test route for the new custom video player."""
+    # We need a dummy item for the partial to work
+    # In a real environment, the user can test this with an actual video file
+    dummy_item = {
+        "url": "/download/test.mp4",
+        "name": "Test Video"
+    }
+    return templates.TemplateResponse("pages/video_test.html", {"request": request, "currentItem": dummy_item})
+
 @router.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return await read_path(request, "")
