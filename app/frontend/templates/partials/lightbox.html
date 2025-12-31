@@ -10,27 +10,23 @@
     <template x-if="isOpen">
         <div class="lightbox-overlay" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
             
-            <!-- Toolbar -->
+            <!-- Top Toolbar (Header) -->
             <div class="lightbox-toolbar">
-                <div class="d-flex align-items-center">
-                    <button @click="close()" class="btn-glass me-3">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <div class="d-none d-sm-block">
-                        <h6 class="mb-0 fw-bold text-truncate" x-text="currentItem?.name" style="max-width: 300px;"></h6>
-                    </div>
+                <!-- Left: Back -->
+                <button @click="close()" class="btn-glass">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                
+                <!-- Center: Title -->
+                <div class="text-center overflow-hidden px-2">
+                    <h6 class="mb-0 fw-bold text-truncate" x-text="currentItem?.name"></h6>
+                    <div class="small opacity-50" x-text="(currentIndex + 1) + ' / ' + items.length"></div>
                 </div>
-                <div class="d-flex gap-2">
-                    <button @click="toggleDetails()" class="btn-glass" title="Details (i)">
-                        <i class="bi bi-info-circle"></i>
-                    </button>
-                    <button @click="copyLink()" class="btn-glass" title="Share">
-                        <i class="bi bi-share"></i>
-                    </button>
-                    <a :href="currentItem?.url" download class="btn-glass" title="Download">
-                        <i class="bi bi-download"></i>
-                    </a>
-                </div>
+
+                <!-- Right: Info -->
+                <button @click="toggleDetails()" class="btn-glass ms-auto" title="Details">
+                    <i class="bi bi-info-circle"></i>
+                </button>
             </div>
 
             <!-- Content Area -->
@@ -75,6 +71,26 @@
                 <button @click="next()" class="lightbox-nav next" x-show="items.length > 1">
                     <i class="bi bi-chevron-right"></i>
                 </button>
+            </div>
+
+            <!-- Bottom Footer (Actions) -->
+            <div class="lightbox-footer">
+                <button @click="copyLink()" class="btn-glass-text">
+                    <i class="bi bi-share"></i>
+                    <span>Share</span>
+                </button>
+                <button class="btn-glass-text text-warning" title="Rename (Not implemented yet)">
+                    <i class="bi bi-pencil"></i>
+                    <span>Rename</span>
+                </button>
+                <button class="btn-glass-text text-danger" title="Delete (Not implemented yet)">
+                    <i class="bi bi-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <a :href="currentItem?.url" download class="btn-glass-text text-decoration-none text-white">
+                    <i class="bi bi-download"></i>
+                    <span>Save</span>
+                </a>
             </div>
 
             <!-- Bottom Sheet (Details) -->

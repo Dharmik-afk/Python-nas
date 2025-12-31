@@ -85,20 +85,38 @@ main {
 
 .lightbox-toolbar {
     padding: 1rem 1.5rem;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
-    display: flex;
-    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
     align-items: center;
     z-index: 2005;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
+    height: 70px;
+}
+
+.lightbox-footer {
+    padding: 1.5rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 2005;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
 }
 
 @media (max-width: 576px) {
     .lightbox-toolbar {
         padding: 0.75rem 1rem;
+    }
+    .lightbox-footer {
+        padding: 1rem;
     }
 }
 
@@ -109,12 +127,14 @@ main {
     justify-content: center;
     position: relative;
     padding: 0;
-    margin-top: 60px; /* Space for toolbar */
+    /* Space for toolbar and footer */
+    margin-top: 70px;
+    margin-bottom: 80px;
 }
 
 .lightbox-media {
     max-width: 100%;
-    max-height: 90vh;
+    max-height: calc(100vh - 160px);
     object-fit: contain;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -124,7 +144,7 @@ main {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none;
     color: white;
     border-radius: 50%;
     width: 40px;
@@ -139,6 +159,36 @@ main {
     background: rgba(255, 255, 255, 0.2);
     color: white;
     transform: scale(1.05);
+}
+
+.btn-glass-text {
+    background: transparent;
+    border: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+}
+
+.btn-glass-text i {
+    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.btn-glass-text:hover {
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
 /* Elegant Navigation */
