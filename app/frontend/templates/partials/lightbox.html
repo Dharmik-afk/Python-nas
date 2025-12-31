@@ -330,161 +330,671 @@
             
             
             
-                                <!-- Video (Custom Player) -->
+                                                    <!-- Video (Custom Player) -->
             
-                                <template x-if="currentItem?.type === 'video'">
             
-                                    <div class="video-player-container position-relative w-100 h-100 d-flex align-items-center justify-content-center"
             
-                                         @mousemove="resetControlsTimer()"
+                                    
             
-                                         @click="togglePlay()"
             
-                                         @touchstart="handleVideoTouchStart($event)"
             
-                                         @touchmove.prevent="handleVideoTouchMove($event)"
+                                                    <template x-if="currentItem?.type === 'video'">
             
-                                         @touchend="handleVideoTouchEnd()">
             
-                                         
             
-                                        <video x-ref="video" 
+                                    
             
-                                               :src="currentItem.url + '?media'" 
             
-                                               @loadeddata="isLoading = false; initVideo()"
             
-                                               @timeupdate="updateTime()"
+                                                        <div class="video-player-container position-relative w-100 h-100 d-flex align-items-center justify-content-center"
             
-                                               @ended="playing = false; showControls = true"
             
-                                               @play="playing = true"
             
-                                               @pause="playing = false"
+                                    
             
-                                               class="lightbox-media"
             
-                                               playsinline>
             
-                                        </video>
+                                                             @mousemove="resetControlsTimer()"
             
             
             
-                                        <!-- Center Play/Pause Overlay -->
+                                    
             
-                                        <div class="position-absolute top-50 start-50 translate-middle" 
             
-                                             x-show="showControls"
             
-                                             x-transition:enter="transition ease-out duration-200"
+                                                             @click="handleVideoTap($event)"
             
-                                             x-transition:enter-start="opacity-0 scale-50"
             
-                                             x-transition:enter-end="opacity-100 scale-100"
             
-                                             x-transition:leave="transition ease-in duration-150"
+                                    
             
-                                             x-transition:leave-start="opacity-100 scale-100"
             
-                                             x-transition:leave-end="opacity-0 scale-50">
             
-                                            <button class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
+                                                             @touchstart="handleVideoTouchStart($event)"
             
-                                                <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
             
-                                            </button>
             
-                                        </div>
+                                    
             
             
             
-                                        <!-- Video Controls Bar (Progress) -->
+                                                             @touchmove="handleVideoTouchMove($event)"
             
-                                        <div class="position-absolute bottom-0 start-0 w-100 p-3" 
             
-                                             x-show="showControls"
             
-                                             style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); z-index: 2010;"
+                                    
             
-                                             x-transition:enter="transition ease-out duration-200"
             
-                                             x-transition:enter-start="opacity-0 translate-y-4"
             
-                                             x-transition:enter-end="opacity-100 translate-y-0"
+                                                             @touchend="handleVideoTouchEnd($event)">
             
-                                             x-transition:leave="transition ease-in duration-150"
             
-                                             x-transition:leave-start="opacity-100 translate-y-0"
             
-                                             x-transition:leave-end="opacity-0 translate-y-4"
+                                    
             
-                                             @click.stop>
             
-                                            
             
-                                            <div class="d-flex align-items-center gap-3 text-white">
+                                                             
             
-                                                <span class="small" x-text="formatTime(currentTime)">0:00</span>
             
-                                                <input type="range" class="form-range flex-grow-1" 
             
-                                                       min="0" :max="duration" step="0.1" 
+                                    
             
-                                                       x-model="currentTime"
             
-                                                       @input="seekVideo($event.target.value)"
             
-                                                       @mousedown="isSeeking = true"
+                                                            <video x-ref="video" 
             
-                                                       @mouseup="isSeeking = false"
             
-                                                       @touchstart="isSeeking = true"
             
-                                                       @touchend="isSeeking = false">
+                                    
             
-                                                <span class="small" x-text="formatTime(duration)">0:00</span>
             
-                                            </div>
             
-                                        </div>
+                                                                   :src="currentItem.url + '?media'" 
             
             
             
-                                        <!-- Gesture Indicators -->
+                                    
             
-                                        <div class="position-absolute top-50 start-0 translate-middle-y ms-4" x-show="isAdjustingBrightness" x-transition>
             
-                                            <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
             
-                                                <i class="bi bi-brightness-high-fill fs-3 mb-2 text-white"></i>
+                                                                   @loadeddata="isLoading = false; initVideo()"
             
-                                                <div class="progress-vertical bg-white bg-opacity-25 rounded-pill position-relative" style="width: 6px; height: 100px;">
             
-                                                    <div class="bg-white rounded-pill w-100" :style="`height: ${brightnessLevel}%`" style="position: absolute; bottom: 0;"></div>
             
-                                                </div>
+                                    
             
-                                            </div>
             
-                                        </div>
             
+                                                                   @timeupdate="updateTime()"
             
             
-                                        <div class="position-absolute top-50 end-0 translate-middle-y me-4" x-show="isAdjustingVolume" x-transition>
             
-                                            <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+                                    
             
-                                                <i class="bi bi-volume-up-fill fs-3 mb-2 text-white"></i>
             
-                                                <div class="progress-vertical bg-white bg-opacity-25 rounded-pill position-relative" style="width: 6px; height: 100px;">
             
-                                                    <div class="bg-white rounded-pill w-100" :style="`height: ${volumeLevel * 100}%`" style="position: absolute; bottom: 0;"></div>
+                                                                   @ended="playing = false; showControls = true"
             
-                                                </div>
             
-                                            </div>
             
-                                        </div>
+                                    
+            
+            
+            
+                                                                   @play="playing = true"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                   @pause="playing = false"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                   class="lightbox-media"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                   playsinline>
+            
+            
+            
+                                    
+            
+            
+            
+                                                            </video>
+            
+            
+            
+                                    
+            
+            
+            
+                                
+            
+            
+            
+                                    
+            
+            
+            
+                                                            <!-- Center Controls (Play/Pause + Skip) -->
+            
+            
+            
+                                    
+            
+            
+            
+                                                            <div class="position-absolute top-50 start-50 translate-middle d-flex align-items-center gap-4" 
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-show="showControls"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-transition:enter="transition ease-out duration-200"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-transition:enter-start="opacity-0 scale-50"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-transition:enter-end="opacity-100 scale-100"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-transition:leave="transition ease-in duration-150"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-transition:leave-start="opacity-100 scale-100"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 x-transition:leave-end="opacity-0 scale-50"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                 @click.stop>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                <button @click="skip(-10)" class="btn btn-glass" style="width: 50px; height: 50px;">
+            
+            
+            
+                                    
+            
+            
+            
+                                                                    <i class="bi bi-arrow-counterclockwise"></i>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                </button>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                <button @click="togglePlay()" class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
+            
+            
+            
+                                    
+            
+            
+            
+                                                                    <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                </button>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                <button @click="skip(10)" class="btn btn-glass" style="width: 50px; height: 50px;">
+            
+            
+            
+                                    
+            
+            
+            
+                                                                    <i class="bi bi-arrow-clockwise"></i>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                </button>
+            
+            
+            
+                                    
+            
+            
+            
+                                                            </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                
+            
+            
+            
+                                                                    <!-- Video Controls Bar (Progress) -->
+            
+            
+            
+                                                                    <div class="position-absolute start-0 w-100 p-3" 
+            
+            
+            
+                                                                         x-show="showControls"
+            
+            
+            
+                                                                         :style="playing ? 'bottom: 0;' : 'bottom: 80px;'"
+            
+            
+            
+                                                                         style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); z-index: 2010; transition: bottom 0.3s ease;"
+            
+            
+            
+                                                                         x-transition:enter="transition ease-out duration-200"
+            
+            
+            
+                                                                         x-transition:enter-start="opacity-0 translate-y-4"
+            
+            
+            
+                                                                         x-transition:enter-end="opacity-100 translate-y-0"
+            
+            
+            
+                                                                         x-transition:leave="transition ease-in duration-150"
+            
+            
+            
+                                                                         x-transition:leave-start="opacity-100 translate-y-0"
+            
+            
+            
+                                                                         x-transition:leave-end="opacity-0 translate-y-4"
+            
+            
+            
+                                                                         @click.stop>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                        <div class="d-flex align-items-center gap-3 text-white">
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            <span class="small" x-text="formatTime(currentTime)">0:00</span>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            <input type="range" class="form-range flex-grow-1" 
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   min="0" :max="duration" step="0.1" 
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   x-model="currentTime"
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   @input="seekVideo($event.target.value)"
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   @mousedown="isSeeking = true"
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   @mouseup="isSeeking = false"
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   @touchstart="isSeeking = true"
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                   @touchend="isSeeking = false">
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            <span class="small" x-text="formatTime(duration)">0:00</span>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                        </div>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                        <!-- Secondary Controls (Below Progress) -->
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                        <div class="d-flex justify-content-center align-items-center gap-5 mt-2">
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            <button @click="prev()" class="btn btn-link text-white p-0 border-0 fs-4" title="Previous">
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                <i class="bi bi-skip-start-fill"></i>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            </button>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            <button @click="togglePlay()" class="btn btn-link text-white p-0 border-0 fs-3" title="Play/Pause">
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                <i class="bi" :class="playing ? 'bi-pause-circle-fill' : 'bi-play-circle-fill'"></i>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            </button>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            <button @click="next()" class="btn btn-link text-white p-0 border-0 fs-4" title="Next">
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                                <i class="bi bi-skip-end-fill"></i>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                            </button>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                        </div>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                                                    </div>
+            
+            
+            
+                                                                        
+            
+            
+            
+                                                                        
+            
+            
+            
+                                        
+            
+            
+            
+                                                                    <!-- Gesture Indicators -->
+            
+            
+            
+                                                                    <div class="position-absolute top-50 start-0 translate-middle-y ms-4" x-show="isAdjustingBrightness" x-transition>
+            
+            
+            
+                                                                        <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+            
+            
+            
+                                                                            <i class="bi bi-brightness-high-fill fs-3 mb-2 text-white"></i>
+            
+            
+            
+                                                                            <div class="progress-vertical bg-white bg-opacity-25 rounded-pill d-flex flex-column-reverse" style="width: 6px; height: 100px;">
+            
+            
+            
+                                                                                <div class="bg-white rounded-pill w-100" :style="`height: ${brightnessLevel}%`" style="transition: height 0.1s ease;"></div>
+            
+            
+            
+                                                                            </div>
+            
+            
+            
+                                                                        </div>
+            
+            
+            
+                                                                    </div>
+            
+            
+            
+                                        
+            
+            
+            
+                                                                    <div class="position-absolute top-50 end-0 translate-middle-y me-4" x-show="isAdjustingVolume" x-transition>
+            
+            
+            
+                                                                        <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+            
+            
+            
+                                                                            <i class="bi bi-volume-up-fill fs-3 mb-2 text-white"></i>
+            
+            
+            
+                                                                            <div class="progress-vertical bg-white bg-opacity-25 rounded-pill d-flex flex-column-reverse" style="width: 6px; height: 100px;">
+            
+            
+            
+                                                                                <div class="bg-white rounded-pill w-100" :style="`height: ${volumeLevel * 100}%`" style="transition: height 0.1s ease;"></div>
+            
+            
+            
+                                                                            </div>
+            
+            
+            
+                                                                        </div>
+            
+            
+            
+                                                                    </div>
+            
+            
+            
+                                        
             
                                         
             
@@ -677,6 +1187,7 @@ function galleryHandler() {
         isSeeking: false,
         initialVolume: 1.0,
         initialBrightness: 100,
+        lastTapTime: 0,
 
         get currentItem() {
             return this.items[this.currentIndex] || null;
@@ -826,6 +1337,34 @@ function galleryHandler() {
             return `${m}:${s.toString().padStart(2, '0')}`;
         },
 
+        skip(seconds) {
+            if (!this.$refs.video) return;
+            let newTime = this.$refs.video.currentTime + seconds;
+            this.seekVideo(Math.min(Math.max(newTime, 0), this.duration));
+            this.showControls = true;
+            this.resetControlsTimer();
+        },
+
+        handleVideoTap(e) {
+            const now = Date.now();
+            const delay = 300;
+            const screenWidth = window.innerWidth;
+            const tapX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+
+            if (now - this.lastTapTime < delay) {
+                // Double Tap Detected
+                if (tapX < screenWidth / 2) {
+                    this.skip(-10);
+                } else {
+                    this.skip(10);
+                }
+                this.lastTapTime = 0; // Reset
+            } else {
+                this.lastTapTime = now;
+                this.togglePlay();
+            }
+        },
+
         // --- Gesture Handling ---
         handleVideoTouchStart(e) {
             this.touchStartX = e.touches[0].clientX;
@@ -844,6 +1383,14 @@ function galleryHandler() {
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
 
+            // Detect horizontal swipe for navigation (even if paused)
+            if (!this.isAdjustingVolume && !this.isAdjustingBrightness && !this.isSeeking) {
+                if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Let the default handleSwipe take over later or trigger here
+                    return; // Don't preventDefault if it looks like a horizontal swipe
+                }
+            }
+
             // Detect vertical swipe intent
             if (!this.isAdjustingVolume && !this.isAdjustingBrightness) {
                 if (Math.abs(deltaY) > 20 && Math.abs(deltaY) > Math.abs(deltaX)) {
@@ -853,6 +1400,10 @@ function galleryHandler() {
                         this.isAdjustingBrightness = true;
                     }
                 }
+            }
+
+            if (this.isAdjustingVolume || this.isAdjustingBrightness) {
+                e.preventDefault(); // Lock screen scrolling only if we are adjusting values
             }
 
             if (this.isAdjustingVolume && this.$refs.video) {
@@ -867,7 +1418,14 @@ function galleryHandler() {
             }
         },
 
-        handleVideoTouchEnd() {
+        handleVideoTouchEnd(e) {
+            if (!this.isAdjustingVolume && !this.isAdjustingBrightness && !this.isSeeking) {
+                // Manually trigger handleSwipe for the gallery if it was a horizontal swipe
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                this.handleSwipe(endX, endY);
+            }
+
             setTimeout(() => {
                 this.isAdjustingVolume = false;
                 this.isAdjustingBrightness = false;
