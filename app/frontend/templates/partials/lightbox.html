@@ -10,214 +10,569 @@
     <template x-if="isOpen">
         <div class="lightbox-overlay" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
             
-            <!-- Top Toolbar (Header) -->
-            <div class="lightbox-toolbar" 
-                 x-show="currentItem?.type !== 'video' || !playing || showControls"
-                 x-transition.opacity.duration.300ms>
-                <!-- Left: Back -->
-                <button @click="close()" class="btn-glass">
-                    <i class="bi bi-arrow-left"></i>
-                </button>
-                
-                <!-- Center: Title -->
-                <div class="text-center overflow-hidden px-2">
-                    <h6 class="mb-0 fw-bold text-truncate" x-text="currentItem?.name"></h6>
-                    <div class="small opacity-50" x-text="(currentIndex + 1) + ' / ' + items.length"></div>
-                </div>
-
-                <!-- Right: Info (with Popover) -->
-                <div class="position-relative ms-auto" @click.outside="showDetails = false">
-                    <button @click="showDetails = !showDetails" class="btn-glass" title="Details">
-                        <i class="bi bi-info-circle"></i>
-                    </button>
-
-                    <!-- Details Popover -->
-                    <div x-show="showDetails" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 scale-95"
-                         x-transition:enter-end="opacity-100 scale-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 scale-100"
-                         x-transition:leave-end="opacity-0 scale-95"
-                         class="lightbox-popover"
-                         style="display: none;">
-                        
-                        <h6 class="mb-3 fw-bold border-bottom border-white-10 pb-2">Details</h6>
-                        
-                        <div class="detail-item">
-                            <div class="detail-icon"><i class="bi bi-file-earmark"></i></div>
-                            <div class="overflow-hidden">
-                                <div class="small text-white-50" style="font-size: 0.7rem;">Filename</div>
-                                <div class="fw-medium text-truncate small" x-text="currentItem?.name"></div>
-                            </div>
-                        </div>
-
-                        <div class="detail-item">
-                            <div class="detail-icon"><i class="bi bi-hdd"></i></div>
-                            <div>
-                                <div class="small text-white-50" style="font-size: 0.7rem;">Size</div>
-                                <div class="fw-medium small" x-text="currentItem?.size"></div>
-                            </div>
-                        </div>
-
-                        <div class="detail-item">
-                            <div class="detail-icon"><i class="bi bi-calendar3"></i></div>
-                            <div>
-                                <div class="small text-white-50" style="font-size: 0.7rem;">Date</div>
-                                <div class="fw-medium small" x-text="currentItem?.mtime"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="lightbox-content" 
-                 @click.self="close()"
-                 @touchstart="touchStartX = $event.changedTouches[0].screenX; touchStartY = $event.changedTouches[0].screenY"
-                 @touchend="handleSwipe($event.changedTouches[0].screenX, $event.changedTouches[0].screenY)">
-                
-                <!-- Loading Spinner -->
-                <div x-show="isLoading" class="position-absolute top-50 start-50 translate-middle z-index-2010">
-                    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-
-                <!-- Prev Button -->
-                <button @click="prev()" class="lightbox-nav prev" x-show="items.length > 1">
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-
-                <!-- Media Display Container -->
-                <div class="w-100 h-100 d-flex align-items-center justify-content-center" x-show="!isLoading" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
-                    <!-- Image -->
-                    <template x-if="currentItem?.type === 'image'">
-                        <img :src="currentItem.url + '?media'" @load="isLoading = false" class="lightbox-media" :alt="currentItem.name">
-                    </template>
-
-                    <!-- Video (Custom Player) -->
-                    <template x-if="currentItem?.type === 'video'">
-                        <div class="video-player-container position-relative w-100 h-100 d-flex align-items-center justify-content-center"
-                             @mousemove="resetControlsTimer()"
-                             @click="togglePlay()"
-                             @touchstart="handleVideoTouchStart($event)"
-                             @touchmove.prevent="handleVideoTouchMove($event)"
-                             @touchend="handleVideoTouchEnd()">
-                             
-                            <video x-ref="video" 
-                                   :src="currentItem.url + '?media'" 
-                                   @loadeddata="isLoading = false; initVideo()"
-                                   @timeupdate="updateTime()"
-                                   @ended="playing = false; showControls = true"
-                                   @play="playing = true"
-                                   @pause="playing = false"
-                                   class="lightbox-media"
-                                   playsinline>
-                            </video>
-
-                            <!-- Center Play/Pause Overlay -->
-                            <div class="position-absolute top-50 start-50 translate-middle" 
-                                 x-show="showControls"
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 scale-50"
-                                 x-transition:enter-end="opacity-100 scale-100"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 scale-100"
-                                 x-transition:leave-end="opacity-0 scale-50">
-                                <button class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
-                                    <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
-                                </button>
-                            </div>
-
-                            <!-- Video Controls Bar (Progress) -->
-                            <div class="position-absolute bottom-0 start-0 w-100 p-3" 
-                                 x-show="showControls"
-                                 style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); z-index: 2010;"
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 translate-y-4"
-                                 x-transition:enter-end="opacity-100 translate-y-0"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                 x-transition:leave-end="opacity-0 translate-y-4"
-                                 @click.stop>
-                                
-                                <div class="d-flex align-items-center gap-3 text-white">
-                                    <span class="small" x-text="formatTime(currentTime)">0:00</span>
-                                    <input type="range" class="form-range flex-grow-1" 
-                                           min="0" :max="duration" step="0.1" 
-                                           x-model="currentTime"
-                                           @input="seekVideo($event.target.value)"
-                                           @mousedown="isSeeking = true"
-                                           @mouseup="isSeeking = false"
-                                           @touchstart="isSeeking = true"
-                                           @touchend="isSeeking = false">
-                                    <span class="small" x-text="formatTime(duration)">0:00</span>
-                                </div>
-                            </div>
-
-                            <!-- Gesture Indicators -->
-                            <div class="position-absolute top-50 start-0 translate-middle-y ms-4" x-show="isAdjustingBrightness" x-transition>
-                                <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
-                                    <i class="bi bi-brightness-high-fill fs-3 mb-2 text-white"></i>
-                                    <div class="progress-vertical bg-white bg-opacity-25 rounded-pill" style="width: 6px; height: 100px;">
-                                        <div class="bg-white rounded-pill w-100" :style="`height: ${brightnessLevel}%`" style="position: absolute; bottom: 0;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="position-absolute top-50 end-0 translate-middle-y me-4" x-show="isAdjustingVolume" x-transition>
-                                <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
-                                    <i class="bi bi-volume-up-fill fs-3 mb-2 text-white"></i>
-                                    <div class="progress-vertical bg-white bg-opacity-25 rounded-pill" style="width: 6px; height: 100px;">
-                                        <div class="bg-white rounded-pill w-100" :style="`height: ${volumeLevel * 100}%`" style="position: absolute; bottom: 0;"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- Top Toolbar (Header) -->
+            
+                        <div class="lightbox-toolbar" 
+            
+                             x-show="currentItem?.type !== 'video' || !playing"
+            
+                             x-transition.opacity.duration.300ms>
+            
+                            <!-- Left: Back -->
+            
+                            <button @click="close()" class="btn-glass">
+            
+                                <i class="bi bi-arrow-left"></i>
+            
+                            </button>
+            
                             
-                            <!-- Brightness Overlay (Simulated) -->
-                            <div class="position-absolute top-0 left-0 w-100 h-100 pointer-events-none"
-                                 :style="`background-color: black; opacity: ${(100 - brightnessLevel) / 100 * 0.7}; pointer-events: none;`">
+            
+                            <!-- Center: Title -->
+            
+                            <div class="text-center overflow-hidden px-2">
+            
+                                <h6 class="mb-0 fw-bold text-truncate" x-text="currentItem?.name"></h6>
+            
+                                <div class="small opacity-50" x-text="(currentIndex + 1) + ' / ' + items.length"></div>
+            
                             </div>
+            
+            
+            
+                            <!-- Right: Info (with Popover) -->
+            
+                            <div class="position-relative ms-auto" @click.outside="showDetails = false">
+            
+                                <button @click="showDetails = !showDetails" class="btn-glass" title="Details">
+            
+                                    <i class="bi bi-info-circle"></i>
+            
+                                </button>
+            
+            
+            
+                                <!-- Details Popover -->
+            
+                                <div x-show="showDetails" 
+            
+                                     x-transition:enter="transition ease-out duration-200"
+            
+                                     x-transition:enter-start="opacity-0 scale-95"
+            
+                                     x-transition:enter-end="opacity-100 scale-100"
+            
+                                     x-transition:leave="transition ease-in duration-150"
+            
+                                     x-transition:leave-start="opacity-100 scale-100"
+            
+                                     x-transition:leave-end="opacity-0 scale-95"
+            
+                                     class="lightbox-popover"
+            
+                                     style="display: none;">
+            
+                                    
+            
+                                    <h6 class="mb-3 fw-bold border-bottom border-white-10 pb-2">Details</h6>
+            
+                                    
+            
+                                    <div class="detail-item">
+            
+                                        <div class="detail-icon"><i class="bi bi-file-earmark"></i></div>
+            
+                                        <div class="overflow-hidden">
+            
+                                            <div class="small text-white-50" style="font-size: 0.7rem;">Filename</div>
+            
+                                            <div class="fw-medium text-truncate small" x-text="currentItem?.name"></div>
+            
+                                        </div>
+            
+                                    </div>
+            
+            
+            
+                                    <div class="detail-item">
+            
+                                        <div class="detail-icon"><i class="bi bi-hdd"></i></div>
+            
+                                        <div>
+            
+                                            <div class="small text-white-50" style="font-size: 0.7rem;">Size</div>
+            
+                                            <div class="fw-medium small" x-text="currentItem?.size"></div>
+            
+                                        </div>
+            
+                                    </div>
+            
+            
+            
+                                                            <div class="detail-item">
+            
+            
+            
+                                                                <div class="detail-icon"><i class="bi bi-calendar3"></i></div>
+            
+            
+            
+                                                                <div>
+            
+            
+            
+                                                                    <div class="small text-white-50" style="font-size: 0.7rem;">Date</div>
+            
+            
+            
+                                                                    <div class="fw-medium small" x-text="currentItem?.mtime"></div>
+            
+            
+            
+                                                                </div>
+            
+            
+            
+                                                            </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                            <div class="detail-item" x-show="mediaMetadata.width">
+            
+            
+            
+                                                                <div class="detail-icon"><i class="bi bi-aspect-ratio"></i></div>
+            
+            
+            
+                                                                <div>
+            
+            
+            
+                                                                    <div class="small text-white-50" style="font-size: 0.7rem;">Resolution</div>
+            
+            
+            
+                                                                    <div class="fw-medium small" x-text="mediaMetadata.width + ' x ' + mediaMetadata.height"></div>
+            
+            
+            
+                                                                </div>
+            
+            
+            
+                                                            </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                            <div class="detail-item" x-show="mediaMetadata.duration">
+            
+            
+            
+                                                                <div class="detail-icon"><i class="bi bi-clock"></i></div>
+            
+            
+            
+                                                                <div>
+            
+            
+            
+                                                                    <div class="small text-white-50" style="font-size: 0.7rem;">Duration</div>
+            
+            
+            
+                                                                    <div class="fw-medium small" x-text="mediaMetadata.duration"></div>
+            
+            
+            
+                                                                </div>
+            
+            
+            
+                                                            </div>
+            
+            
+            
+                                                        </div>
+            
+            
+            
+                                                    </div>
+            
+            
+            
+                                                </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                <!-- Content Area -->
+            
+            
+            
+                                                <div class="lightbox-content" 
+            
+            
+            
+                                                     @click.self="close()"
+            
+            
+            
+                                                     @touchstart="touchStartX = $event.changedTouches[0].screenX; touchStartY = $event.changedTouches[0].screenY"
+            
+            
+            
+                                                     @touchend="handleSwipe($event.changedTouches[0].screenX, $event.changedTouches[0].screenY)">
+            
+            
+            
+                                                    
+            
+            
+            
+                                                    <!-- Loading Spinner -->
+            
+            
+            
+                                                    <div x-show="isLoading" class="position-absolute top-50 start-50 translate-middle z-index-2010">
+            
+            
+            
+                                                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            
+            
+            
+                                                            <span class="visually-hidden">Loading...</span>
+            
+            
+            
+                                                        </div>
+            
+            
+            
+                                                    </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                    <!-- Prev Button -->
+            
+            
+            
+                                                    <button @click="prev()" class="lightbox-nav prev" x-show="items.length > 1">
+            
+            
+            
+                                                        <i class="bi bi-chevron-left"></i>
+            
+            
+            
+                                                    </button>
+            
+            
+            
+                                    
+            
+            
+            
+                                                    <!-- Media Display Container -->
+            
+            
+            
+                                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center" x-show="!isLoading" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+            
+            
+            
+                                                        <!-- Image -->
+            
+            
+            
+                                                        <template x-if="currentItem?.type === 'image'">
+            
+            
+            
+                                                            <img :src="currentItem.url + '?media'" 
+            
+            
+            
+                                                                 @load="isLoading = false; extractImageMetadata($event.target)" 
+            
+            
+            
+                                                                 class="lightbox-media" 
+            
+            
+            
+                                                                 :alt="currentItem.name">
+            
+            
+            
+                                                        </template>
+            
+            
+            
+                                    
+            
+            
+            
+                                <!-- Video (Custom Player) -->
+            
+                                <template x-if="currentItem?.type === 'video'">
+            
+                                    <div class="video-player-container position-relative w-100 h-100 d-flex align-items-center justify-content-center"
+            
+                                         @mousemove="resetControlsTimer()"
+            
+                                         @click="togglePlay()"
+            
+                                         @touchstart="handleVideoTouchStart($event)"
+            
+                                         @touchmove.prevent="handleVideoTouchMove($event)"
+            
+                                         @touchend="handleVideoTouchEnd()">
+            
+                                         
+            
+                                        <video x-ref="video" 
+            
+                                               :src="currentItem.url + '?media'" 
+            
+                                               @loadeddata="isLoading = false; initVideo()"
+            
+                                               @timeupdate="updateTime()"
+            
+                                               @ended="playing = false; showControls = true"
+            
+                                               @play="playing = true"
+            
+                                               @pause="playing = false"
+            
+                                               class="lightbox-media"
+            
+                                               playsinline>
+            
+                                        </video>
+            
+            
+            
+                                        <!-- Center Play/Pause Overlay -->
+            
+                                        <div class="position-absolute top-50 start-50 translate-middle" 
+            
+                                             x-show="showControls"
+            
+                                             x-transition:enter="transition ease-out duration-200"
+            
+                                             x-transition:enter-start="opacity-0 scale-50"
+            
+                                             x-transition:enter-end="opacity-100 scale-100"
+            
+                                             x-transition:leave="transition ease-in duration-150"
+            
+                                             x-transition:leave-start="opacity-100 scale-100"
+            
+                                             x-transition:leave-end="opacity-0 scale-50">
+            
+                                            <button class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
+            
+                                                <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+            
+                                            </button>
+            
+                                        </div>
+            
+            
+            
+                                        <!-- Video Controls Bar (Progress) -->
+            
+                                        <div class="position-absolute bottom-0 start-0 w-100 p-3" 
+            
+                                             x-show="showControls"
+            
+                                             style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); z-index: 2010;"
+            
+                                             x-transition:enter="transition ease-out duration-200"
+            
+                                             x-transition:enter-start="opacity-0 translate-y-4"
+            
+                                             x-transition:enter-end="opacity-100 translate-y-0"
+            
+                                             x-transition:leave="transition ease-in duration-150"
+            
+                                             x-transition:leave-start="opacity-100 translate-y-0"
+            
+                                             x-transition:leave-end="opacity-0 translate-y-4"
+            
+                                             @click.stop>
+            
+                                            
+            
+                                            <div class="d-flex align-items-center gap-3 text-white">
+            
+                                                <span class="small" x-text="formatTime(currentTime)">0:00</span>
+            
+                                                <input type="range" class="form-range flex-grow-1" 
+            
+                                                       min="0" :max="duration" step="0.1" 
+            
+                                                       x-model="currentTime"
+            
+                                                       @input="seekVideo($event.target.value)"
+            
+                                                       @mousedown="isSeeking = true"
+            
+                                                       @mouseup="isSeeking = false"
+            
+                                                       @touchstart="isSeeking = true"
+            
+                                                       @touchend="isSeeking = false">
+            
+                                                <span class="small" x-text="formatTime(duration)">0:00</span>
+            
+                                            </div>
+            
+                                        </div>
+            
+            
+            
+                                        <!-- Gesture Indicators -->
+            
+                                        <div class="position-absolute top-50 start-0 translate-middle-y ms-4" x-show="isAdjustingBrightness" x-transition>
+            
+                                            <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+            
+                                                <i class="bi bi-brightness-high-fill fs-3 mb-2 text-white"></i>
+            
+                                                <div class="progress-vertical bg-white bg-opacity-25 rounded-pill position-relative" style="width: 6px; height: 100px;">
+            
+                                                    <div class="bg-white rounded-pill w-100" :style="`height: ${brightnessLevel}%`" style="position: absolute; bottom: 0;"></div>
+            
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+            
+            
+            
+                                        <div class="position-absolute top-50 end-0 translate-middle-y me-4" x-show="isAdjustingVolume" x-transition>
+            
+                                            <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+            
+                                                <i class="bi bi-volume-up-fill fs-3 mb-2 text-white"></i>
+            
+                                                <div class="progress-vertical bg-white bg-opacity-25 rounded-pill position-relative" style="width: 6px; height: 100px;">
+            
+                                                    <div class="bg-white rounded-pill w-100" :style="`height: ${volumeLevel * 100}%`" style="position: absolute; bottom: 0;"></div>
+            
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+            
+                                        
+            
+                                        <!-- Brightness Overlay (Simulated) -->
+            
+                                        <div class="position-absolute top-0 left-0 w-100 h-100 pointer-events-none"
+            
+                                             :style="`background-color: black; opacity: ${(100 - brightnessLevel) / 100 * 0.7}; pointer-events: none;`">
+            
+                                        </div>
+            
+                                    </div>
+            
+                                </template>
+            
+            
+            
+                                <!-- Text/Code -->
+            
+                                <template x-if="currentItem?.type === 'text'">
+            
+                                    <div class="text-preview-container w-100 h-100 overflow-auto shadow-lg" style="max-width: 900px; max-height: 80vh;">
+            
+                                        <pre class="m-0 small" x-text="textContent"></pre>
+            
+                                    </div>
+            
+                                </template>
+            
+                            </div>
+            
+            
+            
+                            <!-- Next Button -->
+            
+                            <button @click="next()" class="lightbox-nav next" x-show="items.length > 1">
+            
+                                <i class="bi bi-chevron-right"></i>
+            
+                            </button>
+            
                         </div>
-                    </template>
-
-                                                         
-                                                <!-- Text/Code -->
-                    <template x-if="currentItem?.type === 'text'">
-                        <div class="text-preview-container w-100 h-100 overflow-auto shadow-lg" style="max-width: 900px; max-height: 80vh;">
-                            <pre class="m-0 small" x-text="textContent"></pre>
+            
+            
+            
+                        <!-- Bottom Footer (Actions) -->
+            
+                        <div class="lightbox-footer"
+            
+                             x-show="currentItem?.type !== 'video' || !playing"
+            
+                             x-transition.opacity.duration.300ms>
+            
+                            <button @click="copyLink()" class="btn-glass-text">
+            
+                                <i class="bi bi-share"></i>
+            
+                                <span>Share</span>
+            
+                            </button>
+            
+                            <button class="btn-glass-text text-warning" title="Rename (Not implemented yet)">
+            
+                                <i class="bi bi-pencil"></i>
+            
+                                <span>Rename</span>
+            
+                            </button>
+            
+                            <button class="btn-glass-text text-danger" title="Delete (Not implemented yet)">
+            
+                                <i class="bi bi-trash"></i>
+            
+                                <span>Delete</span>
+            
+                            </button>
+            
+                            <a :href="currentItem?.url" download class="btn-glass-text text-decoration-none text-white">
+            
+                                <i class="bi bi-download"></i>
+            
+                                <span>Save</span>
+            
+                            </a>
+            
                         </div>
-                    </template>
-                </div>
-
-                <!-- Next Button -->
-                <button @click="next()" class="lightbox-nav next" x-show="items.length > 1">
-                    <i class="bi bi-chevron-right"></i>
-                </button>
-            </div>
-
-            <!-- Bottom Footer (Actions) -->
-            <div class="lightbox-footer"
-                 x-show="currentItem?.type !== 'video' || !playing || showControls"
-                 x-transition.opacity.duration.300ms>
-                <button @click="copyLink()" class="btn-glass-text">
-                    <i class="bi bi-share"></i>
-                    <span>Share</span>
-                </button>
-                <button class="btn-glass-text text-warning" title="Rename (Not implemented yet)">
-                    <i class="bi bi-pencil"></i>
-                    <span>Rename</span>
-                </button>
-                <button class="btn-glass-text text-danger" title="Delete (Not implemented yet)">
-                    <i class="bi bi-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <a :href="currentItem?.url" download class="btn-glass-text text-decoration-none text-white">
-                    <i class="bi bi-download"></i>
-                    <span>Save</span>
-                </a>
-            </div>
+            
+            
         </div>
     </template>
 </div>
@@ -229,6 +584,7 @@ function galleryHandler() {
         isOpen: false,
         isLoading: false,
         showDetails: false,
+        mediaMetadata: { width: null, height: null, duration: null },
         items: [],
         currentIndex: 0,
         touchStartX: 0,
@@ -255,7 +611,8 @@ function galleryHandler() {
 
         // --- Gallery Methods ---
         async open(path) {
-            this.resetVideoState(); // Reset video state on open
+            this.resetVideoState(); 
+            this.mediaMetadata = { width: null, height: null, duration: null };
             const encodedPath = encodeURIComponent(path);
             this.isOpen = true;
             this.isLoading = true;
@@ -330,6 +687,13 @@ function galleryHandler() {
             const vid = this.$refs.video;
             if (!vid) return;
             
+            // Extract Metadata
+            this.mediaMetadata = {
+                width: vid.videoWidth,
+                height: vid.videoHeight,
+                duration: this.formatTime(vid.duration)
+            };
+
             vid.play().then(() => {
                 this.playing = true;
             }).catch(() => {
@@ -465,6 +829,14 @@ function galleryHandler() {
                 this.textContent = "Error loading text.";
                 this.isLoading = false;
             }
+        },
+
+        extractImageMetadata(img) {
+            this.mediaMetadata = {
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+                duration: null
+            };
         },
 
         prefetchAdjacent() {
