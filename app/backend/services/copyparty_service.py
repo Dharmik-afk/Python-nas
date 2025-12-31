@@ -243,15 +243,33 @@ async def proxy_stream_request(request: Request, relative_path: Path, params: di
         task = BackgroundTask(r.close)
         
         excluded_headers = ['connection', 'keep-alive', 'transfer-encoding', 'server', 'date', 'content-disposition']
-        response_headers = {k: v for k, v in r.headers.items() if k.lower() not in excluded_headers}
+        
+        # Sanitize headers to ensure only latin-1 compatible characters are present
+        # This prevents UnicodeEncodeError in StreamingResponse init
+        response_headers = {}
+        for k, v in r.headers.items():
+            if k.lower() not in excluded_headers:
+                try:
+                    v.encode('latin-1')
+                    response_headers[k] = v
+                except UnicodeEncodeError:
+                    # If it can't be encoded in latin-1, it's not a standard HTTP header
+                    # We could try to URL-encode it, but usually these are custom headers 
+                    # that we can safely drop or sanitize. For now, let's just log and skip
+                    # or strip the offending characters.
+                    logger.warning(f"Dropping non-latin1 header: {k}")
         
         is_preview = params and ('thumb' in params or 'media' in params)
         filename = relative_path.name
         
-        if is_preview:
-            response_headers["Content-Disposition"] = f'inline; filename="{filename}"'
-        else:
-            response_headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+        # RFC 5987 encoding for Content-Disposition
+        from urllib.parse import quote
+        quoted_filename = quote(filename)
+        
+        # We provide both standard filename (URL-encoded for safety) 
+        # and the filename* parameter (proper RFC 5987)
+        disposition_type = "inline" if is_preview else "attachment"
+        response_headers["Content-Disposition"] = f'{disposition_type}; filename="{quoted_filename}"; filename*=UTF-8\'\'{quoted_filename}'
 
         return StreamingResponse(
             r.iter_content(chunk_size=128 * 1024),
