@@ -12,6 +12,7 @@ from app.backend.database.session import SessionLocal
 from app.backend.database.models import User
 from app.backend.models.user_schemas import Token
 from app.backend.services.copyparty_service import get_user_permissions_from_config
+from scripts.manage import sync_users_to_copyparty
 
 router = APIRouter(prefix="/api/v1/auth")
 logger = logging.getLogger(__name__)
@@ -40,6 +41,17 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
         
         # Calculate internal proxy credential
         internal_pw = hasher.get_internal_proxy_password(form_data.password)
+
+        # Migration: Update Copyparty hash if it's using the old unsalted scheme
+        new_cp_hash = hasher.get_copyparty_hash(internal_pw, user_salt=user.username)
+        if user.cp_hash != new_cp_hash:
+            logger.info(f"Updating legacy Copyparty hash for user '{user.username}'")
+            user.cp_hash = new_cp_hash
+            db.commit()
+            try:
+                sync_users_to_copyparty()
+            except Exception as e:
+                logger.error(f"Failed to sync users after hash update: {e}")
 
         # 1. Verify with Copyparty Backend (Handshake)
         if not verify_with_copyparty(user.username, internal_pw):
@@ -116,6 +128,17 @@ async def login(
                 
                 # Calculate internal proxy credential
                 internal_pw = hasher.get_internal_proxy_password(password)
+
+                # Migration: Update Copyparty hash if it's using the old unsalted scheme
+                new_cp_hash = hasher.get_copyparty_hash(internal_pw, user_salt=user.username)
+                if user.cp_hash != new_cp_hash:
+                    logger.info(f"Updating legacy Copyparty hash for user '{user.username}'")
+                    user.cp_hash = new_cp_hash
+                    db.commit()
+                    try:
+                        sync_users_to_copyparty()
+                    except Exception as e:
+                        logger.error(f"Failed to sync users after hash update: {e}")
 
                 # 1. Verify with Copyparty Backend (Handshake)
                 if not verify_with_copyparty(user.username, internal_pw):
