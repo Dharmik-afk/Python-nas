@@ -16,7 +16,7 @@ This plan addresses the `UnicodeEncodeError` in `StreamingResponse` by ensuring 
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Implementation' (Protocol in workflow.md) afeb0a5
 
 ## Phase 3: Refinement and Verification
-- [ ] Task: Ensure `Content-Disposition` header correctly uses `filename*=` (RFC 5987) for non-ASCII filenames so browsers download them with the correct name.
-- [ ] Task: Run full suite of download and streaming tests (`app/tests/test_copyparty_service.py`, `app/tests/test_api.py`) to ensure no regressions.
+- [x] Task: Ensure `Content-Disposition` header correctly uses `filename*=` (RFC 5987) for non-ASCII filenames so browsers download them with the correct name.
+- [x] Task: Run full suite of download and streaming tests (`app/tests/test_copyparty_service.py`, `app/tests/test_api.py`) to ensure no regressions.
 - [ ] Task: Verify fix on a real device/browser with the specific "SSYdance" video file or a similar dummy file with Malayalam characters.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Refinement and Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Refinement and Verification' (Protocol in workflow.md) fd0dd40
