@@ -40,10 +40,10 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
             raise HTTPException(status_code=401, detail="Incorrect username or password")
         
         # Calculate internal proxy credential
-        internal_pw = hasher.get_internal_proxy_password(form_data.password)
+        internal_pw = hasher.get_internal_proxy_password(form_data.password, user_salt=user.username)
 
         # Migration: Update Copyparty hash if it's using the old unsalted scheme
-        new_cp_hash = hasher.get_copyparty_hash(internal_pw, user_salt=user.username)
+        new_cp_hash = hasher.get_copyparty_hash(internal_pw)
         if user.cp_hash != new_cp_hash:
             logger.info(f"Updating legacy Copyparty hash for user '{user.username}'")
             user.cp_hash = new_cp_hash
@@ -127,10 +127,10 @@ async def login(
                 logger.info(f"DEBUG LOGIN SUCCESS: User '{username}' successfully authenticated.")
                 
                 # Calculate internal proxy credential
-                internal_pw = hasher.get_internal_proxy_password(password)
+                internal_pw = hasher.get_internal_proxy_password(password, user_salt=user.username)
 
                 # Migration: Update Copyparty hash if it's using the old unsalted scheme
-                new_cp_hash = hasher.get_copyparty_hash(internal_pw, user_salt=user.username)
+                new_cp_hash = hasher.get_copyparty_hash(internal_pw)
                 if user.cp_hash != new_cp_hash:
                     logger.info(f"Updating legacy Copyparty hash for user '{user.username}'")
                     user.cp_hash = new_cp_hash

@@ -121,8 +121,8 @@ def add_user(username, permissions):
 
     db_hash = hasher.get_password_hash(password)
     # The 'password' known to Copyparty is the SHA-256 hex of the plain password
-    internal_pw = hasher.get_internal_proxy_password(password)
-    cp_hash = hasher.get_copyparty_hash(internal_pw, user_salt=username)
+    internal_pw = hasher.get_internal_proxy_password(password, user_salt=username)
+    cp_hash = hasher.get_copyparty_hash(internal_pw)
 
     new_user = User(
         username=username,
@@ -189,8 +189,8 @@ def change_password(username):
         return
 
     user.hashed_password = hasher.get_password_hash(password)
-    internal_pw = hasher.get_internal_proxy_password(password)
-    user.cp_hash = hasher.get_copyparty_hash(internal_pw, user_salt=username)
+    internal_pw = hasher.get_internal_proxy_password(password, user_salt=username)
+    user.cp_hash = hasher.get_copyparty_hash(internal_pw)
     
     try:
         db.commit()

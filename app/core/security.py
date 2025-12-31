@@ -25,33 +25,26 @@ class Hasher:
         """Verifies a plain password against a hashed one."""
         return self.pwd_context.verify(plain_password, hashed_password)
 
-    def get_internal_proxy_password(self, plain_password: str) -> str:
+    def get_internal_proxy_password(self, plain_password: str, user_salt: str) -> str:
         """
         Returns the password for internal proxying.
-        We now pass the plain password to Copyparty (or use it for hashing)
-        as the previous SHA-256 workaround prevented correct hash alignment.
+        We prepend the username (user_salt) to the password to ensure uniqueness
+        across users, solving the duplicate hash issue in Copyparty.
         """
-        return plain_password
+        return f"{user_salt}{plain_password}"
 
-    def get_copyparty_hash(self, internal_pw: str, user_salt: Optional[str] = None) -> str:
+    def get_copyparty_hash(self, internal_pw: str) -> str:
         """
         Returns the Copyparty-compatible SHA-512 iterated hash.
         This matches Copyparty's custom 'sha2' algorithm.
-        If user_salt is provided, it is combined with the default salt
-        to ensure unique hashes for identical passwords across users.
         """
         # Default parameters from Copyparty
         base_salt = "HOnOz0yVP8H4WJncIu6Y8qof"
         
-        # Combine base salt with user-specific salt if provided
-        combined_salt = base_salt
-        if user_salt:
-            combined_salt += user_salt
-            
         iterations = 424242
         
         bplain = internal_pw.encode("utf-8")
-        bsalt = combined_salt.encode("utf-8")
+        bsalt = base_salt.encode("utf-8")
         ret = b"\n"
         for _ in range(iterations):
             ret = hashlib.sha512(bsalt + bplain + ret).digest()
