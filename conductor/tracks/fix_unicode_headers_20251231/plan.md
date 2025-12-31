@@ -8,12 +8,12 @@ This plan addresses the `UnicodeEncodeError` in `StreamingResponse` by ensuring 
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Reproduce and Validate' (Protocol in workflow.md) b41808f
 
 ## Phase 2: Implementation (Green Phase)
-- [ ] Task: Modify `app/backend/services/copyparty_service.py` to sanitize headers.
-    - Sub-task: Identify headers containing non-ASCII characters (e.g., `Set-Cookie`, `Content-Disposition`).
-    - Sub-task: Implement a helper to URL-encode or remove problematic characters from sensitive headers before passing them to `StreamingResponse`.
-- [ ] Task: Update `app/backend/routes/download_routes.py` if necessary to handle character encoding in the response.
-- [ ] Task: Verify that the reproduction test now passes.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Implementation' (Protocol in workflow.md)
+- [x] Task: Modify `app/backend/services/copyparty_service.py` to sanitize headers.
+    - [x] Sub-task: Identify headers containing non-ASCII characters (e.g., `Set-Cookie`, `Content-Disposition`).
+    - [x] Sub-task: Implement a helper to URL-encode or remove problematic characters from sensitive headers before passing them to `StreamingResponse`.
+- [x] Task: Update `app/backend/routes/download_routes.py` if necessary to handle character encoding in the response.
+- [x] Task: Verify that the reproduction test now passes.
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Implementation' (Protocol in workflow.md) afeb0a5
 
 ## Phase 3: Refinement and Verification
 - [ ] Task: Ensure `Content-Disposition` header correctly uses `filename*=` (RFC 5987) for non-ASCII filenames so browsers download them with the correct name.
