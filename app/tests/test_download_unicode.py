@@ -29,10 +29,21 @@ async def test_proxy_stream_request_unicode_filename_crash():
          patch("app.backend.services.copyparty_service.get_proxy_headers", return_value={}), \
          patch("app.backend.services.copyparty_service._get_proxy_url", return_value="http://127.0.0.1:8090/file"):
         
-        # This call will fail with UnicodeEncodeError
+        # This call should now succeed
         response = await proxy_stream_request(
             request=mock_request,
             relative_path=relative_path,
             params={"media": ""}
         )
+        
+        # Verify headers
+        cd = response.headers.get("Content-Disposition")
+        assert cd is not None
+        assert 'filename*=' in cd
+        
+        from urllib.parse import quote
+        expected_quoted = quote(unicode_filename)
+        assert f"UTF-8''{expected_quoted}" in cd
+        assert f'filename="{expected_quoted}"' in cd
+
 
