@@ -9,11 +9,11 @@ This plan addresses the "duplicate password" error by ensuring password hashes a
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Reproduce and Diagnose' (Protocol in workflow.md) e011587
 
 ## Phase 2: Implement Salted Hashing (Green Phase)
-- [ ] Task: Update `app/core/security.py` to use a more robust hashing configuration if not already present (ensure `passlib` is handling salts correctly).
-- [ ] Task: Modify `app/core/user_sync.py` to ensure that the hashes sent to `copyparty.conf` are generated in a way that Copyparty accepts them as unique (e.g., using Copyparty's supported salted formats).
-- [ ] Task: Update `scripts/manage.py` to use the updated hashing logic when adding users via the CLI.
-- [ ] Task: Verify that the reproduction test now passes (two users with same password can coexist).
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Implement Salted Hashing' (Protocol in workflow.md)
+- [x] Task: Update `app/core/security.py` to use a more robust hashing configuration if not already present (ensure `passlib` is handling salts correctly).
+- [x] Task: Modify `app/core/user_sync.py` to ensure that the hashes sent to `copyparty.conf` are generated in a way that Copyparty accepts them as unique (e.g., using Copyparty's supported salted formats).
+- [x] Task: Update `scripts/manage.py` to use the updated hashing logic when adding users via the CLI.
+- [x] Task: Verify that the reproduction test now passes (two users with same password can coexist).
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Implement Salted Hashing' (Protocol in workflow.md) 4778a7b
 
 ## Phase 3: Migration and Cleanup
 - [ ] Task: Implement a check to handle legacy (unsalted) hashes for existing users if necessary, or decide on a re-hash strategy.
