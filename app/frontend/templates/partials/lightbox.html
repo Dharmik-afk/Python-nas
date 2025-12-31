@@ -101,12 +101,22 @@
                                  playing: true,
                                  showControls: false,
                                  controlsTimeout: null,
+                                 volumeLevel: 1.0,
+                                 brightnessLevel: 100,
+                                 isAdjustingVolume: false,
+                                 isAdjustingBrightness: false,
+                                 touchStartX: 0,
+                                 touchStartY: 0,
+                                 initialVolume: 1.0,
+                                 initialBrightness: 100,
                                  initVideo() {
                                      this.$refs.video.play().catch(() => this.playing = false);
                                      this.showControls = true;
                                      this.resetControlsTimer();
                                  },
                                  togglePlay() {
+                                     if (this.isAdjustingVolume || this.isAdjustingBrightness) return;
+                                     
                                      if (this.$refs.video.paused) {
                                          this.$refs.video.play();
                                          this.playing = true;
@@ -123,10 +133,58 @@
                                      if (this.playing) {
                                          this.controlsTimeout = setTimeout(() => this.showControls = false, 3000);
                                      }
+                                 },
+                                 handleTouchStart(e) {
+                                     this.touchStartX = e.touches[0].clientX;
+                                     this.touchStartY = e.touches[0].clientY;
+                                     this.initialVolume = this.$refs.video.volume;
+                                     this.initialBrightness = this.brightnessLevel;
+                                     this.isAdjustingVolume = false;
+                                     this.isAdjustingBrightness = false;
+                                 },
+                                 handleTouchMove(e) {
+                                     const deltaX = e.touches[0].clientX - this.touchStartX;
+                                     const deltaY = this.touchStartY - e.touches[0].clientY; // Invert Y
+                                     const screenWidth = window.innerWidth;
+                                     const screenHeight = window.innerHeight;
+
+                                     // Determine gesture type if not already locked
+                                     if (!this.isAdjustingVolume && !this.isAdjustingBrightness) {
+                                         if (Math.abs(deltaY) > 20 && Math.abs(deltaY) > Math.abs(deltaX)) {
+                                            // Vertical Swipe detected
+                                            if (this.touchStartX > screenWidth / 2) {
+                                                this.isAdjustingVolume = true;
+                                            } else {
+                                                this.isAdjustingBrightness = true;
+                                            }
+                                         }
+                                     }
+
+                                     if (this.isAdjustingVolume) {
+                                         // Volume Logic (Right Side)
+                                         let change = deltaY / (screenHeight * 0.5);
+                                         let newVol = Math.min(Math.max(this.initialVolume + change, 0), 1);
+                                         this.$refs.video.volume = newVol;
+                                         this.volumeLevel = newVol;
+                                     } else if (this.isAdjustingBrightness) {
+                                         // Brightness Logic (Left Side)
+                                         let change = (deltaY / (screenHeight * 0.5)) * 100;
+                                         let newBright = Math.min(Math.max(this.initialBrightness + change, 20), 100);
+                                         this.brightnessLevel = newBright;
+                                     }
+                                 },
+                                 handleTouchEnd() {
+                                     setTimeout(() => {
+                                         this.isAdjustingVolume = false;
+                                         this.isAdjustingBrightness = false;
+                                     }, 200);
                                  }
                              }"
                              @mousemove="resetControlsTimer()"
-                             @click="togglePlay()">
+                             @click="togglePlay()"
+                             @touchstart="handleTouchStart($event)"
+                             @touchmove.prevent="handleTouchMove($event)"
+                             @touchend="handleTouchEnd()">
                              
                             <video x-ref="video" 
                                    :src="currentItem.url + '?media'" 
@@ -138,23 +196,46 @@
                                    playsinline>
                             </video>
 
-                            <!-- Center Play/Pause Overlay -->
-                            <div class="position-absolute top-50 start-50 translate-middle" 
-                                 x-show="showControls"
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 scale-50"
-                                 x-transition:enter-end="opacity-100 scale-100"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 scale-100"
-                                 x-transition:leave-end="opacity-0 scale-50">
-                                <button class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
-                                    <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </template>
-
-                    <!-- Text/Code -->
+                                                         <!-- Center Play/Pause Overlay -->
+                                                        <div class="position-absolute top-50 start-50 translate-middle" 
+                                                             x-show="showControls"
+                                                             x-transition:enter="transition ease-out duration-200"
+                                                             x-transition:enter-start="opacity-0 scale-50"
+                                                             x-transition:enter-end="opacity-100 scale-100"
+                                                             x-transition:leave="transition ease-in duration-150"
+                                                             x-transition:leave-start="opacity-100 scale-100"
+                                                             x-transition:leave-end="opacity-0 scale-50">
+                                                            <button class="btn btn-glass" style="width: 80px; height: 80px; font-size: 2rem; background: rgba(0,0,0,0.4);">
+                                                                <i class="bi" :class="playing ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                                                            </button>
+                                                        </div>
+                            
+                                                        <!-- Gesture Indicators -->
+                                                        <div class="position-absolute top-50 start-0 translate-middle-y ms-4" x-show="isAdjustingBrightness" x-transition>
+                                                            <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+                                                                <i class="bi bi-brightness-high-fill fs-3 mb-2"></i>
+                                                                <div class="progress-vertical bg-white bg-opacity-25 rounded-pill" style="width: 6px; height: 100px;">
+                                                                    <div class="bg-white rounded-pill w-100" :style="`height: ${brightnessLevel}%`"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                            
+                                                        <div class="position-absolute top-50 end-0 translate-middle-y me-4" x-show="isAdjustingVolume" x-transition>
+                                                            <div class="d-flex flex-column align-items-center p-3 rounded-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);">
+                                                                <i class="bi bi-volume-up-fill fs-3 mb-2"></i>
+                                                                <div class="progress-vertical bg-white bg-opacity-25 rounded-pill" style="width: 6px; height: 100px;">
+                                                                    <div class="bg-white rounded-pill w-100" :style="`height: ${volumeLevel * 100}%`"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Brightness Overlay (Simulated) -->
+                                                        <div class="position-absolute top-0 left-0 w-100 h-100 pointer-events-none"
+                                                             :style="`background-color: black; opacity: ${(100 - brightnessLevel) / 100 * 0.7}; pointer-events: none;`">
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <!-- Text/Code -->
                     <template x-if="currentItem?.type === 'text'">
                         <div class="text-preview-container w-100 h-100 overflow-auto shadow-lg" style="max-width: 900px; max-height: 80vh;">
                             <pre class="m-0 small" x-text="textContent"></pre>
