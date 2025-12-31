@@ -2,14 +2,14 @@
 
 This plan details the steps to implement a high-performance, mobile-optimized media preview system inspired by Google Photos and MX Player.
 
-## Phase 1: Performance Infrastructure (Service Worker & Prefetching)
+## Phase 1: Performance Infrastructure (Service Worker & Prefetching) [checkpoint: 2c96caf]
 Goal: Establish the caching and prefetching foundation for a "zero-loading" experience.
 
-- [ ] **Task 1: Service Worker Implementation**
+- [x] **Task 1: Service Worker Implementation** (4e3c039)
     - [ ] Sub-task: Create `app/frontend/static/js/sw.js` to intercept media requests.
     - [ ] Sub-task: Implement Range Request caching logic for video streaming chunks.
     - [ ] Sub-task: Register Service Worker in `base.html`.
-- [ ] **Task 2: Prefetching Engine**
+- [x] **Task 2: Prefetching Engine** (53e52b1)
     - [ ] Sub-task: Implement Alpine.js logic to identify "next" and "previous" media items.
     - [ ] Sub-task: Create logic to fetch full images for adjacent photos.
     - [ ] Sub-task: Create logic to fetch only thumbnails for adjacent videos.
