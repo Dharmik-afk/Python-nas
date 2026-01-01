@@ -24,7 +24,7 @@
 - [x] Task: Enable and configure the playback speed selector (0.5x to 2.0x). (0703db1)
 - [x] Task: Ensure the player handles mobile orientation changes and container resizing correctly. (0703db1)
 
-## Phase 5: Thumbnail Mode & Layout Refinement
+## Phase 5: Thumbnail Mode & Layout Refinement [checkpoint: 9aee132]
 - [x] Task: specific "Thumbnail Mode" for videos (shows cover image + play button, no player initialization). (43521b9)
 - [x] Task: specific "Video Player Mode" that activates only on user interaction (Play). (43521b9)
 - [x] Task: Ensure the "Thumbnail Mode" aligns perfectly with the standard image viewer layout (vertically centered). (43521b9)
