@@ -13,8 +13,8 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Replacement' (Protocol in workflow.md)
 
 ## Phase 3: Custom Gesture Logic
-- [ ] Task: Write tests for double-tap seeking logic (mocking Artplayer events if necessary).
-- [ ] Task: Implement 10-second skip on double-tap for left (rewind) and right (forward) sides.
+- [x] Task: Write tests for double-tap seeking logic (mocking Artplayer events if necessary). (273e9d1)
+- [~] Task: Implement 10-second skip on double-tap for left (rewind) and right (forward) sides.
 - [ ] Task: Add visual feedback (e.g., center icons or text overlays) during seeking.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Custom Gesture Logic' (Protocol in workflow.md)
 

@@ -623,6 +623,20 @@ function galleryHandler() {
             if (this.art) this.destroyArtplayer();
             if (!this.currentItem || this.currentItem.type !== 'video') return;
 
+            // Simple detector for double-click/tap
+            class DoubleClickDetector {
+                constructor() { this.lastTime = 0; }
+                isDoubleClick() {
+                    const now = Date.now();
+                    const diff = now - this.lastTime;
+                    this.lastTime = now;
+                    return diff > 0 && diff < 300;
+                }
+            }
+
+            const ldb = new DoubleClickDetector();
+            const rdb = new DoubleClickDetector();
+
             this.art = new Artplayer({
                 container: '#artplayer-app',
                 url: this.currentItem.url + '?media',
@@ -638,7 +652,49 @@ function galleryHandler() {
                 theme: '#007bff',
                 icons: {
                     loading: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
-                }
+                },
+                layers: [
+                    {
+                        name: 'backward',
+                        html: '<div class="art-backward" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; background:rgba(0,0,0,0.2); transition:opacity 0.2s;"><i class="bi bi-rewind-fill fs-1"></i><span class="fw-bold">-10s</span></div>',
+                        style: {
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '40%',
+                            height: '100%',
+                            zIndex: 10,
+                        },
+                        click: () => {
+                            if (ldb.isDoubleClick()) {
+                                this.art.backward = 10;
+                                this.showSeekIndicator('backward');
+                            } else {
+                                this.art.toggle();
+                            }
+                        },
+                    },
+                    {
+                        name: 'forward',
+                        html: '<div class="art-forward" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; background:rgba(0,0,0,0.2); transition:opacity 0.2s;"><i class="bi bi-fast-forward-fill fs-1"></i><span class="fw-bold">+10s</span></div>',
+                        style: {
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            width: '40%',
+                            height: '100%',
+                            zIndex: 10,
+                        },
+                        click: () => {
+                            if (rdb.isDoubleClick()) {
+                                this.art.forward = 10;
+                                this.showSeekIndicator('forward');
+                            } else {
+                                this.art.toggle();
+                            }
+                        },
+                    }
+                ]
             });
 
             this.art.on('ready', () => {
@@ -652,6 +708,23 @@ function galleryHandler() {
             
             this.art.on('video:play', () => this.playing = true);
             this.art.on('video:pause', () => this.playing = false);
+        },
+
+        showSeekIndicator(side) {
+            const el = side === 'backward' ? this.art.layers.backward : this.art.layers.forward;
+            if (!el) return;
+            const content = el.querySelector(`.art-${side}`);
+            if (!content) return;
+
+            content.style.display = 'flex';
+            content.style.opacity = '1';
+            
+            setTimeout(() => {
+                content.style.opacity = '0';
+                setTimeout(() => {
+                    content.style.display = 'none';
+                }, 200);
+            }, 500);
         },
 
         destroyArtplayer() {
