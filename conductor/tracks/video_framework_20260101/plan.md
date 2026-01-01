@@ -12,7 +12,7 @@
 - [x] Task: Verify Artplayer correctly consumes the `/download/{path}` stream with Range requests. (5b6582c)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Replacement' (Protocol in workflow.md)
 
-## Phase 3: Custom Gesture Logic
+## Phase 3: Custom Gesture Logic [checkpoint: bcd0ef1]
 - [x] Task: Write tests for double-tap seeking logic (mocking Artplayer events if necessary). (273e9d1)
 - [x] Task: Implement 10-second skip on double-tap for left (rewind) and right (forward) sides. (d49f4e0)
 - [x] Task: Add visual feedback (e.g., center icons or text overlays) during seeking. (d49f4e0)
