@@ -235,19 +235,10 @@
                 </button>
               </div>
 
-              <!-- Player Mode -->
-
-              <div
-                x-show="videoMode === 'player'"
-                class="artplayer-container w-100 h-100"
-                style="background: black"
-              >
-                <div
-                  id="artplayer-app"
-                  class="artplayer-app w-100 h-100"
-                  @click.stop
-                ></div>
-              </div>
+                                                    <!-- Player Mode -->
+                                                    <div x-show="videoMode === 'player'" class="artplayer-container w-100 h-100 position-relative overflow-hidden" style="background: black;">
+                                                        <div id="artplayer-app" class="artplayer-app w-100 h-100" @click.stop></div>
+                                                    </div>
             </div>
           </template>
 
