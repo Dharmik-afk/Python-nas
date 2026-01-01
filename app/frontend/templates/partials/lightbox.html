@@ -538,14 +538,16 @@
           ],
         });
 
-        this.art.on("ready", () => {
-          this.isLoading = false;
-          this.mediaMetadata = {
-            width: this.art.video.videoWidth,
-            height: this.art.video.videoHeight,
-            duration: this.formatTime(this.art.duration),
-          };
-        });
+            this.art.on('ready', () => {
+                this.isLoading = false;
+                this.mediaMetadata = {
+                    width: this.art.video.videoWidth,
+                    height: this.art.video.videoHeight,
+                    duration: this.formatTime(this.art.duration)
+                };
+                // Force a resize calculation once ready
+                this.art.resize();
+            });
 
         this.art.on("video:play", () => (this.playing = true));
         this.art.on("video:pause", () => (this.playing = false));
