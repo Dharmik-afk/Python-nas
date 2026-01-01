@@ -1,6 +1,6 @@
 # Plan: Fix Video Player Alignment Transition
 
-## Phase 1: Diagnostics & Targeted Testing
+## Phase 1: Diagnostics & Targeted Testing [checkpoint: f70e929]
 - [x] Task: Create a reproduction test case in `app/tests/test_artplayer_integration.py` to verify the layout container and its responsiveness. (4cb1468)
 - [x] Task: Audit `app/frontend/templates/partials/lightbox.html` for CSS conflicts (e.g., flexbox vs absolute positioning). (audit)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Diagnostics & Targeted Testing' (Protocol in workflow.md)
