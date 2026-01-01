@@ -405,10 +405,13 @@
         this.prefetchAdjacent();
       },
 
-      startVideo() {
-        this.videoMode = "player";
-        this.$nextTick(() => this.initArtplayer());
-      },
+        startVideo() {
+            this.videoMode = 'player';
+            // Wait for DOM and layout stabilization
+            this.$nextTick(() => {
+                setTimeout(() => this.initArtplayer(), 50);
+            });
+        },
 
       // --- Artplayer Methods ---
       initArtplayer() {
