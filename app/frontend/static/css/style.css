@@ -90,11 +90,13 @@ main {
     grid-template-columns: 40px 1fr 40px;
     align-items: center;
     z-index: 2005;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    /* position: absolute; - Removed for Flex Layout */
+    /* top: 0; */
+    /* left: 0; */
+    /* right: 0; */
+    width: 100%; /* Ensure full width */
     height: 70px;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .lightbox-footer {
@@ -104,11 +106,13 @@ main {
     justify-content: space-evenly;
     align-items: center;
     z-index: 2005;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    /* position: absolute; - Removed for Flex Layout */
+    /* bottom: 0; */
+    /* left: 0; */
+    /* right: 0; */
+    width: 100%; /* Ensure full width */
     height: 80px;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 @media (max-width: 576px) {
@@ -127,9 +131,11 @@ main {
     justify-content: center;
     position: relative;
     padding: 0;
-    /* Space for toolbar and footer */
-    margin-top: 70px;
-    margin-bottom: 80px;
+    width: 100%;
+    overflow: hidden; /* Ensure content is contained */
+    /* Margins removed as we are now using flex flow */
+    /* margin-top: 70px; */
+    /* margin-bottom: 80px; */
 }
 
 .lightbox-media {
