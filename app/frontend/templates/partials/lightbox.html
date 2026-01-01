@@ -246,7 +246,9 @@
                                                     </div>
 
                                                     <!-- Player Mode -->
-                                                    <div x-show="videoMode === 'player'" class="artplayer-container w-100 h-100 position-relative overflow-hidden" style="background: black;">
+                                                    <div x-show="videoMode === 'player'" 
+                                                         class="position-fixed top-0 start-0 w-100 h-100 overflow-hidden" 
+                                                         style="background: black; z-index: 2100;">
                                                         <div id="artplayer-app" class="artplayer-app w-100 h-100" @click.stop></div>
                                                     </div>
             </div>
@@ -469,12 +471,22 @@
           pip: true,
           autoSize: false,
           fastForward: true,
-          lock: true,
-          theme: "#ffffff", // Minimalist white theme
-          controls: [
-            {
-              name: "playbackRate",
-              position: "right",
+                lock: true,
+                theme: '#ffffff', // Minimalist white theme
+                controls: [
+                    {
+                        name: 'back',
+                        position: 'left',
+                        html: '<i class="bi bi-arrow-left fs-4 mx-2"></i>',
+                        tooltip: 'Back to Preview',
+                        click: () => {
+                            this.videoMode = 'thumbnail';
+                            this.destroyArtplayer();
+                        },
+                    },
+                    {
+                        name: 'playbackRate',
+                        position: 'right',
               html: "Speed",
               selector: [
                 { html: "0.5x", rate: 0.5 },
