@@ -8,8 +8,8 @@
 ## Phase 2: Core Replacement
 - [x] Task: Create tests for video player initialization and stream binding. (a77cd41)
 - [x] Task: Remove custom legacy video player JS/CSS logic. (d011b88)
-- [~] Task: Implement Artplayer.js initialization within the media lightbox.
-- [ ] Task: Verify Artplayer correctly consumes the `/download/{path}` stream with Range requests.
+- [x] Task: Implement Artplayer.js initialization within the media lightbox. (5b6582c)
+- [x] Task: Verify Artplayer correctly consumes the `/download/{path}` stream with Range requests. (5b6582c)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Replacement' (Protocol in workflow.md)
 
 ## Phase 3: Custom Gesture Logic
