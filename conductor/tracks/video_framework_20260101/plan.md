@@ -19,8 +19,8 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Custom Gesture Logic' (Protocol in workflow.md)
 
 ## Phase 4: UI Polish & Mobile Optimization
-- [ ] Task: Create tests for responsive behavior and playback controls.
-- [ ] Task: Customize Artplayer theme and icons to match the project's minimalist aesthetic.
-- [ ] Task: Enable and configure the playback speed selector (0.5x to 2.0x).
-- [ ] Task: Ensure the player handles mobile orientation changes and container resizing correctly.
+- [x] Task: Create tests for responsive behavior and playback controls. (b4abfba)
+- [~] Task: Customize Artplayer theme and icons to match the project's minimalist aesthetic.
+- [~] Task: Enable and configure the playback speed selector (0.5x to 2.0x).
+- [~] Task: Ensure the player handles mobile orientation changes and container resizing correctly.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: UI Polish & Mobile Optimization' (Protocol in workflow.md)

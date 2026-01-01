@@ -665,9 +665,29 @@ function galleryHandler() {
                 autoSize: true,
                 fastForward: true,
                 lock: true,
-                theme: '#007bff',
+                theme: '#ffffff', // Minimalist white theme
+                controls: [
+                    {
+                        name: 'playbackRate',
+                        position: 'right',
+                        html: 'Speed',
+                        selector: [
+                            { html: '0.5x', rate: 0.5 },
+                            { html: '0.75x', rate: 0.75 },
+                            { html: '1.0x', rate: 1.0, default: true },
+                            { html: '1.25x', rate: 1.25 },
+                            { html: '1.5x', rate: 1.5 },
+                            { html: '2.0x', rate: 2.0 },
+                        ],
+                        onSelect: (item) => {
+                            this.art.playbackRate = item.rate;
+                            return item.html;
+                        },
+                    },
+                ],
                 icons: {
-                    loading: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+                    loading: '<div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>',
+                    state: '<i class="bi bi-play-fill fs-1"></i>', // Larger play icon
                 },
                 layers: [
                     {
