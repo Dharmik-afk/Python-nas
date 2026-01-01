@@ -20,7 +20,7 @@
 
 ## Phase 4: UI Polish & Mobile Optimization
 - [x] Task: Create tests for responsive behavior and playback controls. (b4abfba)
-- [~] Task: Customize Artplayer theme and icons to match the project's minimalist aesthetic.
-- [~] Task: Enable and configure the playback speed selector (0.5x to 2.0x).
-- [~] Task: Ensure the player handles mobile orientation changes and container resizing correctly.
+- [x] Task: Customize Artplayer theme and icons to match the project's minimalist aesthetic. (0703db1)
+- [x] Task: Enable and configure the playback speed selector (0.5x to 2.0x). (0703db1)
+- [x] Task: Ensure the player handles mobile orientation changes and container resizing correctly. (0703db1)
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: UI Polish & Mobile Optimization' (Protocol in workflow.md)
