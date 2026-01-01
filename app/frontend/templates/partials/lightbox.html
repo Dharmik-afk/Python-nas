@@ -623,14 +623,30 @@ function galleryHandler() {
             if (this.art) this.destroyArtplayer();
             if (!this.currentItem || this.currentItem.type !== 'video') return;
 
-            // Simple detector for double-click/tap
+            // Simple detector for double-click/tap with debouncing
             class DoubleClickDetector {
-                constructor() { this.lastTime = 0; }
-                isDoubleClick() {
+                constructor(handler) { 
+                    this.lastTime = 0; 
+                    this.timer = null;
+                    this.handler = handler;
+                }
+                
+                trigger(doubleClickAction, singleClickAction) {
                     const now = Date.now();
                     const diff = now - this.lastTime;
                     this.lastTime = now;
-                    return diff > 0 && diff < 300;
+                    
+                    if (diff > 0 && diff < 300) {
+                        // Double click detected
+                        clearTimeout(this.timer);
+                        doubleClickAction();
+                    } else {
+                        // Potential single click
+                        clearTimeout(this.timer);
+                        this.timer = setTimeout(() => {
+                            singleClickAction();
+                        }, 300);
+                    }
                 }
             }
 
@@ -666,12 +682,15 @@ function galleryHandler() {
                             zIndex: 10,
                         },
                         click: () => {
-                            if (ldb.isDoubleClick()) {
-                                this.art.backward = 10;
-                                this.showSeekIndicator('backward');
-                            } else {
-                                this.art.toggle();
-                            }
+                            ldb.trigger(
+                                () => { // Double click action
+                                    this.art.backward = 10;
+                                    this.showSeekIndicator('backward');
+                                },
+                                () => { // Single click action
+                                    this.art.toggle();
+                                }
+                            );
                         },
                     },
                     {
@@ -686,12 +705,15 @@ function galleryHandler() {
                             zIndex: 10,
                         },
                         click: () => {
-                            if (rdb.isDoubleClick()) {
-                                this.art.forward = 10;
-                                this.showSeekIndicator('forward');
-                            } else {
-                                this.art.toggle();
-                            }
+                            rdb.trigger(
+                                () => { // Double click action
+                                    this.art.forward = 10;
+                                    this.showSeekIndicator('forward');
+                                },
+                                () => { // Single click action
+                                    this.art.toggle();
+                                }
+                            );
                         },
                     }
                 ]

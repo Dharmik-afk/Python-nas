@@ -14,8 +14,8 @@
 
 ## Phase 3: Custom Gesture Logic
 - [x] Task: Write tests for double-tap seeking logic (mocking Artplayer events if necessary). (273e9d1)
-- [~] Task: Implement 10-second skip on double-tap for left (rewind) and right (forward) sides.
-- [ ] Task: Add visual feedback (e.g., center icons or text overlays) during seeking.
+- [x] Task: Implement 10-second skip on double-tap for left (rewind) and right (forward) sides. (d49f4e0)
+- [x] Task: Add visual feedback (e.g., center icons or text overlays) during seeking. (d49f4e0)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Custom Gesture Logic' (Protocol in workflow.md)
 
 ## Phase 4: UI Polish & Mobile Optimization
