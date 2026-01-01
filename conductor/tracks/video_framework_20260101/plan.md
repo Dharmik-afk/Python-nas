@@ -5,7 +5,7 @@
 - [x] Task: Download Artplayer.js and Artplayer.css and integrate them into `app/frontend/static/`. (a2b258b)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Preparation & Asset Integration' (Protocol in workflow.md)
 
-## Phase 2: Core Replacement
+## Phase 2: Core Replacement [checkpoint: b19c86b]
 - [x] Task: Create tests for video player initialization and stream binding. (a77cd41)
 - [x] Task: Remove custom legacy video player JS/CSS logic. (d011b88)
 - [x] Task: Implement Artplayer.js initialization within the media lightbox. (5b6582c)
