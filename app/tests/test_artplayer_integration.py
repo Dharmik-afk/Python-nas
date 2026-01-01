@@ -35,5 +35,15 @@ def test_thumbnail_mode_logic():
     assert "startVideo()" in content
     assert "bi-play-fill" in content # Play button
 
+def test_player_container_has_strict_constraints():
+    """Verify that the player container has strict overflow and positioning constraints."""
+    template_path = Path("app/frontend/templates/partials/lightbox.html")
+    content = template_path.read_text()
+    
+    # We expect the artplayer-container to explicitly handle overflow
+    assert 'class="artplayer-container w-100 h-100 overflow-hidden"' in content or 'class="artplayer-container w-100 h-100 position-relative overflow-hidden"' in content
+
+
+
 
 
