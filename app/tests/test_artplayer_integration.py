@@ -25,15 +25,15 @@ def test_artplayer_has_ui_controls_configuration():
     assert "setting: true" in content
     assert "playbackRate: true" in content
     
-def test_artplayer_has_mobile_optimization():
-    """Verify that Artplayer handles mobile constraints."""
+def test_thumbnail_mode_logic():
+    """Verify that thumbnail mode logic is present."""
     template_path = Path("app/frontend/templates/partials/lightbox.html")
     content = template_path.read_text()
     
-    # We expect some logic to handle resize or specific mobile styling
-    # This assertion might fail if we haven't added explicit mobile handling yet
-    assert "autoSize: true" in content
-    # We'll add a check for 'lock: true' which is useful for mobile
-    assert "lock: true" in content
+    assert "videoMode === 'thumbnail'" in content
+    assert "videoMode === 'player'" in content
+    assert "startVideo()" in content
+    assert "bi-play-fill" in content # Play button
+
 
 

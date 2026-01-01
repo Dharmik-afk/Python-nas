@@ -330,7 +330,7 @@
             
             
             
-                                                                            <!-- Video (Artplayer Integration) -->
+                                                                                                                        <!-- Video (Artplayer Integration) -->
             
             
             
@@ -338,7 +338,7 @@
             
             
             
-                                                                            <template x-if="currentItem?.type === 'video'">
+                                                                                                                        <template x-if="currentItem?.type === 'video'">
             
             
             
@@ -346,7 +346,7 @@
             
             
             
-                                                                                <div class="artplayer-container position-relative w-100 h-100">
+                                                                                                                            <div class="w-100 h-100">
             
             
             
@@ -354,7 +354,7 @@
             
             
             
-                                                                                    <div id="artplayer-app" class="artplayer-app w-100 h-100" @click.stop></div>
+                                                                                                                                <!-- Thumbnail Mode -->
             
             
             
@@ -362,7 +362,7 @@
             
             
             
-                                                                                </div>
+                                                                                                                                <div x-show="videoMode === 'thumbnail'" class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
             
             
             
@@ -370,7 +370,143 @@
             
             
             
-                                                                            </template>
+                                                                                                                                    <img :src="currentItem.url + '?media'" 
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                         class="lightbox-media" 
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                         @load="isLoading = false; extractImageMetadata($event.target)"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                         :alt="currentItem.name">
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                    
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                    <button class="btn rounded-circle p-0 d-flex align-items-center justify-content-center position-absolute top-50 start-50 translate-middle shadow-lg"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                            style="width: 80px; height: 80px; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.8); backdrop-filter: blur(4px);"
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                            @click.stop="startVideo()">
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                        <i class="bi bi-play-fill text-white ps-1" style="font-size: 3rem;"></i>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                    </button>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                            
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                <!-- Player Mode -->
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                <div x-show="videoMode === 'player'" class="artplayer-container position-relative w-100 h-100">
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                    <div id="artplayer-app" class="artplayer-app w-100 h-100" @click.stop></div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                                </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                            </div>
+            
+            
+            
+                                    
+            
+            
+            
+                                                                                                                        </template>
             
             
             
@@ -538,6 +674,7 @@ function galleryHandler() {
 
         // Video Player State
         playing: false,
+        videoMode: 'thumbnail', // 'thumbnail' or 'player'
         art: null,
 
         get currentItem() {
@@ -546,6 +683,7 @@ function galleryHandler() {
 
         // --- Gallery Methods ---
         async open(path) {
+            this.videoMode = 'thumbnail';
             this.mediaMetadata = { width: null, height: null, duration: null };
             const encodedPath = encodeURIComponent(path);
             this.isOpen = true;
@@ -576,9 +714,6 @@ function galleryHandler() {
                 document.body.style.overflow = 'hidden';
                 this.prefetchAdjacent();
                 
-                if (this.currentItem?.type === 'video') {
-                    this.$nextTick(() => this.initArtplayer());
-                }
             } catch (e) {
                 console.error("Failed to load gallery info", e);
                 this.isLoading = false;
@@ -589,6 +724,7 @@ function galleryHandler() {
         close() {
             this.isOpen = false;
             this.showDetails = false;
+            this.videoMode = 'thumbnail';
             this.destroyArtplayer();
             document.body.style.overflow = '';
             this.textContent = '';
@@ -597,25 +733,26 @@ function galleryHandler() {
         async next() {
             if (this.items.length === 0) return;
             this.destroyArtplayer();
+            this.videoMode = 'thumbnail';
             this.isLoading = true;
             this.currentIndex = (this.currentIndex + 1) % this.items.length;
             if (this.currentItem?.type === 'text') await this.loadText();
             this.prefetchAdjacent();
-            if (this.currentItem?.type === 'video') {
-                this.$nextTick(() => this.initArtplayer());
-            }
         },
 
         async prev() {
             if (this.items.length === 0) return;
             this.destroyArtplayer();
+            this.videoMode = 'thumbnail';
             this.isLoading = true;
             this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
             if (this.currentItem?.type === 'text') await this.loadText();
             this.prefetchAdjacent();
-            if (this.currentItem?.type === 'video') {
-                this.$nextTick(() => this.initArtplayer());
-            }
+        },
+
+        startVideo() {
+            this.videoMode = 'player';
+            this.$nextTick(() => this.initArtplayer());
         },
 
         // --- Artplayer Methods ---
