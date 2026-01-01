@@ -1,0 +1,8 @@
+{
+  "track_id": "video_alignment_fix_20260101",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-01T12:00:00Z",
+  "updated_at": "2026-01-01T12:00:00Z",
+  "description": "Fix video player alignment transition issue between thumbnail and player modes"
+}

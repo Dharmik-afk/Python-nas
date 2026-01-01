@@ -11,7 +11,8 @@
 ## Frontend
 *   **Template Engine:** Jinja2 (Server-side rendering)
 *   **UI Framework:** Bootstrap (CSS/Layout)
-*   **Interactivity:** htmx (Providing dynamic, single-page application behavior)
+*   **Interactivity:** HTMX (AJAX/Partial updates) and Alpine.js (Client-side state)
+*   **Media:** Artplayer.js (Video playback and gestures)
 *   **Icons:** Custom SVG icon set and Bootstrap Icons.
 
 ## Database & Persistence

@@ -1,1051 +1,733 @@
-<div x-data="galleryHandler()" 
-     @open-preview.window="open($event.detail.path)"
-     @keydown.escape.window="close()"
-     @keydown.left.window="prev()"
-     @keydown.right.window="next()"
-     @keydown.i.window="toggleDetails()"
-     class="lightbox-root">
+<div
+  x-data="galleryHandler()"
+  @open-preview.window="open($event.detail.path)"
+  @keydown.escape.window="close()"
+  @keydown.left.window="prev()"
+  @keydown.right.window="next()"
+  @keydown.i.window="toggleDetails()"
+  class="lightbox-root"
+>
+  <!-- Lightbox Overlay -->
+  <template x-if="isOpen">
+    <div
+      class="lightbox-overlay"
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+    >
+      <!-- Top Toolbar (Header) -->
 
-    <!-- Lightbox Overlay -->
-    <template x-if="isOpen">
-        <div class="lightbox-overlay" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-            
-                        <!-- Top Toolbar (Header) -->
-            
-                        <div class="lightbox-toolbar" 
-            
-                             x-show="currentItem?.type !== 'video' || !playing"
-            
-                             x-transition.opacity.duration.300ms>
-            
-                            <!-- Left: Back -->
-            
-                            <button @click="close()" class="btn-glass">
-            
-                                <i class="bi bi-arrow-left"></i>
-            
-                            </button>
-            
-                            
-            
-                            <!-- Center: Title -->
-            
-                            <div class="text-center overflow-hidden px-2">
-            
-                                <h6 class="mb-0 fw-bold text-truncate" x-text="currentItem?.name"></h6>
-            
-                                <div class="small opacity-50" x-text="(currentIndex + 1) + ' / ' + items.length"></div>
-            
-                            </div>
-            
-            
-            
-                            <!-- Right: Info (with Popover) -->
-            
-                            <div class="position-relative ms-auto" @click.outside="showDetails = false">
-            
-                                <button @click="showDetails = !showDetails" class="btn-glass" title="Details">
-            
-                                    <i class="bi bi-info-circle"></i>
-            
-                                </button>
-            
-            
-            
-                                <!-- Details Popover -->
-            
-                                <div x-show="showDetails" 
-            
-                                     x-transition:enter="transition ease-out duration-200"
-            
-                                     x-transition:enter-start="opacity-0 scale-95"
-            
-                                     x-transition:enter-end="opacity-100 scale-100"
-            
-                                     x-transition:leave="transition ease-in duration-150"
-            
-                                     x-transition:leave-start="opacity-100 scale-100"
-            
-                                     x-transition:leave-end="opacity-0 scale-95"
-            
-                                     class="lightbox-popover"
-            
-                                     style="display: none;">
-            
-                                    
-            
-                                    <h6 class="mb-3 fw-bold border-bottom border-white-10 pb-2">Details</h6>
-            
-                                    
-            
-                                    <div class="detail-item">
-            
-                                        <div class="detail-icon"><i class="bi bi-file-earmark"></i></div>
-            
-                                        <div class="overflow-hidden">
-            
-                                            <div class="small text-white-50" style="font-size: 0.7rem;">Filename</div>
-            
-                                            <div class="fw-medium text-truncate small" x-text="currentItem?.name"></div>
-            
-                                        </div>
-            
-                                    </div>
-            
-            
-            
-                                    <div class="detail-item">
-            
-                                        <div class="detail-icon"><i class="bi bi-hdd"></i></div>
-            
-                                        <div>
-            
-                                            <div class="small text-white-50" style="font-size: 0.7rem;">Size</div>
-            
-                                            <div class="fw-medium small" x-text="currentItem?.size"></div>
-            
-                                        </div>
-            
-                                    </div>
-            
-            
-            
-                                                            <div class="detail-item">
-            
-            
-            
-                                                                <div class="detail-icon"><i class="bi bi-calendar3"></i></div>
-            
-            
-            
-                                                                <div>
-            
-            
-            
-                                                                    <div class="small text-white-50" style="font-size: 0.7rem;">Date</div>
-            
-            
-            
-                                                                    <div class="fw-medium small" x-text="currentItem?.mtime"></div>
-            
-            
-            
-                                                                </div>
-            
-            
-            
-                                                            </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                            <div class="detail-item" x-show="mediaMetadata.width">
-            
-            
-            
-                                                                <div class="detail-icon"><i class="bi bi-aspect-ratio"></i></div>
-            
-            
-            
-                                                                <div>
-            
-            
-            
-                                                                    <div class="small text-white-50" style="font-size: 0.7rem;">Resolution</div>
-            
-            
-            
-                                                                    <div class="fw-medium small" x-text="mediaMetadata.width + ' x ' + mediaMetadata.height"></div>
-            
-            
-            
-                                                                </div>
-            
-            
-            
-                                                            </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                            <div class="detail-item" x-show="mediaMetadata.duration">
-            
-            
-            
-                                                                <div class="detail-icon"><i class="bi bi-clock"></i></div>
-            
-            
-            
-                                                                <div>
-            
-            
-            
-                                                                    <div class="small text-white-50" style="font-size: 0.7rem;">Duration</div>
-            
-            
-            
-                                                                    <div class="fw-medium small" x-text="mediaMetadata.duration"></div>
-            
-            
-            
-                                                                </div>
-            
-            
-            
-                                                            </div>
-            
-            
-            
-                                                        </div>
-            
-            
-            
-                                                    </div>
-            
-            
-            
-                                                </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                <!-- Content Area -->
-            
-            
-            
-                                                <div class="lightbox-content" 
-            
-            
-            
-                                                     @click.self="close()"
-            
-            
-            
-                                                     @touchstart="touchStartX = $event.changedTouches[0].screenX; touchStartY = $event.changedTouches[0].screenY"
-            
-            
-            
-                                                     @touchend="handleSwipe($event.changedTouches[0].screenX, $event.changedTouches[0].screenY)">
-            
-            
-            
-                                                    
-            
-            
-            
-                                                    <!-- Loading Spinner -->
-            
-            
-            
-                                                    <div x-show="isLoading" class="position-absolute top-50 start-50 translate-middle z-index-2010">
-            
-            
-            
-                                                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            
-            
-            
-                                                            <span class="visually-hidden">Loading...</span>
-            
-            
-            
-                                                        </div>
-            
-            
-            
-                                                    </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                    <!-- Prev Button -->
-            
-            
-            
-                                                    <button @click="prev()" class="lightbox-nav prev" x-show="items.length > 1">
-            
-            
-            
-                                                        <i class="bi bi-chevron-left"></i>
-            
-            
-            
-                                                    </button>
-            
-            
-            
-                                    
-            
-            
-            
-                                                    <!-- Media Display Container -->
-            
-            
-            
-                                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center" x-show="!isLoading" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
-            
-            
-            
-                                                        <!-- Image -->
-            
-            
-            
-                                                        <template x-if="currentItem?.type === 'image'">
-            
-            
-            
-                                                            <img :src="currentItem.url + '?media'" 
-            
-            
-            
-                                                                 @load="isLoading = false; extractImageMetadata($event.target)" 
-            
-            
-            
-                                                                 class="lightbox-media" 
-            
-            
-            
-                                                                 :alt="currentItem.name">
-            
-            
-            
-                                                        </template>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                    <!-- Video (Artplayer Integration) -->
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                    <template x-if="currentItem?.type === 'video'">
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                        <div class="position-absolute top-0 start-0 w-100 h-100">
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                            <!-- Thumbnail Mode -->
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                            <div x-show="videoMode === 'thumbnail'" class="w-100 h-100 d-flex align-items-center justify-content-center">
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                <img :src="currentItem.url + '?thumb=800'" 
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                     class="lightbox-media" 
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                     style="max-width: 100%; max-height: 100%; object-fit: contain;"
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                     @load="isLoading = false; extractImageMetadata($event.target)"
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                     :alt="currentItem.name">
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                <button class="btn rounded-circle p-0 d-flex align-items-center justify-content-center position-absolute top-50 start-50 translate-middle shadow-lg"
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                        style="width: 80px; height: 80px; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.8); backdrop-filter: blur(4px); z-index: 10;"
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                        @click.stop="startVideo()">
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                    <i class="bi bi-play-fill text-white ps-1" style="font-size: 3rem;"></i>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                </button>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                            </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                        
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                            <!-- Player Mode -->
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                            <div x-show="videoMode === 'player'" class="artplayer-container w-100 h-100" style="background: black;">
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                                <div id="artplayer-app" class="artplayer-app w-100 h-100" @click.stop></div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                            </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                        </div>
-            
-            
-            
-                                    
-            
-            
-            
-                                                                                                                                                                    </template>
-            
-            
-            
-                                <!-- Text/Code -->
-            
-                                <template x-if="currentItem?.type === 'text'">
-            
-                                    <div class="text-preview-container w-100 h-100 overflow-auto shadow-lg" style="max-width: 900px; max-height: 80vh;">
-            
-                                        <pre class="m-0 small" x-text="textContent"></pre>
-            
-                                    </div>
-            
-                                </template>
-            
-                            </div>
-            
-            
-            
-                            <!-- Next Button -->
-            
-                            <button @click="next()" class="lightbox-nav next" x-show="items.length > 1">
-            
-                                <i class="bi bi-chevron-right"></i>
-            
-                            </button>
-            
-                        </div>
-            
-            
-            
-                                    <!-- Bottom Footer (Actions) -->
-            
-            
-            
-                                    <div class="lightbox-footer"
-            
-            
-            
-                                         x-show="currentItem?.type !== 'video' || !playing"
-            
-            
-            
-                                         x-transition.opacity.duration.300ms>
-            
-            
-            
-                                        <button @click="copyLink()" class="btn-glass-text">
-            
-            
-            
-                                            <i class="bi bi-share"></i>
-            
-            
-            
-                                            <span>Share</span>
-            
-            
-            
-                                        </button>
-            
-            
-            
-                                        
-            
-            
-            
-                                        <template x-if="pmask.includes('m')">
-            
-            
-            
-                                            <button class="btn-glass-text text-warning" @click="handleRename()">
-            
-            
-            
-                                                <i class="bi bi-pencil"></i>
-            
-            
-            
-                                                <span>Rename</span>
-            
-            
-            
-                                            </button>
-            
-            
-            
-                                        </template>
-            
-            
-            
-                        
-            
-            
-            
-                                        <template x-if="pmask.includes('d')">
-            
-            
-            
-                                            <button class="btn-glass-text text-danger" @click="handleDelete()">
-            
-            
-            
-                                                <i class="bi bi-trash"></i>
-            
-            
-            
-                                                <span>Delete</span>
-            
-            
-            
-                                            </button>
-            
-            
-            
-                                        </template>
-            
-            
-            
-                        
-            
-            
-            
-                                        <a :href="currentItem?.url" download class="btn-glass-text text-decoration-none text-white">
-            
-            
-            
-                                            <i class="bi bi-download"></i>
-            
-            
-            
-                                            <span>Save</span>
-            
-            
-            
-                                        </a>
-            
-            
-            
-                                    </div>
-            
-            
-            
-                        
-            
-            
+      <div
+        class="lightbox-toolbar"
+        x-show="currentItem?.type !== 'video' || !playing"
+        x-transition.opacity.duration.300ms
+      >
+        <!-- Left: Back -->
+
+        <button @click="close()" class="btn-glass">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+
+        <!-- Center: Title -->
+
+        <div class="text-center overflow-hidden px-2">
+          <h6
+            class="mb-0 fw-bold text-truncate"
+            x-text="currentItem?.name"
+          ></h6>
+
+          <div
+            class="small opacity-50"
+            x-text="(currentIndex + 1) + ' / ' + items.length"
+          ></div>
         </div>
-    </template>
+
+        <!-- Right: Info (with Popover) -->
+
+        <div
+          class="position-relative ms-auto"
+          @click.outside="showDetails = false"
+        >
+          <button
+            @click="showDetails = !showDetails"
+            class="btn-glass"
+            title="Details"
+          >
+            <i class="bi bi-info-circle"></i>
+          </button>
+
+          <!-- Details Popover -->
+
+          <div
+            x-show="showDetails"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="lightbox-popover"
+            style="display: none"
+          >
+            <h6 class="mb-3 fw-bold border-bottom border-white-10 pb-2">
+              Details
+            </h6>
+
+            <div class="detail-item">
+              <div class="detail-icon"><i class="bi bi-file-earmark"></i></div>
+
+              <div class="overflow-hidden">
+                <div class="small text-white-50" style="font-size: 0.7rem">
+                  Filename
+                </div>
+
+                <div
+                  class="fw-medium text-truncate small"
+                  x-text="currentItem?.name"
+                ></div>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon"><i class="bi bi-hdd"></i></div>
+
+              <div>
+                <div class="small text-white-50" style="font-size: 0.7rem">
+                  Size
+                </div>
+
+                <div class="fw-medium small" x-text="currentItem?.size"></div>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon"><i class="bi bi-calendar3"></i></div>
+
+              <div>
+                <div class="small text-white-50" style="font-size: 0.7rem">
+                  Date
+                </div>
+
+                <div class="fw-medium small" x-text="currentItem?.mtime"></div>
+              </div>
+            </div>
+
+            <div class="detail-item" x-show="mediaMetadata.width">
+              <div class="detail-icon"><i class="bi bi-aspect-ratio"></i></div>
+
+              <div>
+                <div class="small text-white-50" style="font-size: 0.7rem">
+                  Resolution
+                </div>
+
+                <div
+                  class="fw-medium small"
+                  x-text="mediaMetadata.width + ' x ' + mediaMetadata.height"
+                ></div>
+              </div>
+            </div>
+
+            <div class="detail-item" x-show="mediaMetadata.duration">
+              <div class="detail-icon"><i class="bi bi-clock"></i></div>
+
+              <div>
+                <div class="small text-white-50" style="font-size: 0.7rem">
+                  Duration
+                </div>
+
+                <div
+                  class="fw-medium small"
+                  x-text="mediaMetadata.duration"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+
+      <div
+        class="lightbox-content"
+        @click.self="close()"
+        @touchstart="touchStartX = $event.changedTouches[0].screenX; touchStartY = $event.changedTouches[0].screenY"
+        @touchend="handleSwipe($event.changedTouches[0].screenX, $event.changedTouches[0].screenY)"
+      >
+        <!-- Loading Spinner -->
+
+        <div
+          x-show="isLoading"
+          class="position-absolute top-50 start-50 translate-middle z-index-2010"
+        >
+          <div
+            class="spinner-border text-primary"
+            style="width: 3rem; height: 3rem"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Prev Button -->
+
+        <button
+          @click="prev()"
+          class="lightbox-nav prev"
+          x-show="items.length > 1"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <!-- Media Display Container -->
+
+        <div
+          class="w-100 h-100 d-flex align-items-center justify-content-center"
+          x-show="!isLoading"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+        >
+          <!-- Image -->
+
+          <template x-if="currentItem?.type === 'image'">
+            <img
+              :src="currentItem.url + '?media'"
+              @load="isLoading = false; extractImageMetadata($event.target)"
+              class="lightbox-media"
+              :alt="currentItem.name"
+            />
+          </template>
+
+          <!-- Video (Artplayer Integration) -->
+
+          <template x-if="currentItem?.type === 'video'">
+            <div class="position-absolute top-0 start-0 w-100 h-100">
+              <!-- Thumbnail Mode -->
+
+              <div
+                x-show="videoMode === 'thumbnail'"
+                class="w-100 h-100 d-flex align-items-center justify-content-center"
+              >
+                <img
+                  :src="currentItem.url + '?thumb=800'"
+                  class="lightbox-media"
+                  style="max-width: 100%; max-height: 100%; object-fit: contain"
+                  @load="isLoading = false; extractImageMetadata($event.target)"
+                  :alt="currentItem.name"
+                />
+
+                <button
+                  class="btn rounded-circle p-0 d-flex align-items-center justify-content-center position-absolute top-50 start-50 translate-middle shadow-lg"
+                  style="
+                    width: 80px;
+                    height: 80px;
+                    background: rgba(0, 0, 0, 0.4);
+                    border: 2px solid rgba(255, 255, 255, 0.8);
+                    backdrop-filter: blur(4px);
+                    z-index: 10;
+                  "
+                  @click.stop="startVideo()"
+                >
+                  <i
+                    class="bi bi-play-fill text-white ps-1"
+                    style="font-size: 3rem"
+                  ></i>
+                </button>
+              </div>
+
+              <!-- Player Mode -->
+
+              <div
+                x-show="videoMode === 'player'"
+                class="artplayer-container w-100 h-100"
+                style="background: black"
+              >
+                <div
+                  id="artplayer-app"
+                  class="artplayer-app w-100 h-100"
+                  @click.stop
+                ></div>
+              </div>
+            </div>
+          </template>
+
+          <!-- Text/Code -->
+
+          <template x-if="currentItem?.type === 'text'">
+            <div
+              class="text-preview-container w-100 h-100 overflow-auto shadow-lg"
+              style="max-width: 900px; max-height: 80vh"
+            >
+              <pre class="m-0 small" x-text="textContent"></pre>
+            </div>
+          </template>
+        </div>
+
+        <!-- Next Button -->
+
+        <button
+          @click="next()"
+          class="lightbox-nav next"
+          x-show="items.length > 1"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Bottom Footer (Actions) -->
+
+      <div
+        class="lightbox-footer"
+        x-show="currentItem?.type !== 'video' || !playing"
+        x-transition.opacity.duration.300ms
+      >
+        <button @click="copyLink()" class="btn-glass-text">
+          <i class="bi bi-share"></i>
+
+          <span>Share</span>
+        </button>
+
+        <template x-if="pmask.includes('m')">
+          <button class="btn-glass-text text-warning" @click="handleRename()">
+            <i class="bi bi-pencil"></i>
+
+            <span>Rename</span>
+          </button>
+        </template>
+
+        <template x-if="pmask.includes('d')">
+          <button class="btn-glass-text text-danger" @click="handleDelete()">
+            <i class="bi bi-trash"></i>
+
+            <span>Delete</span>
+          </button>
+        </template>
+
+        <a
+          :href="currentItem?.url"
+          download
+          class="btn-glass-text text-decoration-none text-white"
+        >
+          <i class="bi bi-download"></i>
+
+          <span>Save</span>
+        </a>
+      </div>
+    </div>
+  </template>
 </div>
 
 <script>
-function galleryHandler() {
+  function galleryHandler() {
     return {
-        // Gallery State
-        isOpen: false,
-        isLoading: false,
-        showDetails: false,
-        mediaMetadata: { width: null, height: null, duration: null },
-        pmask: '',
-        items: [],
-        currentIndex: 0,
-        touchStartX: 0,
-        touchStartY: 0,
-        textContent: '',
+      // Gallery State
+      isOpen: false,
+      isLoading: false,
+      showDetails: false,
+      mediaMetadata: { width: null, height: null, duration: null },
+      pmask: "",
+      items: [],
+      currentIndex: 0,
+      touchStartX: 0,
+      touchStartY: 0,
+      textContent: "",
 
-        // Video Player State
-        playing: false,
-        videoMode: 'thumbnail', // 'thumbnail' or 'player'
-        art: null,
+      // Video Player State
+      playing: false,
+      videoMode: "thumbnail", // 'thumbnail' or 'player'
+      art: null,
 
-        get currentItem() {
-            return this.items[this.currentIndex] || null;
-        },
+      get currentItem() {
+        return this.items[this.currentIndex] || null;
+      },
 
-        // --- Gallery Methods ---
-        async open(path) {
-            this.videoMode = 'thumbnail';
-            this.mediaMetadata = { width: null, height: null, duration: null };
-            const encodedPath = encodeURIComponent(path);
-            this.isOpen = true;
-            this.isLoading = true;
-            this.showDetails = false;
-            
-            try {
-                const response = await fetch(`/api/v1/gallery/${encodedPath}`);
-                if (!response.ok) throw new Error("Gallery API failed");
-                
-                const data = await response.json();
-                this.pmask = data.pmask || 'r';
-                
-                // Document Isolation Logic
-                const targetItem = data.items.find(item => item.path === path);
-                if (targetItem && targetItem.type === 'text') {
-                    this.items = [targetItem];
-                    this.currentIndex = 0;
-                } else {
-                    this.items = data.items.filter(item => item.type === 'image' || item.type === 'video');
-                    this.currentIndex = this.items.findIndex(item => item.path === path);
-                }
+      // --- Gallery Methods ---
+      async open(path) {
+        this.videoMode = "thumbnail";
+        this.mediaMetadata = { width: null, height: null, duration: null };
+        const encodedPath = encodeURIComponent(path);
+        this.isOpen = true;
+        this.isLoading = true;
+        this.showDetails = false;
 
-                if (this.currentIndex === -1) this.currentIndex = 0;
-                
-                if (this.currentItem?.type === 'text') await this.loadText();
+        try {
+          const response = await fetch(`/api/v1/gallery/${encodedPath}`);
+          if (!response.ok) throw new Error("Gallery API failed");
 
-                document.body.style.overflow = 'hidden';
-                this.prefetchAdjacent();
-                
-            } catch (e) {
-                console.error("Failed to load gallery info", e);
-                this.isLoading = false;
-                this.textContent = "Error loading content.";
-            }
-        },
+          const data = await response.json();
+          this.pmask = data.pmask || "r";
 
-        close() {
-            this.isOpen = false;
-            this.showDetails = false;
-            this.videoMode = 'thumbnail';
-            this.destroyArtplayer();
-            document.body.style.overflow = '';
-            this.textContent = '';
-        },
+          // Document Isolation Logic
+          const targetItem = data.items.find((item) => item.path === path);
+          if (targetItem && targetItem.type === "text") {
+            this.items = [targetItem];
+            this.currentIndex = 0;
+          } else {
+            this.items = data.items.filter(
+              (item) => item.type === "image" || item.type === "video",
+            );
+            this.currentIndex = this.items.findIndex(
+              (item) => item.path === path,
+            );
+          }
 
-        async next() {
-            if (this.items.length === 0) return;
-            this.destroyArtplayer();
-            this.videoMode = 'thumbnail';
-            this.isLoading = true;
-            this.currentIndex = (this.currentIndex + 1) % this.items.length;
-            if (this.currentItem?.type === 'text') await this.loadText();
-            this.prefetchAdjacent();
-        },
+          if (this.currentIndex === -1) this.currentIndex = 0;
 
-        async prev() {
-            if (this.items.length === 0) return;
-            this.destroyArtplayer();
-            this.videoMode = 'thumbnail';
-            this.isLoading = true;
-            this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
-            if (this.currentItem?.type === 'text') await this.loadText();
-            this.prefetchAdjacent();
-        },
+          if (this.currentItem?.type === "text") await this.loadText();
 
-        startVideo() {
-            this.videoMode = 'player';
-            this.$nextTick(() => this.initArtplayer());
-        },
-
-        // --- Artplayer Methods ---
-        initArtplayer() {
-            if (this.art) this.destroyArtplayer();
-            if (!this.currentItem || this.currentItem.type !== 'video') return;
-
-            // Simple detector for double-click/tap with debouncing
-            class DoubleClickDetector {
-                constructor(handler) { 
-                    this.lastTime = 0; 
-                    this.timer = null;
-                    this.handler = handler;
-                }
-                
-                trigger(doubleClickAction, singleClickAction) {
-                    const now = Date.now();
-                    const diff = now - this.lastTime;
-                    this.lastTime = now;
-                    
-                    if (diff > 0 && diff < 300) {
-                        // Double click detected
-                        clearTimeout(this.timer);
-                        doubleClickAction();
-                    } else {
-                        // Potential single click
-                        clearTimeout(this.timer);
-                        this.timer = setTimeout(() => {
-                            singleClickAction();
-                        }, 300);
-                    }
-                }
-            }
-
-            const ldb = new DoubleClickDetector();
-            const rdb = new DoubleClickDetector();
-
-            this.art = new Artplayer({
-                container: '#artplayer-app',
-                url: this.currentItem.url + '?media',
-                autoplay: true,
-                fullscreen: true,
-                setting: true,
-                playbackRate: true,
-                aspectRatio: true,
-                pip: true,
-                autoSize: false,
-                fastForward: true,
-                lock: true,
-                theme: '#ffffff', // Minimalist white theme
-                controls: [
-                    {
-                        name: 'playbackRate',
-                        position: 'right',
-                        html: 'Speed',
-                        selector: [
-                            { html: '0.5x', rate: 0.5 },
-                            { html: '0.75x', rate: 0.75 },
-                            { html: '1.0x', rate: 1.0, default: true },
-                            { html: '1.25x', rate: 1.25 },
-                            { html: '1.5x', rate: 1.5 },
-                            { html: '2.0x', rate: 2.0 },
-                        ],
-                        onSelect: (item) => {
-                            this.art.playbackRate = item.rate;
-                            return item.html;
-                        },
-                    },
-                ],
-                icons: {
-                    loading: '<div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>',
-                },
-                layers: [
-                    {
-                        name: 'backward',
-                        html: '<div class="art-backward" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; background:rgba(0,0,0,0.2); transition:opacity 0.2s;"><i class="bi bi-rewind-fill fs-1"></i><span class="fw-bold">-10s</span></div>',
-                        style: {
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '40%',
-                            height: '100%',
-                            zIndex: 10,
-                        },
-                        click: () => {
-                            ldb.trigger(
-                                () => { // Double click action
-                                    this.art.backward = 10;
-                                    this.showSeekIndicator('backward');
-                                },
-                                () => { // Single click action
-                                    this.art.toggle();
-                                }
-                            );
-                        },
-                    },
-                    {
-                        name: 'forward',
-                        html: '<div class="art-forward" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; background:rgba(0,0,0,0.2); transition:opacity 0.2s;"><i class="bi bi-fast-forward-fill fs-1"></i><span class="fw-bold">+10s</span></div>',
-                        style: {
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            width: '40%',
-                            height: '100%',
-                            zIndex: 10,
-                        },
-                        click: () => {
-                            rdb.trigger(
-                                () => { // Double click action
-                                    this.art.forward = 10;
-                                    this.showSeekIndicator('forward');
-                                },
-                                () => { // Single click action
-                                    this.art.toggle();
-                                }
-                            );
-                        },
-                    }
-                ]
-            });
-
-            this.art.on('ready', () => {
-                this.isLoading = false;
-                this.mediaMetadata = {
-                    width: this.art.video.videoWidth,
-                    height: this.art.video.videoHeight,
-                    duration: this.formatTime(this.art.duration)
-                };
-            });
-            
-            this.art.on('video:play', () => this.playing = true);
-            this.art.on('video:pause', () => this.playing = false);
-        },
-
-        showSeekIndicator(side) {
-            const el = side === 'backward' ? this.art.layers.backward : this.art.layers.forward;
-            if (!el) return;
-            const content = el.querySelector(`.art-${side}`);
-            if (!content) return;
-
-            content.style.display = 'flex';
-            content.style.opacity = '1';
-            
-            setTimeout(() => {
-                content.style.opacity = '0';
-                setTimeout(() => {
-                    content.style.display = 'none';
-                }, 200);
-            }, 500);
-        },
-
-        destroyArtplayer() {
-            if (this.art) {
-                this.art.destroy(true);
-                this.art = null;
-            }
-            this.playing = false;
-        },
-
-        formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${s.toString().padStart(2, '0')}`;
-        },
-
-        // Generic Lightbox Gestures (Nav/Close)
-        handleSwipe(endX, endY) {
-            // If artplayer is active, we might want to let it handle gestures or restrict gallery swipe
-            const diffX = this.touchStartX - endX;
-            const diffY = this.touchStartY - endY;
-            const horizontalThreshold = 50;
-            const verticalThreshold = 150;
-
-            if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > verticalThreshold) {
-                if (diffY < 0) this.close(); // Swipe down to close
-            } else if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > horizontalThreshold) {
-                 if (this.currentItem?.type === 'text') return;
-                 // Prevent gallery swipe if video is playing to avoid accidental nav during seek
-                 if (this.currentItem?.type === 'video' && this.playing) return;
-                 if (diffX > 0) this.next();
-                 else this.prev();
-            }
-        },
-
-        async loadText() {
-            try {
-                const res = await fetch(this.currentItem.url);
-                this.textContent = await res.text();
-                this.isLoading = false;
-            } catch (e) {
-                this.textContent = "Error loading text.";
-                this.isLoading = false;
-            }
-        },
-
-        extractImageMetadata(img) {
-            this.mediaMetadata = {
-                width: img.naturalWidth,
-                height: img.naturalHeight,
-                duration: null
-            };
-        },
-
-        prefetchAdjacent() {
-            if (this.items.length <= 1) return;
-            const nextIndex = (this.currentIndex + 1) % this.items.length;
-            const prevIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
-            [nextIndex, prevIndex].forEach(index => {
-                const item = this.items[index];
-                if (!item || item.type === 'text') return;
-                let url = item.url + (item.type === 'video' ? '?thumb=400' : '?media');
-                fetch(url, { priority: 'low' }).catch(() => {});
-            });
-        },
-
-        async copyLink() {
-            if (this.currentItem) {
-                const url = window.location.origin + this.currentItem.url;
-                try {
-                    await navigator.clipboard.writeText(url);
-                    alert("Link copied!");
-                } catch (err) { console.error('Copy failed', err); }
-            }
-        },
-
-        async handleRename() {
-            if (!this.currentItem) return;
-            const newName = prompt("Enter new name:", this.currentItem.name);
-            if (!newName || newName === this.currentItem.name) return;
-
-            try {
-                const encodedPath = encodeURIComponent(this.currentItem.path);
-                const res = await fetch(`/api/v1/fs/rename/${encodedPath}?new_name=${encodeURIComponent(newName)}`, {
-                    method: 'POST'
-                });
-                
-                if (res.ok) {
-                    // Update local state
-                    this.currentItem.name = newName;
-                    // Trigger a refresh of the file browser in the background
-                    if (window.htmx) htmx.trigger('body', 'refresh-files');
-                } else {
-                    const data = await res.json();
-                    alert("Rename failed: " + (data.detail || "Unknown error"));
-                }
-            } catch (e) {
-                console.error("Rename error", e);
-                alert("An error occurred during rename.");
-            }
-        },
-
-        async handleDelete() {
-            if (!this.currentItem) return;
-            if (!confirm(`Are you sure you want to delete '${this.currentItem.name}'?`)) return;
-
-            try {
-                const encodedPath = encodeURIComponent(this.currentItem.path);
-                const res = await fetch(`/api/v1/fs/${encodedPath}`, {
-                    method: 'DELETE'
-                });
-
-                if (res.ok) {
-                    // Remove item from local list
-                    const deletedIndex = this.currentIndex;
-                    this.items.splice(deletedIndex, 1);
-                    
-                    if (this.items.length === 0) {
-                        this.close();
-                    } else {
-                        // Move to next item or previous if it was the last one
-                        this.currentIndex = deletedIndex % this.items.length;
-                    }
-                    
-                    if (window.htmx) htmx.trigger('body', 'refresh-files');
-                } else {
-                    const data = await res.json();
-                    alert("Delete failed: " + (data.detail || "Unknown error"));
-                }
-            } catch (e) {
-                console.error("Delete error", e);
-                alert("An error occurred during deletion.");
-            }
+          document.body.style.overflow = "hidden";
+          this.prefetchAdjacent();
+        } catch (e) {
+          console.error("Failed to load gallery info", e);
+          this.isLoading = false;
+          this.textContent = "Error loading content.";
         }
-    }
-}
+      },
+
+      close() {
+        this.isOpen = false;
+        this.showDetails = false;
+        this.videoMode = "thumbnail";
+        this.destroyArtplayer();
+        document.body.style.overflow = "";
+        this.textContent = "";
+      },
+
+      async next() {
+        if (this.items.length === 0) return;
+        this.destroyArtplayer();
+        this.videoMode = "thumbnail";
+        this.isLoading = true;
+        this.currentIndex = (this.currentIndex + 1) % this.items.length;
+        if (this.currentItem?.type === "text") await this.loadText();
+        this.prefetchAdjacent();
+      },
+
+      async prev() {
+        if (this.items.length === 0) return;
+        this.destroyArtplayer();
+        this.videoMode = "thumbnail";
+        this.isLoading = true;
+        this.currentIndex =
+          (this.currentIndex - 1 + this.items.length) % this.items.length;
+        if (this.currentItem?.type === "text") await this.loadText();
+        this.prefetchAdjacent();
+      },
+
+      startVideo() {
+        this.videoMode = "player";
+        this.$nextTick(() => this.initArtplayer());
+      },
+
+      // --- Artplayer Methods ---
+      initArtplayer() {
+        if (this.art) this.destroyArtplayer();
+        if (!this.currentItem || this.currentItem.type !== "video") return;
+
+        // Simple detector for double-click/tap with debouncing
+        class DoubleClickDetector {
+          constructor(handler) {
+            this.lastTime = 0;
+            this.timer = null;
+            this.handler = handler;
+          }
+
+          trigger(doubleClickAction, singleClickAction) {
+            const now = Date.now();
+            const diff = now - this.lastTime;
+            this.lastTime = now;
+
+            if (diff > 0 && diff < 300) {
+              // Double click detected
+              clearTimeout(this.timer);
+              doubleClickAction();
+            } else {
+              // Potential single click
+              clearTimeout(this.timer);
+              this.timer = setTimeout(() => {
+                singleClickAction();
+              }, 300);
+            }
+          }
+        }
+
+        const ldb = new DoubleClickDetector();
+        const rdb = new DoubleClickDetector();
+
+        this.art = new Artplayer({
+          container: "#artplayer-app",
+          url: this.currentItem.url + "?media",
+          autoplay: true,
+          fullscreen: true,
+          setting: true,
+          playbackRate: true,
+          aspectRatio: true,
+          pip: true,
+          autoSize: false,
+          fastForward: true,
+          lock: true,
+          theme: "#ffffff", // Minimalist white theme
+          controls: [
+            {
+              name: "playbackRate",
+              position: "right",
+              html: "Speed",
+              selector: [
+                { html: "0.5x", rate: 0.5 },
+                { html: "0.75x", rate: 0.75 },
+                { html: "1.0x", rate: 1.0, default: true },
+                { html: "1.25x", rate: 1.25 },
+                { html: "1.5x", rate: 1.5 },
+                { html: "2.0x", rate: 2.0 },
+              ],
+              onSelect: (item) => {
+                this.art.playbackRate = item.rate;
+                return item.html;
+              },
+            },
+          ],
+          icons: {
+            loading:
+              '<div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>',
+          },
+          layers: [
+            {
+              name: "backward",
+              html: '<div class="art-backward" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; background:rgba(0,0,0,0.2); transition:opacity 0.2s;"><i class="bi bi-rewind-fill fs-1"></i><span class="fw-bold">-10s</span></div>',
+              style: {
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "40%",
+                height: "100%",
+                zIndex: 10,
+              },
+              click: () => {
+                ldb.trigger(
+                  () => {
+                    // Double click action
+                    this.art.backward = 10;
+                    this.showSeekIndicator("backward");
+                  },
+                  () => {
+                    // Single click action
+                    this.art.toggle();
+                  },
+                );
+              },
+            },
+            {
+              name: "forward",
+              html: '<div class="art-forward" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%; width:100%; background:rgba(0,0,0,0.2); transition:opacity 0.2s;"><i class="bi bi-fast-forward-fill fs-1"></i><span class="fw-bold">+10s</span></div>',
+              style: {
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "40%",
+                height: "100%",
+                zIndex: 10,
+              },
+              click: () => {
+                rdb.trigger(
+                  () => {
+                    // Double click action
+                    this.art.forward = 10;
+                    this.showSeekIndicator("forward");
+                  },
+                  () => {
+                    // Single click action
+                    this.art.toggle();
+                  },
+                );
+              },
+            },
+          ],
+        });
+
+        this.art.on("ready", () => {
+          this.isLoading = false;
+          this.mediaMetadata = {
+            width: this.art.video.videoWidth,
+            height: this.art.video.videoHeight,
+            duration: this.formatTime(this.art.duration),
+          };
+        });
+
+        this.art.on("video:play", () => (this.playing = true));
+        this.art.on("video:pause", () => (this.playing = false));
+      },
+
+      showSeekIndicator(side) {
+        const el =
+          side === "backward"
+            ? this.art.layers.backward
+            : this.art.layers.forward;
+        if (!el) return;
+        const content = el.querySelector(`.art-${side}`);
+        if (!content) return;
+
+        content.style.display = "flex";
+        content.style.opacity = "1";
+
+        setTimeout(() => {
+          content.style.opacity = "0";
+          setTimeout(() => {
+            content.style.display = "none";
+          }, 200);
+        }, 500);
+      },
+
+      destroyArtplayer() {
+        if (this.art) {
+          this.art.destroy(true);
+          this.art = null;
+        }
+        this.playing = false;
+      },
+
+      formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return "0:00";
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, "0")}`;
+      },
+
+      // Generic Lightbox Gestures (Nav/Close)
+      handleSwipe(endX, endY) {
+        // If artplayer is active, we might want to let it handle gestures or restrict gallery swipe
+        const diffX = this.touchStartX - endX;
+        const diffY = this.touchStartY - endY;
+        const horizontalThreshold = 50;
+        const verticalThreshold = 150;
+
+        if (
+          Math.abs(diffY) > Math.abs(diffX) &&
+          Math.abs(diffY) > verticalThreshold
+        ) {
+          if (diffY < 0) this.close(); // Swipe down to close
+        } else if (
+          Math.abs(diffX) > Math.abs(diffY) &&
+          Math.abs(diffX) > horizontalThreshold
+        ) {
+          if (this.currentItem?.type === "text") return;
+          // Prevent gallery swipe if video is playing to avoid accidental nav during seek
+          if (this.currentItem?.type === "video" && this.playing) return;
+          if (diffX > 0) this.next();
+          else this.prev();
+        }
+      },
+
+      async loadText() {
+        try {
+          const res = await fetch(this.currentItem.url);
+          this.textContent = await res.text();
+          this.isLoading = false;
+        } catch (e) {
+          this.textContent = "Error loading text.";
+          this.isLoading = false;
+        }
+      },
+
+      extractImageMetadata(img) {
+        this.mediaMetadata = {
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+          duration: null,
+        };
+      },
+
+      prefetchAdjacent() {
+        if (this.items.length <= 1) return;
+        const nextIndex = (this.currentIndex + 1) % this.items.length;
+        const prevIndex =
+          (this.currentIndex - 1 + this.items.length) % this.items.length;
+        [nextIndex, prevIndex].forEach((index) => {
+          const item = this.items[index];
+          if (!item || item.type === "text") return;
+          let url =
+            item.url + (item.type === "video" ? "?thumb=400" : "?media");
+          fetch(url, { priority: "low" }).catch(() => {});
+        });
+      },
+
+      async copyLink() {
+        if (this.currentItem) {
+          const url = window.location.origin + this.currentItem.url;
+          try {
+            await navigator.clipboard.writeText(url);
+            alert("Link copied!");
+          } catch (err) {
+            console.error("Copy failed", err);
+          }
+        }
+      },
+
+      async handleRename() {
+        if (!this.currentItem) return;
+        const newName = prompt("Enter new name:", this.currentItem.name);
+        if (!newName || newName === this.currentItem.name) return;
+
+        try {
+          const encodedPath = encodeURIComponent(this.currentItem.path);
+          const res = await fetch(
+            `/api/v1/fs/rename/${encodedPath}?new_name=${encodeURIComponent(newName)}`,
+            {
+              method: "POST",
+            },
+          );
+
+          if (res.ok) {
+            // Update local state
+            this.currentItem.name = newName;
+            // Trigger a refresh of the file browser in the background
+            if (window.htmx) htmx.trigger("body", "refresh-files");
+          } else {
+            const data = await res.json();
+            alert("Rename failed: " + (data.detail || "Unknown error"));
+          }
+        } catch (e) {
+          console.error("Rename error", e);
+          alert("An error occurred during rename.");
+        }
+      },
+
+      async handleDelete() {
+        if (!this.currentItem) return;
+        if (
+          !confirm(
+            `Are you sure you want to delete '${this.currentItem.name}'?`,
+          )
+        )
+          return;
+
+        try {
+          const encodedPath = encodeURIComponent(this.currentItem.path);
+          const res = await fetch(`/api/v1/fs/${encodedPath}`, {
+            method: "DELETE",
+          });
+
+          if (res.ok) {
+            // Remove item from local list
+            const deletedIndex = this.currentIndex;
+            this.items.splice(deletedIndex, 1);
+
+            if (this.items.length === 0) {
+              this.close();
+            } else {
+              // Move to next item or previous if it was the last one
+              this.currentIndex = deletedIndex % this.items.length;
+            }
+
+            if (window.htmx) htmx.trigger("body", "refresh-files");
+          } else {
+            const data = await res.json();
+            alert("Delete failed: " + (data.detail || "Unknown error"));
+          }
+        } catch (e) {
+          console.error("Delete error", e);
+          alert("An error occurred during deletion.");
+        }
+      },
+    };
+  }
 </script>
