@@ -1,0 +1,26 @@
+# Plan: Integrate Artplayer.js for Robust Video Streaming
+
+## Phase 1: Preparation & Asset Integration
+- [~] Task: Research Artplayer.js API for custom gestures and integration with Jinja2 templates.
+- [ ] Task: Download Artplayer.js and Artplayer.css and integrate them into `app/frontend/static/`.
+- [ ] Task: Conductor - User Manual Verification 'Phase 1: Preparation & Asset Integration' (Protocol in workflow.md)
+
+## Phase 2: Core Replacement
+- [ ] Task: Create tests for video player initialization and stream binding.
+- [ ] Task: Remove custom legacy video player JS/CSS logic.
+- [ ] Task: Implement Artplayer.js initialization within the media lightbox.
+- [ ] Task: Verify Artplayer correctly consumes the `/download/{path}` stream with Range requests.
+- [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Replacement' (Protocol in workflow.md)
+
+## Phase 3: Custom Gesture Logic
+- [ ] Task: Write tests for double-tap seeking logic (mocking Artplayer events if necessary).
+- [ ] Task: Implement 10-second skip on double-tap for left (rewind) and right (forward) sides.
+- [ ] Task: Add visual feedback (e.g., center icons or text overlays) during seeking.
+- [ ] Task: Conductor - User Manual Verification 'Phase 3: Custom Gesture Logic' (Protocol in workflow.md)
+
+## Phase 4: UI Polish & Mobile Optimization
+- [ ] Task: Create tests for responsive behavior and playback controls.
+- [ ] Task: Customize Artplayer theme and icons to match the project's minimalist aesthetic.
+- [ ] Task: Enable and configure the playback speed selector (0.5x to 2.0x).
+- [ ] Task: Ensure the player handles mobile orientation changes and container resizing correctly.
+- [ ] Task: Conductor - User Manual Verification 'Phase 4: UI Polish & Mobile Optimization' (Protocol in workflow.md)
