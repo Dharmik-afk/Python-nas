@@ -25,8 +25,8 @@
 - [x] Task: Ensure the player handles mobile orientation changes and container resizing correctly. (0703db1)
 
 ## Phase 5: Thumbnail Mode & Layout Refinement
-- [~] Task: specific "Thumbnail Mode" for videos (shows cover image + play button, no player initialization).
-- [~] Task: specific "Video Player Mode" that activates only on user interaction (Play).
-- [~] Task: Ensure the "Thumbnail Mode" aligns perfectly with the standard image viewer layout (vertically centered).
+- [x] Task: specific "Thumbnail Mode" for videos (shows cover image + play button, no player initialization). (43521b9)
+- [x] Task: specific "Video Player Mode" that activates only on user interaction (Play). (43521b9)
+- [x] Task: Ensure the "Thumbnail Mode" aligns perfectly with the standard image viewer layout (vertically centered). (43521b9)
 - [ ] Task: Conductor - User Manual Verification 'Phase 5: Thumbnail Mode & Layout Refinement' (Protocol in workflow.md)
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: UI Polish & Mobile Optimization' (Protocol in workflow.md)
