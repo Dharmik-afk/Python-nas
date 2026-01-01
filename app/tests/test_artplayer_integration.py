@@ -16,8 +16,12 @@ def test_lightbox_has_artplayer_container():
     assert 'id="artplayer-app"' in content or 'class="artplayer-app"' in content
 
 
-def test_artplayer_initialization_logic():
-    """Verify that the initialization logic for Artplayer is present in the frontend scripts."""
-    # Assuming initialization will be in a new or updated JS file
-    # This is a placeholder for checking the script content
-    pass
+def test_artplayer_has_custom_gesture_configuration():
+    """Verify that Artplayer initialization includes custom gesture logic placeholders."""
+    template_path = Path("app/frontend/templates/partials/lightbox.html")
+    content = template_path.read_text()
+    
+    # We expect these to be added in Phase 3
+    assert "layers:" in content or "custom" in content.lower()
+    assert "backward" in content.lower() or "forward" in content.lower()
+
