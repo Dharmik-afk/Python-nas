@@ -18,7 +18,7 @@
 - [x] Task: Add visual feedback (e.g., center icons or text overlays) during seeking. (d49f4e0)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Custom Gesture Logic' (Protocol in workflow.md)
 
-## Phase 4: UI Polish & Mobile Optimization
+## Phase 4: UI Polish & Mobile Optimization [checkpoint: fa69e77]
 - [x] Task: Create tests for responsive behavior and playback controls. (b4abfba)
 - [x] Task: Customize Artplayer theme and icons to match the project's minimalist aesthetic. (0703db1)
 - [x] Task: Enable and configure the playback speed selector (0.5x to 2.0x). (0703db1)
