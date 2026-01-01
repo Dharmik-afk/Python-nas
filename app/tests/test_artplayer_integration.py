@@ -16,12 +16,24 @@ def test_lightbox_has_artplayer_container():
     assert 'id="artplayer-app"' in content or 'class="artplayer-app"' in content
 
 
-def test_artplayer_has_custom_gesture_configuration():
-    """Verify that Artplayer initialization includes custom gesture logic placeholders."""
+def test_artplayer_has_ui_controls_configuration():
+    """Verify that Artplayer initialization includes required UI controls."""
     template_path = Path("app/frontend/templates/partials/lightbox.html")
     content = template_path.read_text()
     
-    # We expect these to be added in Phase 3
-    assert "layers:" in content or "custom" in content.lower()
-    assert "backward" in content.lower() or "forward" in content.lower()
+    assert "fullscreen: true" in content
+    assert "setting: true" in content
+    assert "playbackRate: true" in content
+    
+def test_artplayer_has_mobile_optimization():
+    """Verify that Artplayer handles mobile constraints."""
+    template_path = Path("app/frontend/templates/partials/lightbox.html")
+    content = template_path.read_text()
+    
+    # We expect some logic to handle resize or specific mobile styling
+    # This assertion might fail if we haven't added explicit mobile handling yet
+    assert "autoSize: true" in content
+    # We'll add a check for 'lock: true' which is useful for mobile
+    assert "lock: true" in content
+
 
