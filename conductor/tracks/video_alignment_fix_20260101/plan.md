@@ -12,6 +12,6 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout Stabilization' (Protocol in workflow.md)
 
 ## Phase 3: Mobile & Transition Polish
-- [ ] Task: Add a transition grace period or a small delay before Artplayer initialization to prevent "half-rendered" states.
-- [ ] Task: Verify and fix the alignment on different mobile orientations (portrait/landscape).
+- [x] Task: Add a transition grace period or a small delay before Artplayer initialization to prevent "half-rendered" states. (face775)
+- [x] Task: Verify and fix the alignment on different mobile orientations (portrait/landscape). (face775)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Mobile & Transition Polish' (Protocol in workflow.md)

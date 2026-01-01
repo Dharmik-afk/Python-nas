@@ -40,8 +40,10 @@ def test_player_container_has_strict_constraints():
     template_path = Path("app/frontend/templates/partials/lightbox.html")
     content = template_path.read_text()
     
-    # We expect the artplayer-container to explicitly handle overflow
-    assert 'class="artplayer-container w-100 h-100 overflow-hidden"' in content or 'class="artplayer-container w-100 h-100 position-relative overflow-hidden"' in content
+    # We expect the player container to use fixed positioning and overflow-hidden for the fullscreen overlay
+    assert 'class="position-fixed top-0 start-0 w-100 h-100 overflow-hidden"' in content
+    assert 'style="background: black; z-index: 2100;"' in content
+
 
 
 
