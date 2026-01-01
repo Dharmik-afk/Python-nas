@@ -105,6 +105,12 @@ async def get_service_worker():
     sw_path = settings.BASE_DIR / "app" / "frontend" / "static" / "js" / "sw.js"
     return FileResponse(sw_path, media_type="application/javascript")
 
+@app.get("/manifest.json")
+async def get_manifest():
+    """Serves the PWA manifest file."""
+    manifest_path = settings.BASE_DIR / "app" / "frontend" / "static" / "manifest.json"
+    return FileResponse(manifest_path, media_type="application/json")
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint for the supervisor."""

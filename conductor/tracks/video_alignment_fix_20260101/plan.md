@@ -6,9 +6,9 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Diagnostics & Targeted Testing' (Protocol in workflow.md)
 
 ## Phase 2: Layout Stabilization
-- [ ] Task: Refactor the `artplayer-container` CSS to use a more robust containment strategy (e.g., forcing aspect-ratio or using fixed viewport units if necessary).
-- [ ] Task: Update the `initArtplayer` call to ensure the player is initialized only after the DOM container has reached its final dimensions.
-- [ ] Task: Implement a resize observer or use Artplayer's built-in resize methods to handle the transition from hidden to visible.
+- [x] Task: Refactor the `artplayer-container` CSS to use a more robust containment strategy (e.g., forcing aspect-ratio or using fixed viewport units if necessary). (014225a)
+- [x] Task: Update the `initArtplayer` call to ensure the player is initialized only after the DOM container has reached its final dimensions. (2f07f73)
+- [x] Task: Implement a resize observer or use Artplayer's built-in resize methods to handle the transition from hidden to visible. (c7b0aee)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout Stabilization' (Protocol in workflow.md)
 
 ## Phase 3: Mobile & Transition Polish

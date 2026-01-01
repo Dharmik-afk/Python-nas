@@ -419,6 +419,10 @@
 
         startVideo() {
             this.videoMode = 'player';
+            // Attempt to lock orientation to landscape if supported (requires user gesture/fullscreen)
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(e => console.debug("Orientation lock skipped", e));
+            }
             // Wait for DOM and layout stabilization
             this.$nextTick(() => {
                 setTimeout(() => this.initArtplayer(), 50);
@@ -595,14 +599,16 @@
         }, 500);
       },
 
-      destroyArtplayer() {
-        if (this.art) {
-          this.art.destroy(true);
-          this.art = null;
-        }
-        this.playing = false;
-      },
-
+              destroyArtplayer() {
+                  if (this.art) {
+                      this.art.destroy(true);
+                      this.art = null;
+                  }
+                  this.playing = false;
+                  if (screen.orientation && screen.orientation.unlock) {
+                      screen.orientation.unlock();
+                  }
+              },
       formatTime(seconds) {
         if (!seconds || isNaN(seconds)) return "0:00";
         const m = Math.floor(seconds / 60);
