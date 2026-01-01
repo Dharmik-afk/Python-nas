@@ -5,3 +5,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## [~] Track: improve video streaming
 *Link: [./conductor/tracks/video_streaming_ui_20251231/](./conductor/tracks/video_streaming_ui_20251231/)*
+
+---
+
+## [~] Track: Switch to Artplayer.js for robust video streaming with custom gestures.
+*Link: [./conductor/tracks/video_framework_20260101/](./conductor/tracks/video_framework_20260101/)*

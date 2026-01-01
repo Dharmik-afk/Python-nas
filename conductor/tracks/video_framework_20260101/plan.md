@@ -1,8 +1,8 @@
 # Plan: Integrate Artplayer.js for Robust Video Streaming
 
 ## Phase 1: Preparation & Asset Integration
-- [~] Task: Research Artplayer.js API for custom gestures and integration with Jinja2 templates.
-- [ ] Task: Download Artplayer.js and Artplayer.css and integrate them into `app/frontend/static/`.
+- [x] Task: Research Artplayer.js API for custom gestures and integration with Jinja2 templates. (681e8ee)
+- [x] Task: Download Artplayer.js and Artplayer.css and integrate them into `app/frontend/static/`. (a2b258b)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Preparation & Asset Integration' (Protocol in workflow.md)
 
 ## Phase 2: Core Replacement
