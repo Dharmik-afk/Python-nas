@@ -35,17 +35,17 @@ Goal: Implement orientation locking/triggering and aspect-ratio-aware scaling fo
 - [x] Task: Responsive Scaling (CSS) - Ensure the video container scales correctly for all horizontal formats. ac37efd
     - [x] Implement CSS for letterboxing/pillarboxing using object-fit and flexbox.
     - [x] Verify 4:3 and ultra-wide (2.39:1) rendering on mobile viewports.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Intelligent Mobile Orientation & Scaling' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Intelligent Mobile Orientation & Scaling' (Protocol in workflow.md) - Superseded by video_framework_20260101
 
 ## Phase 3: Visual Polish & UX Refinement
 Goal: Add finishing touches like auto-hiding controls and buffering indicators.
 
-- [ ] Task: Buffering & Loading Indicator (TDD) - Show a spinner when the video is stalled or loading.
-    - [ ] Red Phase: Write tests that check for the presence of a spinner when the `waiting` event fires.
-    - [ ] Green Phase: Implement the visual spinner and event listeners (`waiting`, `playing`, `canplay`).
-- [ ] Task: Auto-hide Controls (TDD) - Implement logic to hide the control bar after inactivity.
-    - [ ] Red Phase: Write tests to verify the control bar's "hidden" class is applied after a timeout.
-    - [ ] Green Phase: Implement `setTimeout` and mouse/touch movement listeners to toggle control visibility.
-- [ ] Task: Integration & Cleanup - Final visual audit and CSS minification/optimization.
-    - [ ] Audit all transitions and ensure 80%+ code coverage for new JS/Python code.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Visual Polish & UX Refinement' (Protocol in workflow.md)
+- [x] Task: Buffering & Loading Indicator (TDD) - Show a spinner when the video is stalled or loading. - Superseded by video_framework_20260101
+    - [x] Red Phase: Write tests that check for the presence of a spinner when the `waiting` event fires. - Superseded by video_framework_20260101
+    - [x] Green Phase: Implement the visual spinner and event listeners (`waiting`, `playing`, `canplay`). - Superseded by video_framework_20260101
+- [x] Task: Auto-hide Controls (TDD) - Implement logic to hide the control bar after inactivity. - Superseded by video_framework_20260101
+    - [x] Red Phase: Write tests to verify the control bar's "hidden" class is applied after a timeout. - Superseded by video_framework_20260101
+    - [x] Green Phase: Implement `setTimeout` and mouse/touch movement listeners to toggle control visibility. - Superseded by video_framework_20260101
+- [x] Task: Integration & Cleanup - Final visual audit and CSS minification/optimization. - Superseded by video_framework_20260101
+    - [x] Audit all transitions and ensure 80%+ code coverage for new JS/Python code. - Superseded by video_framework_20260101
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Visual Polish & UX Refinement' (Protocol in workflow.md) - Superseded by video_framework_20260101
