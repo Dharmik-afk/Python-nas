@@ -23,7 +23,7 @@ The primary audience for this server consists of **home users** who require a re
 
 *   **Integrated File Management:** Supports core file operations including browsing, downloading, multi-file uploading, and folder creation.
 
-*   **Advanced Media Playback:** Features a robust, gesture-controlled video player (Artplayer.js) with mobile-optimized controls (double-tap seek, swipe for volume/brightness) and playback speed adjustment. Videos present a clean thumbnail preview before playing to maintain visual consistency.
+*   **Advanced Media Playback:** Features a robust, gesture-controlled video player (Artplayer.js) with mobile-optimized controls (double-tap seek, swipe for volume/brightness), intelligent orientation locking (auto-landscape for horizontal videos), and playback speed adjustment. Videos present a clean thumbnail preview before playing to maintain visual consistency.
 
 
 
