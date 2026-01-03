@@ -12,16 +12,16 @@ Goal: Enable the backend to serve video thumbnails by forwarding requests to Cop
     - [x] Audit `copyparty/copyparty.conf` to ensure thumbnailing features are enabled and not blocked.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Backend Proxy & Configuration' (Protocol in workflow.md) b0ac74f
 
-## Phase 2: Frontend Integration & Display [checkpoint: ]
+## Phase 2: Frontend Integration & Display [checkpoint: ce09e31]
 Goal: Update the UI to display the generated thumbnails and implement prefetching.
 
-- [ ] Task: Lightbox UI Update (TDD) - Update the video thumbnail mode to use the generated thumbnail.
-    - [ ] Red Phase: Write/update a test in `app/tests/test_artplayer_integration.py` to verify the `<img>` tag in the video thumbnail mode has a `?thumb=` parameter in its `src`.
-    - [ ] Green Phase: Update `app/frontend/templates/partials/lightbox.html` to use `currentItem.url + '?thumb=800'` (or similar) for the video preview image.
-- [ ] Task: Refine Prefetch Logic (TDD) - Ensure thumbnails are proactively requested for videos.
-    - [ ] Red Phase: Mock the `fetch` call and verify that `prefetchAdjacent` requests thumbnail URLs for video items.
-    - [ ] Green Phase: Update the `prefetchAdjacent()` function in `lightbox.html` to handle video items by requesting their thumbnail URL.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Frontend Integration & Display' (Protocol in workflow.md)
+- [x] Task: Lightbox UI Update (TDD) - Update the video thumbnail mode to use the generated thumbnail. ce09e31
+    - [x] Red Phase: Write/update a test in `app/tests/test_artplayer_integration.py` to verify the `<img>` tag in the video thumbnail mode has a `?thumb=` parameter in its `src`.
+    - [x] Green Phase: Update `app/frontend/templates/partials/lightbox.html` to use `currentItem.url + '?thumb=800'` (or similar) for the video preview image.
+- [x] Task: Refine Prefetch Logic (TDD) - Ensure thumbnails are proactively requested for videos. ce09e31
+    - [x] Red Phase: Mock the `fetch` call and verify that `prefetchAdjacent` requests thumbnail URLs for video items.
+    - [x] Green Phase: Update the `prefetchAdjacent()` function in `lightbox.html` to handle video items by requesting their thumbnail URL.
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Frontend Integration & Display' (Protocol in workflow.md) ce09e31
 
 ## Phase 3: Final Polish & Audit [checkpoint: ]
 Goal: Ensure stability and remove placeholders.
