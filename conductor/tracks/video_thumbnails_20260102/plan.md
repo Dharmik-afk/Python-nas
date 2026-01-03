@@ -23,9 +23,9 @@ Goal: Update the UI to display the generated thumbnails and implement prefetchin
     - [x] Green Phase: Update the `prefetchAdjacent()` function in `lightbox.html` to handle video items by requesting their thumbnail URL.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Frontend Integration & Display' (Protocol in workflow.md) ce09e31
 
-## Phase 3: Final Polish & Audit [checkpoint: ]
+## Phase 3: Final Polish & Audit [checkpoint: ce09e31]
 Goal: Ensure stability and remove placeholders.
 
-- [ ] Task: Visual Audit - Confirm that thumbnails load correctly and fall back to the icon only on error.
-- [ ] Task: Cleanup - Remove any temporary placeholder assets or debug logs related to thumbnails.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Final Polish & Audit' (Protocol in workflow.md)
+- [x] Task: Visual Audit - Confirm that thumbnails load correctly and fall back to the icon only on error.
+- [x] Task: Cleanup - Remove any temporary placeholder assets or debug logs related to thumbnails.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Final Polish & Audit' (Protocol in workflow.md) ce09e31
