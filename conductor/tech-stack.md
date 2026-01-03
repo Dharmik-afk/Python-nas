@@ -29,3 +29,4 @@
 ## Infrastructure & Tooling
 *   **Execution:** `make` (via `Makefile`), `scripts/run.sh`.
 *   **Package Management:** `requirements.txt`.
+*   **AI Context Management:** Hierarchical context system (scoped `.context.md` files) with `scripts/context_loader.py` for agent orchestration.

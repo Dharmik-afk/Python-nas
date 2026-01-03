@@ -68,3 +68,28 @@ python3 scripts/manage.py list-users
 - ✅ SQLite DB: `storage/db/server.db`
 - ✅ Session Persistence: `storage/db/sessions.json`
 - ✅ Internal Config: `copyparty/copyparty.conf` (Auto-generated)
+
+---
+
+## 5. Context Hierarchy (Scoped AI Instructions)
+
+### Maintenance
+- **Root Context**: Global invariants and project identity are defined in `GEMINI.md`.
+- **Scoped Contexts**: Directory-specific rules are defined in `.context.md` files (e.g., `app/backend/.context.md`).
+- **Role Overlays**: Cross-cutting concerns go into `.context/*.md` (e.g., `.context/security.md`).
+
+### Debugging Context Resolution
+To verify what an AI agent "sees" for a specific path, use the context loader:
+```bash
+# Verify backend context
+python3 scripts/context_loader.py --path app/backend
+
+# Verify frontend context with security overlay
+python3 scripts/context_loader.py --path app/frontend --task security
+```
+
+### Adding New Contexts
+1. Create `.context.md` in the target directory.
+2. Define rules, library preferences, or architectural details specific to that scope.
+3. The nearest `.context.md` file will always take priority in resolution.
+
