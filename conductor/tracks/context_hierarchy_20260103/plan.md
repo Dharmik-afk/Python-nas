@@ -12,12 +12,12 @@
 - [x] Task: Verify tool output format (Markdown with source attribution). 250ed28
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Context Loader Tooling' (Protocol in workflow.md)
 
-## Phase 3: Modularization & Scoping
+## Phase 3: Modularization & Scoping [checkpoint: 23f5502]
 - [x] Task: Create `app/backend/.context.md` (scoped backend rules and FastAPI/SQLAlchemy details). 23903aa
 - [x] Task: Create `app/frontend/.context.md` (scoped frontend/HTMX/Alpine.js rules). 8b523bb
 - [x] Task: Create `app/tests/.context.md` (scoped testing guidelines and coverage targets). fc0ef83
 - [x] Task: Create `scripts/.context.md` (scoped operational/automation rules). 4493afe
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Modularization & Scoping' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Modularization & Scoping' (Protocol in workflow.md) 23f5502
 
 ## Phase 4: Integration & Documentation
 - [ ] Task: Refactor root `GEMINI.md` to remove redundant modular info (keeping only global/core context).
