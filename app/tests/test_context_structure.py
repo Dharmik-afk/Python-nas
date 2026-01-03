@@ -15,3 +15,7 @@ def test_gemini_protocol_exists():
     with open("GEMINI.md", "r") as f:
         content = f.read()
     assert "Context Loading Protocol" in content, "GEMINI.md should contain 'Context Loading Protocol'."
+
+def test_backend_context_exists():
+    """Verify that app/backend/.context.md exists."""
+    assert os.path.isfile("app/backend/.context.md"), "app/backend/.context.md should exist."
