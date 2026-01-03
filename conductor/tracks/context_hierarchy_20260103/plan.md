@@ -13,10 +13,10 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Context Loader Tooling' (Protocol in workflow.md)
 
 ## Phase 3: Modularization & Scoping
-- [ ] Task: Create `app/backend/.context.md` (scoped backend rules and FastAPI/SQLAlchemy details).
-- [ ] Task: Create `app/frontend/.context.md` (scoped frontend/HTMX/Alpine.js rules).
-- [ ] Task: Create `app/tests/.context.md` (scoped testing guidelines and coverage targets).
-- [ ] Task: Create `scripts/.context.md` (scoped operational/automation rules).
+- [x] Task: Create `app/backend/.context.md` (scoped backend rules and FastAPI/SQLAlchemy details). 23903aa
+- [x] Task: Create `app/frontend/.context.md` (scoped frontend/HTMX/Alpine.js rules). 8b523bb
+- [x] Task: Create `app/tests/.context.md` (scoped testing guidelines and coverage targets). fc0ef83
+- [x] Task: Create `scripts/.context.md` (scoped operational/automation rules). 4493afe
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Modularization & Scoping' (Protocol in workflow.md)
 
 ## Phase 4: Integration & Documentation
