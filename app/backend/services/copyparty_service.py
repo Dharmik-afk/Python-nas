@@ -214,15 +214,29 @@ async def proxy_stream_request(request: Request, relative_path: Path, params: di
     
     clean_params = {k: v for k, v in params.items()} if params else {}
 
+    # Check if we are requesting a thumbnail
+    is_thumbnail_request = params and ('thumb' in params or 'th' in params)
+
     if request_headers:
         for header in ['range', 'if-range', 'if-match', 'if-none-match', 'if-modified-since', 'if-unmodified-since']:
             if header in request_headers:
+                # Skip forwarding Range and conditional headers for thumbnail requests
+                # to prevent Copyparty from streaming the file content instead of the image.
+                if is_thumbnail_request:
+                    logger.debug(f"Skipping {header} header for thumbnail request.")
+                    continue
+                
                 headers[header] = request_headers[header]
+        
+        # Explicitly remove range header if it somehow got in (double safety)
+        if is_thumbnail_request and 'range' in headers:
+             del headers['range']
 
     try:
         logger.debug(f"--- PROXY REQUEST START ---")
         logger.debug(f"Target URL: {url}")
-        
+        logger.debug(f"Params: {clean_params}")
+
         # Log headers (masking sensitive info)
         debug_headers = headers.copy()
         if "Authorization" in debug_headers:
@@ -245,7 +259,6 @@ async def proxy_stream_request(request: Request, relative_path: Path, params: di
         excluded_headers = ['connection', 'keep-alive', 'transfer-encoding', 'server', 'date', 'content-disposition']
         
         # Sanitize headers to ensure only latin-1 compatible characters are present
-        # This prevents UnicodeEncodeError in StreamingResponse init
         response_headers = {}
         for k, v in r.headers.items():
             if k.lower() not in excluded_headers:
@@ -253,21 +266,14 @@ async def proxy_stream_request(request: Request, relative_path: Path, params: di
                     v.encode('latin-1')
                     response_headers[k] = v
                 except UnicodeEncodeError:
-                    # If it can't be encoded in latin-1, it's not a standard HTTP header
-                    # We could try to URL-encode it, but usually these are custom headers 
-                    # that we can safely drop or sanitize. For now, let's just log and skip
-                    # or strip the offending characters.
                     logger.warning(f"Dropping non-latin1 header: {k}")
         
-        is_preview = params and ('thumb' in params or 'media' in params)
+        is_preview = is_thumbnail_request or (params and 'media' in params)
         filename = relative_path.name
         
-        # RFC 5987 encoding for Content-Disposition
         from urllib.parse import quote
         quoted_filename = quote(filename)
         
-        # We provide both standard filename (URL-encoded for safety) 
-        # and the filename* parameter (proper RFC 5987)
         disposition_type = "inline" if is_preview else "attachment"
         response_headers["Content-Disposition"] = f'{disposition_type}; filename="{quoted_filename}"; filename*=UTF-8\'\'{quoted_filename}'
 

@@ -22,16 +22,17 @@ class Settings(BaseSettings):
         if v and v != "0.0.0.0":
             return v
             
-        # Default based on DEBUG: localhost for debug, LAN IP for production
+        # Default based on DEBUG: localhost for debug, 0.0.0.0 (All interfaces) for production
         if values.get("DEBUG"):
             return "127.0.0.1"
         else:
-            return get_lan_ip()
+            return "0.0.0.0"
 
     @property
     def FRONTEND_IP(self) -> str:
         """
         Returns the LAN IP for production or 127.0.0.1 for debug mode.
+        Used for display purposes.
         """
         if self.DEBUG:
             return "127.0.0.1"
