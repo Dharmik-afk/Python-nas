@@ -232,6 +232,10 @@ async def proxy_stream_request(request: Request, relative_path: Path, params: di
         if is_thumbnail_request and 'range' in headers:
              del headers['range']
 
+    if is_thumbnail_request:
+        headers['Cache-Control'] = 'no-cache'
+        headers['Pragma'] = 'no-cache'
+
     try:
         logger.debug(f"--- PROXY REQUEST START ---")
         logger.debug(f"Target URL: {url}")
