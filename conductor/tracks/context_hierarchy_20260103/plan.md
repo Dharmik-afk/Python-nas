@@ -19,8 +19,8 @@
 - [x] Task: Create `scripts/.context.md` (scoped operational/automation rules). 4493afe
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Modularization & Scoping' (Protocol in workflow.md) 23f5502
 
-## Phase 4: Integration & Documentation
-- [ ] Task: Refactor root `GEMINI.md` to remove redundant modular info (keeping only global/core context).
-- [ ] Task: Update `DEBUG.md` with maintenance instructions for the context hierarchy.
-- [ ] Task: Final end-to-end verification (Agent successfully uses loader to resolve deep context).
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Integration & Documentation' (Protocol in workflow.md)
+## Phase 4: Integration & Documentation [checkpoint: 1ee367d]
+- [x] Task: Refactor root `GEMINI.md` to remove redundant modular info (keeping only global/core context). 68bd9bb
+- [x] Task: Update `DEBUG.md` with maintenance instructions for the context hierarchy. d7ec357
+- [x] Task: Final end-to-end verification (Agent successfully uses loader to resolve deep context). 2afc0e8
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Integration & Documentation' (Protocol in workflow.md) 1ee367d
