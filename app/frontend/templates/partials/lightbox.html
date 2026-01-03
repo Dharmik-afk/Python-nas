@@ -239,7 +239,7 @@
                                                     <div x-show="videoMode === 'thumbnail'" class="w-100 h-100 d-flex align-items-center justify-content-center">
                                                         <div class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
                                                             <!-- Main Thumbnail -->
-                                                            <img :src="currentItem.url + '?th=' + (mediaMetadata.width ? mediaMetadata.width + 'x' + mediaMetadata.height : 'j') + '&t=' + Date.now()" 
+                                                            <img :src="currentItem.url + '?th=' + (mediaMetadata.width ? mediaMetadata.width + 'x' + mediaMetadata.height : 'j') + '&crop=n&t=' + Date.now()" 
                                                                  class="lightbox-media" 
                                                                  style="max-width: 100%; max-height: 100%; object-fit: contain;"
                                                                  @error="$event.target.classList.add('d-none'); $event.target.nextElementSibling.classList.remove('d-none')"
