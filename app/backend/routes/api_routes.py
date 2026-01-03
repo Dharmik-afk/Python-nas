@@ -26,6 +26,19 @@ async def search(request: Request, q: str = None):
     # For now, search from root.
     return await search_files(request, q)
 
+class SearchResultItem:
+    def __init__(self, name, path_str):
+        self.name = name
+        self.path = path_str
+        self._is_dir = path_str.endswith("/")
+        self.suffix = Path(name).suffix
+
+    def is_file(self):
+        return not self._is_dir
+
+    def is_dir(self):
+        return self._is_dir
+
 @router.get("/fs/search/ui")
 async def search_ui(request: Request, q: str = None, path: str = ""):
     """
@@ -68,20 +81,14 @@ async def search_ui(request: Request, q: str = None, path: str = ""):
         name = path_str.split("/")[-1]
         
         # We'll create a dummy object that mimics a Path object for the template
-        # or we could create a new template for search results.
-        # A new template is cleaner because search results need to show full paths.
-        transformed_hits.append({
-            "name": name,
-            "path": path_str,
-            "is_dir": path_str.endswith("/"), # Copyparty usually ends dirs with /
-            "ext": name.split(".")[-1].lower() if "." in name else ""
-        })
+        transformed_hits.append(SearchResultItem(name, path_str))
     
     context = {
         "request": request,
         "query": q,
         "hits": transformed_hits,
-        "pmask": "r" # Search results are usually read-only in this view
+        "pmask": "r", # Search results are usually read-only in this view
+        "path": "" # Required by file_card template
     }
     
     return templates.TemplateResponse("partials/search_results.html", context)

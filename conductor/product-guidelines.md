@@ -12,3 +12,5 @@
 *   **Functional & Literal:** Use clear, descriptive, and literal terms for all features and actions.
     *   *Examples:* Use "File Browser" instead of "Explore", "Downloads" instead of "My Stuff", and "User Settings" instead of "Profile Hub".
 *   **Consistency:** Once a term is defined for a feature, it must be used consistently across the entire application and all levels of documentation.
+*    **git:** when new track is being created make sure git pull is done before hand or check if it is latest one. if not notify the user immidently
+
