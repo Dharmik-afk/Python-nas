@@ -7,9 +7,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Root Protocol' (Protocol in workflow.md)
 
 ## Phase 2: Context Loader Tooling
-- [ ] Task: Create test suite `app/tests/test_context_loader.py` (verifying merge logic and resolution order).
-- [ ] Task: Implement `scripts/context_loader.py` (supporting `--path`, `--task`, and recursive resolution).
-- [ ] Task: Verify tool output format (Markdown with source attribution).
+- [x] Task: Create test suite `app/tests/test_context_loader.py` (verifying merge logic and resolution order). 250ed28
+- [x] Task: Implement `scripts/context_loader.py` (supporting `--path`, `--task`, and recursive resolution). 250ed28
+- [x] Task: Verify tool output format (Markdown with source attribution). 250ed28
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Context Loader Tooling' (Protocol in workflow.md)
 
 ## Phase 3: Modularization & Scoping
