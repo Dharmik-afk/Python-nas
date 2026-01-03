@@ -187,6 +187,9 @@
           x-transition:enter-start="opacity-0 scale-95"
           x-transition:enter-end="opacity-100 scale-100"
         >
+          <!-- Hidden Video for Metadata Extraction -->
+          <video x-ref="metaVideo" preload="metadata" class="d-none" @loadedmetadata="onVideoMetadataLoaded($event.target)"></video>
+
           <!-- Image -->
 
           <template x-if="currentItem?.type === 'image'">
@@ -236,11 +239,11 @@
                                                     <div x-show="videoMode === 'thumbnail'" class="w-100 h-100 d-flex align-items-center justify-content-center">
                                                         <div class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
                                                             <!-- Main Thumbnail -->
-                                                            <img :src="currentItem.url + '?thumb=800'" 
+                                                            <img :src="currentItem.url + '?th=' + (mediaMetadata.width ? mediaMetadata.width + 'x' + mediaMetadata.height : 'j') + '&t=' + Date.now()" 
                                                                  class="lightbox-media" 
                                                                  style="max-width: 100%; max-height: 100%; object-fit: contain;"
                                                                  @error="$event.target.classList.add('d-none'); $event.target.nextElementSibling.classList.remove('d-none')"
-                                                                 @load="isLoading = false; extractImageMetadata($event.target)"
+                                                                 @load="isLoading = false"
                                                                  :alt="currentItem.name">
                                                             
                                                             <!-- Fallback Icon (Hidden by default) -->
@@ -389,6 +392,7 @@
           if (this.currentIndex === -1) this.currentIndex = 0;
 
           if (this.currentItem?.type === "text") await this.loadText();
+          if (this.currentItem?.type === "video") this.preloadVideoMetadata();
 
           document.body.style.overflow = "hidden";
           this.prefetchAdjacent();
@@ -415,6 +419,7 @@
         this.isLoading = true;
         this.currentIndex = (this.currentIndex + 1) % this.items.length;
         if (this.currentItem?.type === "text") await this.loadText();
+        if (this.currentItem?.type === "video") this.preloadVideoMetadata();
         this.prefetchAdjacent();
       },
 
@@ -426,7 +431,30 @@
         this.currentIndex =
           (this.currentIndex - 1 + this.items.length) % this.items.length;
         if (this.currentItem?.type === "text") await this.loadText();
+        if (this.currentItem?.type === "video") this.preloadVideoMetadata();
         this.prefetchAdjacent();
+      },
+
+      preloadVideoMetadata() {
+        if (!this.currentItem || this.currentItem.type !== 'video') return;
+        // Reset metadata while loading
+        this.mediaMetadata = { width: null, height: null, duration: null };
+        // Trigger metadata load via hidden video
+        this.$nextTick(() => {
+          if (this.$refs.metaVideo) {
+            this.$refs.metaVideo.src = this.currentItem.url + '?media';
+          }
+        });
+      },
+
+      onVideoMetadataLoaded(vid) {
+        this.mediaMetadata = {
+          width: vid.videoWidth,
+          height: vid.videoHeight,
+          duration: this.formatTime(vid.duration)
+        };
+        // Clear src to stop loading
+        vid.src = "";
       },
 
         startVideo() {
