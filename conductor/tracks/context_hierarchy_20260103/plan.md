@@ -1,10 +1,10 @@
 # Plan: AI Context Hierarchy
 
-## Phase 1: Infrastructure & Root Protocol
+## Phase 1: Infrastructure & Root Protocol [checkpoint: 7ea9d38]
 - [x] Task: Create root `.context/` directory for role-based overlays. 34bc972
 - [x] Task: Create initial overlay: `.context/security.md` (extracting security invariants from root `GEMINI.md`). 09c088d
 - [x] Task: Update root `GEMINI.md` to include the **Context Loading Protocol** and reference the new system. 674848e
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Root Protocol' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Root Protocol' (Protocol in workflow.md)
 
 ## Phase 2: Context Loader Tooling
 - [ ] Task: Create test suite `app/tests/test_context_loader.py` (verifying merge logic and resolution order).
