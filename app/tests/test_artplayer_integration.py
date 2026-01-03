@@ -34,6 +34,18 @@ def test_thumbnail_mode_logic():
     assert "videoMode === 'player'" in content
     assert "startVideo()" in content
     assert "bi-play-fill" in content # Play button
+    
+    # Verify that the image tag for video thumbnails uses the ?thumb parameter
+    assert ":src=\"currentItem.url + '?thumb=800'\"" in content
+
+def test_prefetch_logic_includes_thumbnails():
+    """Verify that the prefetchAdjacent function requests thumbnails for videos."""
+    template_path = Path("app/frontend/templates/partials/lightbox.html")
+    content = template_path.read_text()
+    
+    # Check for the conditional logic in prefetchAdjacent
+    assert 'item.url + (item.type === "video" ? "?thumb=400" : "?media")' in content
+
 
 def test_player_container_has_strict_constraints():
     """Verify that the player container has strict overflow and positioning constraints."""
