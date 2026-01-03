@@ -8,8 +8,7 @@ def find_context_files(start_path):
     files = []
     current = os.path.abspath(start_path)
     if not os.path.exists(current):
-        print(f"Error: Path {current} does not exist.", file=sys.stderr)
-        sys.exit(1)
+        return []
         
     if os.path.isfile(current):
         current = os.path.dirname(current)
@@ -20,8 +19,6 @@ def find_context_files(start_path):
     while temp != "/":
         if os.path.isfile(os.path.join(temp, "GEMINI.md")):
             project_root = temp
-            # Don't break yet, we might want to go higher if there are nested projects, 
-            # but for this NAS project, the first GEMINI.md usually marks the root.
             break
         temp = os.path.dirname(temp)
     
@@ -69,14 +66,9 @@ def merge_context(files, overlay=None):
             
     return "\n---\n\n".join(merged)
 
-def main():
-    parser = argparse.ArgumentParser(description="Aggregate project context based on path and task.")
-    parser.add_argument("--path", default=".", help="Directory to start context resolution from.")
-    parser.add_argument("--task", help="Role or task overlay to include (e.g., 'security').")
-    
-    args = parser.parse_args()
-    
-    context_files = find_context_files(args.path)
+def resolve_context(path=".", task=None):
+    """Public API to resolve and merge context."""
+    context_files = find_context_files(path)
     
     # Find project root for overlays
     project_root = None
@@ -86,12 +78,23 @@ def main():
             break
     
     overlay_file = None
-    if args.task and project_root:
-        overlay_file = get_overlay_path(project_root, args.task)
-        if not overlay_file:
-            print(f"Warning: Overlay '{args.task}' not found in {project_root}/.context/", file=sys.stderr)
+    if task and project_root:
+        overlay_file = get_overlay_path(project_root, task)
             
-    print(merge_context(context_files, overlay_file))
+    return merge_context(context_files, overlay_file)
+
+def main():
+    parser = argparse.ArgumentParser(description="Aggregate project context based on path and task.")
+    parser.add_argument("--path", default=".", help="Directory to start context resolution from.")
+    parser.add_argument("--task", help="Role or task overlay to include (e.g., 'security').")
+    
+    args = parser.parse_args()
+    
+    try:
+        print(resolve_context(args.path, args.task))
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
