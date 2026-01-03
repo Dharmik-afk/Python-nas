@@ -70,6 +70,9 @@ def resolve_context(path=".", task=None):
     """Public API to resolve and merge context."""
     context_files = find_context_files(path)
     
+    if not context_files:
+        raise FileNotFoundError(f"No context found for path: {path}")
+    
     # Find project root for overlays
     project_root = None
     for f in context_files:
