@@ -22,11 +22,11 @@ This plan is optimized for the Termux environment on Android, utilizing Expo (Ma
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Project Scaffolding' (Protocol in workflow.md)
 
 ## Phase 2: Authentication & Security
-- [ ] **Task 5: Implement Auth Store (Zustand)**
+- [x] **Task 5: Implement Auth Store (Zustand)** 104c0e8
   - Create `store/useAuthStore.js`.
   - Implement actions: `login`, `logout`, `setServerUrl`.
   - Implement persistence using `persist` middleware (storing `serverUrl` and `accessToken`).
-- [ ] **Task 6: Implement Login Screen**
+- [x] **Task 6: Implement Login Screen** 51037c4
   - Create `screens/LoginScreen.js`.
   - UI: Minimalist "Google Photos" style entry for Server URL and Password.
   - Integration: Connect to server's `/api/v1/auth/token` via `fetch`.
