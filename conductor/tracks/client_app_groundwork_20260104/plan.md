@@ -34,13 +34,13 @@ This plan is optimized for the Termux environment on Android, utilizing Expo (Ma
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Authentication' (Protocol in workflow.md)
 
 ## Phase 3: File Explorer (Google Photos Aesthetic)
-- [ ] **Task 7: Implement Data Store (Zustand)**
+- [x] **Task 7: Implement Data Store (Zustand)** 1845438
   - Create `store/useFileStore.js` to manage directory contents and caching.
-- [ ] **Task 8: Implement Directory Grid View**
+- [x] **Task 8: Implement Directory Grid View** 8875b46
   - Create `screens/ExplorerScreen.js`.
   - Use `FlashList` to render a high-performance grid of media items.
   - **Constraint:** Ensure `numColumns` adapts to screen width.
-- [ ] **Task 9: Navigation Logic**
+- [x] **Task 9: Navigation Logic** aabe4ef
   - Update `App.js` to implement a Stack Navigator.
   - Handle navigation between `LoginScreen` and `ExplorerScreen`.
   - Implement drill-down navigation for folders.
