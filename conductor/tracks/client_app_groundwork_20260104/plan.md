@@ -46,7 +46,7 @@ This plan is optimized for the Termux environment on Android, utilizing Expo (Ma
   - Implement drill-down navigation for folders.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: File Explorer' (Protocol in workflow.md)
 
-## Phase 4: Media Player (Expo AV)
+## Phase 4: Media Player (Expo AV) [checkpoint: a9fd005]
 - [x] **Task 10: Integrate Video Player** 17c122e
   - Create `screens/PlayerScreen.js`.
   - Use `expo-av` (`Video` component) for playback.
