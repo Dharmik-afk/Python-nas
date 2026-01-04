@@ -1,6 +1,7 @@
 import logging
 import urllib.parse
 import shutil
+from typing import Optional
 from fastapi import APIRouter, Request, HTTPException, Depends, Response
 from fastapi.responses import JSONResponse
 from pathlib import Path
@@ -10,21 +11,103 @@ from app.core.constants import PREVIEWABLE_EXTENSIONS, VIDEO_EXTENSIONS, TEXT_EX
 from app.core.auth import auth_required, decrypt_string
 from app.core.templates import templates
 from app.backend.services.copyparty_service import get_pmask, get_proxy_headers, search_files, rename_item
+from app.backend.models.fs_schemas import FSItem, DirectoryListing
 
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)
 
+@router.get("/fs/list/{full_path:path}", response_model=DirectoryListing)
+async def list_directory(request: Request, full_path: str = ""):
+    """
+    Returns a JSON directory listing for the mobile app.
+    """
+    base_serve_dir = settings.SERVE_PATH
+    
+    try:
+        full_path = urllib.parse.unquote(full_path)
+        resolved_path = validate_and_resolve_path(
+            requested_path=Path(full_path),
+            base_dir=base_serve_dir,
+            client_host=request.client.host
+        )
+
+        if not resolved_path.is_dir():
+            raise HTTPException(status_code=404, detail="Directory not found")
+
+        pmask = get_pmask(request, Path(full_path))
+        
+        items = []
+        for item in sorted(resolved_path.iterdir(), key=lambda f: (not f.is_dir(), f.name.lower())):
+            if not is_path_forbidden(item):
+                stat = item.stat()
+                rel_path = item.relative_to(base_serve_dir)
+                
+                # Check permissions for the item itself (if it's a dir, check its pmask)
+                # For files, we use the parent's pmask.
+                item_pmask = pmask
+                if item.is_dir():
+                    item_pmask = get_pmask(request, rel_path)
+
+                items.append(FSItem(
+                    name=item.name,
+                    path=str(rel_path),
+                    is_dir=item.is_dir(),
+                    size=stat.st_size,
+                    mtime=stat.st_mtime,
+                    permissions=item_pmask
+                ))
+
+        return DirectoryListing(
+            path=full_path,
+            items=items,
+            permissions=pmask
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error listing directory {full_path}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 @router.get("/fs/search")
-async def search(request: Request, q: str = None):
+async def search(request: Request, q: str = None, format: Optional[str] = None):
     """
     Proxies search request to copyparty.
+    Returns transformed JSON if format=json or Accept: application/json is set.
     """
     if not q:
         raise HTTPException(status_code=400, detail="Query parameter 'q' is required")
     
-    # Optional: could also take a 'path' parameter to limit search scope
-    # For now, search from root.
-    return await search_files(request, q)
+    results = await search_files(request, q)
+    
+    accept_header = request.headers.get("accept", "")
+    if format == "json" or "application/json" in accept_header:
+        hits = results.get("hits", [])
+        items = []
+        for hit in hits:
+            path_str = hit["p"]
+            name = path_str.split("/")[-1] or path_str.split("/")[-2] # Handle trailing slash for dirs
+            is_dir = path_str.endswith("/")
+            
+            # For search results, we provide the pmask of the parent or root
+            # To be safe and simple for mobile app, we'll return 'r' (read-only) for search hits
+            # unless we want to do a full pmask lookup for each hit (expensive).
+            items.append(FSItem(
+                name=name,
+                path=path_str,
+                is_dir=is_dir,
+                size=hit.get("s", 0),
+                mtime=hit.get("t", 0),
+                permissions="r" 
+            ))
+            
+        return DirectoryListing(
+            path=f"search:{q}",
+            items=items,
+            permissions="r"
+        )
+        
+    return results
 
 class SearchResultItem:
     def __init__(self, name, path_str):
