@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request, Response, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 from .core.logger import setup_logging
 from .core.session_manager import session_manager
@@ -11,6 +12,15 @@ from app.backend.routes import download_routes, upload_routes, api_routes, auth_
 from app.frontend.routes import frontend_routes
 
 app = FastAPI(title="Media Vault")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):

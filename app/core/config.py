@@ -16,6 +16,14 @@ class Settings(BaseSettings):
     FRONTEND_PORT: int = 8000
     FRONTEND_HOST: str = "0.0.0.0"
 
+    # CORS Configuration
+    CORS_ORIGINS: list[str] = [
+        "http://localhost",
+        "http://localhost:8081", # Typical React Native Metro Bundler
+        "http://127.0.0.1",
+        "http://10.0.2.2", # Android Emulator
+    ]
+
     @validator("FRONTEND_HOST", always=True, pre=True)
     def set_frontend_host(cls, v, values):
         # If explicitly set in .env and it's not the generic 0.0.0.0, respect it

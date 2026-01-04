@@ -13,7 +13,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Mobile API Support (Server-Side)
+## [~] Track: Mobile API Support (Server-Side)
 *Link: [./conductor/tracks/mobile_api_server_20260104/](./conductor/tracks/mobile_api_server_20260104/)*
 
 ---
