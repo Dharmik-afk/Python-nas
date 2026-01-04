@@ -23,7 +23,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: JSON File System API' (Protocol in workflow.md) (4c2541e)
 
 ## Phase 3: Media Metadata API
-- [ ] **Task 5: Refine Gallery JSON Endpoint**
+- [~] **Task 5: Refine Gallery JSON Endpoint**
   - Verify `GET /api/v1/gallery/{path:path}` returns a clean, mobile-ready JSON array.
   - Ensure all necessary streaming and thumbnail URLs are absolute or correctly relative to the server root.
   - Implement TDD: Verify gallery metadata structure via tests.

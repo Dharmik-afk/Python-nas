@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from unittest.mock import patch, MagicMock
+from pathlib import Path
 from app.backend.database.session import SessionLocal
 from app.backend.database.models import User
 from app.core.security import hasher
@@ -112,3 +113,58 @@ def test_search_json(auth_header):
         assert first_item["name"] == "file1.txt"
         assert first_item["is_dir"] is False
         assert first_item["permissions"] == "r"
+
+def test_gallery_metadata_json(auth_header):
+    """TDD: Test for the gallery metadata JSON endpoint."""
+    with patch("app.backend.routes.api_routes.validate_and_resolve_path") as mock_resolve, \
+         patch("app.backend.routes.api_routes.get_pmask", return_value="r"):
+        
+        # Mock media file
+        mock_file = MagicMock()
+        mock_file.name = "image.jpg"
+        mock_file.is_file.return_value = True
+        mock_file.suffix = ".jpg"
+        
+        mock_resolved_dir = MagicMock()
+        mock_resolved_dir.is_dir.return_value = True
+        mock_resolved_dir.iterdir.return_value = [mock_file]
+        mock_resolve.return_value = mock_resolved_dir
+        
+        response = client.get("/api/v1/gallery/folder", headers=auth_header)
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert "items" in data
+        assert len(data["items"]) == 1
+        
+        item = data["items"][0]
+        assert "name" in item
+        assert "url" in item
+        assert "thumb" in item
+        assert "type" in item
+        assert item["type"] == "image"
+        # Verify thumb URL contains parameter
+        assert "?thumb=" in item["thumb"]
+
+def test_thumbnail_proxy_auth(auth_header):
+    """TDD: Test that thumbnail requests are protected and accept Bearer tokens."""
+    with patch("app.backend.routes.download_routes.validate_and_resolve_path") as mock_resolve, \
+         patch("app.backend.routes.download_routes.copyparty_service.proxy_stream_request") as mock_proxy:
+        
+        mock_file = MagicMock()
+        mock_file.is_file.return_value = True
+        mock_file.relative_to.return_value = Path("test.jpg")
+        mock_resolve.return_value = mock_file
+        
+        # Simulating a successful proxy response
+        mock_proxy.return_value = {"status": "streaming"}
+        
+        response = client.get("/download/test.jpg?thumb=300x300", headers=auth_header)
+        
+        assert response.status_code == 200
+        assert mock_proxy.called
+        
+        # Verify it fails without token
+        client.cookies.clear()
+        response = client.get("/download/test.jpg?thumb=300x300")
+        assert response.status_code == 401
