@@ -52,10 +52,23 @@ Version: 2.5.0 (Architecture 2.0 + Hierarchical Context)
 - **conductor**: Orchestrates multi-step project tracks (plans in `conductor/archive/` or `conductor/tracks/`).
 
 ## 8. Context Loading Protocol
+
 This project uses a hierarchical context system to manage agent instructions.
 
+
+
 **Protocol:**
+
 1.  **Search**: Upon starting a task in a directory, the agent MUST look for a `.context.md` file in the current directory and all parent directories up to the project root.
+
 2.  **Resolution**: The agent MUST prioritize instructions in the *nearest* `.context.md` file (local scope) over those in parent files.
+
 3.  **Aggregation**: The agent SHOULD read all relevant `.context.md` files to build a complete picture, applying the priority rule for conflicts.
+
 4.  **Overlays**: If a `.context.md` file references a role overlay (e.g., `.context/security.md`), the agent MUST read that overlay.
+
+
+
+## 9. Companion Apps
+
+- **ClientApp (Android)**: A standalone React Native (Expo) application located in `ClientApp/`. It has its own isolated git repository and `GEMINI.md` context. It consumes the main server's Mobile API.

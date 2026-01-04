@@ -31,3 +31,11 @@
 *   **Execution:** `make` (via `Makefile`), `scripts/run.sh`.
 *   **Package Management:** `requirements.txt`.
 *   **AI Context Management:** Hierarchical context system (scoped `.context.md` files) with `scripts/context_loader.py` for agent orchestration.
+
+## Mobile Client App (Groundwork)
+*   **Framework:** React Native (Expo Managed Workflow)
+*   **Language:** TypeScript
+*   **State Management:** Zustand (with persistence)
+*   **Navigation:** React Navigation (Stack)
+*   **List Rendering:** @shopify/flash-list
+*   **Media Playback:** expo-av

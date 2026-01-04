@@ -10,8 +10,8 @@ The primary audience for this server consists of **home users** who require a re
 *   **Intuitive Web Interface:** Provide a simple and easy-to-use web interface for browsing, searching, and downloading files.
 *   **Secure Private Storage:** Offer a secure method for managing files on a local network, eliminating the need for complex or untrusted cloud-based storage.
 
-## Future Goals
-*   **Dedicated Client Applications:** Develop native client-side applications for mobile and desktop platforms to offer offline access, background file synchronization, and a more integrated OS experience.
+## Companion Ecosystem
+*   **Mobile Client (Android):** A dedicated React Native (Expo) application providing a high-performance "Google Photos" style experience for browsing and streaming media. Features include secure login, grid-based file exploration, and gesture-controlled video playback.
 
 ## Key Features
 

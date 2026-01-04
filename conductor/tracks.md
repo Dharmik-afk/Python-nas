@@ -13,7 +13,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 
 
----
 
-## [~] Track: React Native Client App (Groundwork)
-*Link: [./conductor/tracks/client_app_groundwork_20260104/](./conductor/tracks/client_app_groundwork_20260104/)*
