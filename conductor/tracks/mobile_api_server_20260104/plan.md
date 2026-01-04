@@ -32,10 +32,10 @@
   - Verify that authentication is enforced for thumbnail generation when using Bearer tokens.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Media Metadata API' (Protocol in workflow.md)
 
-## Phase 4: Finalization & Quality Assurance
+## Phase 4: Finalization & Quality Assurance [checkpoint: eafa699]
 - [x] **Task 7: API Documentation & Schema Review** (df1063c)
   - Review the auto-generated Swagger UI (`/docs`) to ensure all mobile API schemas are correctly documented and named.
 - [x] **Task 8: Comprehensive Mobile API Test Suite** (df1063c)
   - Run a full test pass covering all mobile endpoints with valid, expired, and missing tokens.
   - Ensure coverage meets the >80% requirement for the new API modules.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Finalization & QA' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Finalization & QA' (Protocol in workflow.md) (eafa699)
