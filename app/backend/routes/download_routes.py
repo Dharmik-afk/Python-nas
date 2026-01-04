@@ -11,11 +11,11 @@ from app.core.auth import auth_required
 router = APIRouter(dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)
 
-@router.get("/download/{full_path:path}")
+@router.get("/download/{full_path:path}", tags=["Mobile API"], summary="Stream or download a file")
 async def download_file(request: Request, full_path: str):
     """
     Proxies a file download or media request to the copyparty backend.
-    Supports query parameters for thumbnails/media and Range headers for seeking.
+    Supports query parameters for thumbnails (?thumb=WxH) and Range headers for video streaming.
     """
     logger.info(f"File request received for path: {full_path}")
     base_serve_dir = settings.SERVE_PATH

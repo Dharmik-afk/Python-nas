@@ -16,10 +16,10 @@ from app.backend.models.fs_schemas import FSItem, DirectoryListing
 router = APIRouter(prefix="/api/v1", dependencies=[Depends(auth_required)])
 logger = logging.getLogger(__name__)
 
-@router.get("/fs/list/{full_path:path}", response_model=DirectoryListing)
+@router.get("/fs/list/{full_path:path}", response_model=DirectoryListing, tags=["Mobile API"], summary="List directory contents")
 async def list_directory(request: Request, full_path: str = ""):
     """
-    Returns a JSON directory listing for the mobile app.
+    Returns a structured JSON directory listing for the mobile app.
     """
     base_serve_dir = settings.SERVE_PATH
     
@@ -69,7 +69,7 @@ async def list_directory(request: Request, full_path: str = ""):
         logger.error(f"Error listing directory {full_path}: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@router.get("/fs/search")
+@router.get("/fs/search", tags=["Mobile API"], summary="Search files and folders")
 async def search(request: Request, q: str = None, format: Optional[str] = None):
     """
     Proxies search request to copyparty.
@@ -324,11 +324,11 @@ async def create_directory(request: Request, full_path: str):
         logger.error(f"Error creating directory {full_path}: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@router.get("/gallery/{full_path:path}")
+@router.get("/gallery/{full_path:path}", tags=["Mobile API"], summary="Get media metadata for gallery")
 async def get_gallery_metadata(request: Request, full_path: str):
     """
     Returns a list of previewable media files in the same directory as the target path.
-    Used for lightbox navigation (Next/Prev).
+    Used for lightbox navigation on web and media discovery on mobile.
     """
     base_serve_dir = settings.SERVE_PATH
     

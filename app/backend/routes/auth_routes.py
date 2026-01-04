@@ -28,10 +28,10 @@ def verify_with_copyparty(username: str, internal_pw: str) -> bool:
         logger.error(f"Copyparty handshake failed: {e}")
         return False
 
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=Token, tags=["Mobile API"], summary="OAuth2 compatible token login")
 async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
     """
-    OAuth2 compatible token login, get an access token for future requests.
+    Get an access token for future requests. This is the primary login method for the mobile app.
     """
     db = SessionLocal()
     try:
@@ -217,9 +217,9 @@ async def login(
         db.close()
 
 
-@router.post("/logout")
+@router.post("/logout", tags=["Mobile API"], summary="Logout and clear session")
 async def logout(request: Request):
-    """Logs out the user by clearing their session data."""
+    """Logs out the user by clearing their session data and JWT cookies."""
     session = getattr(request.state, "session", None)
     if session:
         session.username = None

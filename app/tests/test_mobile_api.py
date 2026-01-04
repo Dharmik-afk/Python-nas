@@ -168,3 +168,80 @@ def test_thumbnail_proxy_auth(auth_header):
         client.cookies.clear()
         response = client.get("/download/test.jpg?thumb=300x300")
         assert response.status_code == 401
+
+def test_expired_token(mock_db_user):
+    """Test that expired tokens are rejected."""
+    user, password = mock_db_user
+    # Create a token that expires in -1 minutes
+    from datetime import timedelta
+    expired_token = hasher.create_access_token(
+        data={"sub": user.username},
+        expires_delta=timedelta(minutes=-1)
+    )
+    
+    headers = {"Authorization": f"Bearer {expired_token}"}
+    response = client.get("/api/v1/fs/list/", headers=headers)
+    assert response.status_code == 401
+
+def test_invalid_token(auth_header):
+    """Test that invalid/malformed tokens are rejected."""
+    headers = {"Authorization": "Bearer not-a-valid-token"}
+    response = client.get("/api/v1/fs/list/", headers=headers)
+    assert response.status_code == 401
+
+def test_invalid_credentials(mock_db_user):
+    """Test that incorrect credentials return 401."""
+    user, _ = mock_db_user
+    response = client.post(
+        "/api/v1/auth/token",
+        data={"username": user.username, "password": "wrong-password"}
+    )
+    assert response.status_code == 401
+
+def test_missing_credentials():
+    """Test that missing credentials return 401/422."""
+    response = client.post("/api/v1/auth/token", data={})
+    # FastAPI OAuth2PasswordRequestForm returns 422 if fields are missing
+    assert response.status_code in [401, 422]
+
+def test_list_directory_not_found(auth_header):
+    """Test 404 for non-existent directory."""
+    with patch("app.backend.routes.api_routes.validate_and_resolve_path") as mock_resolve:
+        mock_path = MagicMock()
+        mock_path.is_dir.return_value = False
+        mock_resolve.return_value = mock_path
+        
+        response = client.get("/api/v1/fs/list/non-existent", headers=auth_header)
+        assert response.status_code == 404
+
+def test_search_missing_query(auth_header):
+    """Test 400 for missing search query."""
+    response = client.get("/api/v1/fs/search?format=json", headers=auth_header)
+    assert response.status_code == 400
+
+def test_login_handshake_failed(mock_db_user):
+    """Test login failure when backend handshake fails."""
+    user, password = mock_db_user
+    with patch("app.backend.routes.auth_routes.verify_with_copyparty", return_value=False):
+        response = client.post(
+            "/api/v1/auth/token",
+            data={"username": user.username, "password": password}
+        )
+        assert response.status_code == 502
+
+def test_login_no_permissions(mock_db_user):
+    """Test login failure when user has no backend permissions."""
+    user, password = mock_db_user
+    with patch("app.backend.routes.auth_routes.verify_with_copyparty", return_value=True), \
+         patch("app.backend.routes.auth_routes.get_user_permissions_from_config", return_value=""):
+        response = client.post(
+            "/api/v1/auth/token",
+            data={"username": user.username, "password": password}
+        )
+        assert response.status_code == 403
+
+def test_logout_api(auth_header):
+    """Test logout endpoint."""
+    response = client.post("/api/v1/auth/logout", headers=auth_header)
+    assert response.status_code == 200
+    assert "access_token" not in response.cookies
