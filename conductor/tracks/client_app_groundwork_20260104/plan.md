@@ -2,7 +2,7 @@
 
 This plan is optimized for the Termux environment on Android, utilizing Expo (Managed Workflow) and Zustand for state management. It strictly avoids native tooling dependencies.
 
-## Phase 1: Project Scaffolding & Setup (Termux/Expo)
+## Phase 1: Project Scaffolding & Setup (Termux/Expo) [checkpoint: d68005d]
 - [x] **Task 1: Environment Verification** 94f5efb
   - Verify `node -v` and `npm -v`.
   - Install Node.js via Termux pkg if missing (`pkg install nodejs`).
