@@ -47,11 +47,11 @@ This plan is optimized for the Termux environment on Android, utilizing Expo (Ma
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: File Explorer' (Protocol in workflow.md)
 
 ## Phase 4: Media Player (Expo AV)
-- [ ] **Task 10: Integrate Video Player**
+- [x] **Task 10: Integrate Video Player** 17c122e
   - Create `screens/PlayerScreen.js`.
   - Use `expo-av` (`Video` component) for playback.
   - **Constraint:** Do NOT use `react-native-video` (avoids native linking issues in Termux).
-- [ ] **Task 11: Implement Gestures**
+- [x] **Task 11: Implement Gestures** e7769c9
   - Use `react-native-gesture-handler` to implement:
     - Double-tap to seek.
     - (Optional) Vertical swipe for brightness/volume (if feasible with Expo libraries, otherwise provide on-screen sliders).
