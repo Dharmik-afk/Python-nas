@@ -21,7 +21,7 @@ This plan is optimized for the Termux environment on Android, utilizing Expo (Ma
   - Create `ClientApp/GEMINI.md` containing the "React Native App (Expo + Zustand) on Termux" context rules to guide future sub-agents.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Project Scaffolding' (Protocol in workflow.md)
 
-## Phase 2: Authentication & Security
+## Phase 2: Authentication & Security [checkpoint: 6a98adc]
 - [x] **Task 5: Implement Auth Store (Zustand)** 104c0e8
   - Create `store/useAuthStore.js`.
   - Implement actions: `login`, `logout`, `setServerUrl`.
