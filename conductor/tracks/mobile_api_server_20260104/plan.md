@@ -10,7 +10,7 @@
   - Test the `/api/v1/auth/token` endpoint to ensure it returns a valid JWT with appropriate expiration.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Groundwork & Security' (Protocol in workflow.md) (5a36bb5)
 
-## Phase 2: JSON File System API
+## Phase 2: JSON File System API [checkpoint: 4c2541e]
 - [x] **Task 3: Implement JSON Directory Listing Endpoint** (4e9dc1f)
   - Create/Update an endpoint `GET /api/v1/fs/list/{path:path}`.
   - Define a Pydantic schema for file/folder objects (name, size, type, permissions, mtime).
@@ -20,7 +20,7 @@
   - Ensure the search logic returns the same underlying data structure as the directory listing.
   - Implement TDD: Write failing tests for JSON search response.
   - *Fix:* Updated `search_files` to send `&json` as a flag instead of `&json=` to ensure Copyparty returns JSON.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: JSON File System API' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: JSON File System API' (Protocol in workflow.md) (4c2541e)
 
 ## Phase 3: Media Metadata API
 - [ ] **Task 5: Refine Gallery JSON Endpoint**
