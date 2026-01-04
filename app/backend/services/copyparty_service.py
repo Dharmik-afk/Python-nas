@@ -145,11 +145,24 @@ async def search_files(request: Request, query: str, relative_path: Path = Path(
     """
     Performs a recursive search using the copyparty backend.
     """
-    params = {
-        "q": query,
-        "json": ""  # Copyparty uses &json to return JSON results
-    }
-    return await proxy_api_request(request, relative_path, params=params)
+    url = _get_proxy_url(relative_path)
+    headers = get_proxy_headers(request)
+    headers["Accept"] = "application/json"
+    
+    # Manually build URL to support flag-style 'json' parameter
+    # Copyparty expects &json (flag) rather than &json= (empty value)
+    import urllib.parse
+    encoded_query = urllib.parse.quote(query)
+    separator = "&" if "?" in url else "?"
+    url += f"{separator}q={encoded_query}&json"
+
+    try:
+        r = requests.get(url, headers=headers, timeout=10)
+        r.raise_for_status()
+        return r.json()
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Proxy search request failed: {e}")
+        raise HTTPException(status_code=502, detail=f"Backend search failed: {str(e)}")
 
 async def rename_item(request: Request, relative_path: Path, new_name: str) -> bool:
     """

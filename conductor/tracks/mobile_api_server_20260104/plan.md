@@ -11,14 +11,15 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Groundwork & Security' (Protocol in workflow.md) (5a36bb5)
 
 ## Phase 2: JSON File System API
-- [~] **Task 3: Implement JSON Directory Listing Endpoint**
+- [x] **Task 3: Implement JSON Directory Listing Endpoint** (4e9dc1f)
   - Create/Update an endpoint `GET /api/v1/fs/list/{path:path}`.
   - Define a Pydantic schema for file/folder objects (name, size, type, permissions, mtime).
   - Implement TDD: Write failing tests in `app/tests/test_mobile_api.py` first.
-- [~] **Task 4: Implement JSON Search Results Endpoint**
+- [x] **Task 4: Implement JSON Search Results Endpoint** (4e9dc1f)
   - Modify `GET /api/v1/fs/search` to detect an `Accept: application/json` header or a `format=json` query parameter.
   - Ensure the search logic returns the same underlying data structure as the directory listing.
   - Implement TDD: Write failing tests for JSON search response.
+  - *Fix:* Updated `search_files` to send `&json` as a flag instead of `&json=` to ensure Copyparty returns JSON.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: JSON File System API' (Protocol in workflow.md)
 
 ## Phase 3: Media Metadata API
