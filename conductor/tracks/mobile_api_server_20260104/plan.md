@@ -1,6 +1,6 @@
 # Implementation Plan: Mobile API Support (Server-Side)
 
-## Phase 1: Groundwork & Security
+## Phase 1: Groundwork & Security [checkpoint: 5a36bb5]
 - [x] **Task 1: Configure CORS for Mobile Development** (67230fe)
   - Update `app/main.py` to include `CORSMiddleware`.
   - Allow origins typical for mobile development (e.g., `http://localhost`, `http://10.0.2.2` for Android emulator).
@@ -8,7 +8,7 @@
 - [x] **Task 2: Verify and Refine Bearer Token Authentication** (67230fe)
   - Ensure `app/core/auth.py` and route dependencies correctly extract tokens from the `Authorization: Bearer <token>` header.
   - Test the `/api/v1/auth/token` endpoint to ensure it returns a valid JWT with appropriate expiration.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Groundwork & Security' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Groundwork & Security' (Protocol in workflow.md) (5a36bb5)
 
 ## Phase 2: JSON File System API
 - [ ] **Task 3: Implement JSON Directory Listing Endpoint**
