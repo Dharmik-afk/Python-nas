@@ -23,19 +23,19 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: JSON File System API' (Protocol in workflow.md) (4c2541e)
 
 ## Phase 3: Media Metadata API
-- [~] **Task 5: Refine Gallery JSON Endpoint**
+- [x] **Task 5: Refine Gallery JSON Endpoint** (a64bbf3)
   - Verify `GET /api/v1/gallery/{path:path}` returns a clean, mobile-ready JSON array.
   - Ensure all necessary streaming and thumbnail URLs are absolute or correctly relative to the server root.
   - Implement TDD: Verify gallery metadata structure via tests.
-- [ ] **Task 6: Verify Thumbnail Proxy for Mobile Access**
+- [x] **Task 6: Verify Thumbnail Proxy for Mobile Access** (a64bbf3)
   - Ensure the `?thumb=WxH` parameter on download routes is correctly handled for mobile clients.
   - Verify that authentication is enforced for thumbnail generation when using Bearer tokens.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Media Metadata API' (Protocol in workflow.md)
 
 ## Phase 4: Finalization & Quality Assurance
-- [ ] **Task 7: API Documentation & Schema Review**
+- [x] **Task 7: API Documentation & Schema Review** (df1063c)
   - Review the auto-generated Swagger UI (`/docs`) to ensure all mobile API schemas are correctly documented and named.
-- [ ] **Task 8: Comprehensive Mobile API Test Suite**
+- [x] **Task 8: Comprehensive Mobile API Test Suite** (df1063c)
   - Run a full test pass covering all mobile endpoints with valid, expired, and missing tokens.
   - Ensure coverage meets the >80% requirement for the new API modules.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Finalization & QA' (Protocol in workflow.md)
