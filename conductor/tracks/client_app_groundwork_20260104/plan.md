@@ -33,7 +33,7 @@ This plan is optimized for the Termux environment on Android, utilizing Expo (Ma
   - Error Handling: Display clear error messages (e.g., "Connection Failed", "Invalid Credentials").
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Authentication' (Protocol in workflow.md)
 
-## Phase 3: File Explorer (Google Photos Aesthetic)
+## Phase 3: File Explorer (Google Photos Aesthetic) [checkpoint: f757a62]
 - [x] **Task 7: Implement Data Store (Zustand)** 1845438
   - Create `store/useFileStore.js` to manage directory contents and caching.
 - [x] **Task 8: Implement Directory Grid View** 8875b46
