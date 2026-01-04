@@ -7,6 +7,7 @@
     *   Unified frontend architecture serving as a management layer.
     *   **Core Engine:** Deep integration with `copyparty` for file-serving operations, indexing, and management.
     *   **Process Management:** Supervisor model managing the FastAPI and `copyparty` subprocesses.
+    *   **Mobile API:** JSON-based REST API with Pydantic response modeling and JWT security.
 
 ## Frontend
 *   **Template Engine:** Jinja2 (Server-side rendering)

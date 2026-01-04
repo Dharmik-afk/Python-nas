@@ -11,10 +11,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 ## [x] Track: Integrate video thumbnail generation
 *Link: [./conductor/tracks/video_thumbnails_20260102/](./conductor/tracks/video_thumbnails_20260102/)*
 
----
 
-## [~] Track: Mobile API Support (Server-Side)
-*Link: [./conductor/tracks/mobile_api_server_20260104/](./conductor/tracks/mobile_api_server_20260104/)*
 
 ---
 

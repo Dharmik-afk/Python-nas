@@ -15,6 +15,8 @@ The primary audience for this server consists of **home users** who require a re
 
 ## Key Features
 
+*   **Dedicated Mobile API:** Robust, JSON-based RESTful API supporting JWT Bearer token authentication, directory browsing, and media discovery for companion applications.
+
 *   **Mobile-First Design:** A fully responsive user interface ensuring a seamless experience across mobile phones, tablets, and desktop computers.
 
 *   **Unified Frontend:** Acts as a modern wrapper and management layer for the robust `copyparty` file-serving engine.
