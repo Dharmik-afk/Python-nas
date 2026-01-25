@@ -21,7 +21,6 @@ class Settings(BaseSettings):
         "http://localhost",
         "http://localhost:8081", # Typical React Native Metro Bundler
         "http://127.0.0.1",
-        "http://10.0.2.2", # Android Emulator
     ]
 
     @validator("FRONTEND_HOST", always=True, pre=True)
@@ -29,7 +28,6 @@ class Settings(BaseSettings):
         # If explicitly set in .env and it's not the generic 0.0.0.0, respect it
         if v and v != "0.0.0.0":
             return v
-            
         # Default based on DEBUG: localhost for debug, 0.0.0.0 (All interfaces) for production
         if values.get("DEBUG"):
             return "127.0.0.1"
@@ -44,7 +42,7 @@ class Settings(BaseSettings):
         """
         if self.DEBUG:
             return "127.0.0.1"
-        return get_lan_ip()
+        return "0.0.0.0"
 
     LOG_LEVEL: str = "DEBUG"
     LOG_FILE: Path = BASE_DIR / "logs" / "server.log"

@@ -1,8 +1,8 @@
 .PHONY: all setup run test clean clean-all install setup-sys db-init list-users add-user delete-user change-password sync-users set-debug
 
-VENV = venv
+VENV = .venv-pypy
 VENV_BIN = $(VENV)/bin
-PYTHON = $(VENV_BIN)/python3
+PYTHON = $(VENV_BIN)/pypy3
 PIP = $(VENV_BIN)/pip
 ALEMBIC = $(VENV_BIN)/alembic
 
