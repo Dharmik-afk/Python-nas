@@ -2,8 +2,8 @@
 
 VENV = .venv
 VENV_BIN = $(VENV)/bin
-PYTHON = uv run python3
-ALEMBIC = uv run alembic
+PYTHON = uv run --no-sync python3
+ALEMBIC = uv run --no-sync alembic
 
 # Default target
 all: setup run

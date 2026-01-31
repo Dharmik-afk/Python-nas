@@ -28,7 +28,7 @@ def start_copyparty():
     global copyparty_proc
     # Bind Copyparty to the configured host (e.g., 0.0.0.0 for UI access)
     cmd = [
-        VENV_PYTHON, "run", "python3", "-m", "copyparty",
+        VENV_PYTHON, "run", "--no-sync", "python3", "-m", "copyparty",
         "-c", str(COPYPARTY_CONF),
         "-i", settings.COPYPARTY_HOST,
         "-p", str(settings.COPYPARTY_PORT)
@@ -40,7 +40,7 @@ def start_copyparty():
 def start_uvicorn():
     global uvicorn_proc
     cmd = [
-        VENV_PYTHON, "run", "python3", "-m", "uvicorn",
+        VENV_PYTHON, "run", "--no-sync", "python3", "-m", "uvicorn",
         "app.main:app",
         "--host", settings.FRONTEND_HOST,
         "--port", str(settings.FRONTEND_PORT)

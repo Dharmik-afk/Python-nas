@@ -2,34 +2,21 @@
 
 # run.sh - Robust launcher for the Python File Server
 
-# Navigate to the project root directory (one level up from scripts/)
+# Navigate to the project root directory
 cd "$(dirname "$0")/.." || exit
 ROOT_DIR="$PWD"
 
 # Pre-flight checks
-
 if [ ! -d ".venv" ]; then
-
     echo "Error: Virtual environment '.venv' not found. Please run 'make setup' first."
-
     exit 1
-
 fi
 
-
-
 # Ensure storage directories exist
-
 mkdir -p storage/files storage/db storage/cache logs copyparty
 
-
-
 echo "Syncing configuration..."
-
-uv run python3 -m app.core.user_sync
-
-
+uv run --no-sync python3 -m app.core.user_sync
 
 echo "Starting Supervisor..."
-
-uv run python3 supervisor/supervisor.py
+uv run --no-sync python3 supervisor/supervisor.py

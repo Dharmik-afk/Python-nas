@@ -56,3 +56,6 @@ dependencies = [
     "wheel==0.45.1",
     "xmltodict==1.0.2",
 ]
+
+[tool.uv]
+link-mode = "copy"
