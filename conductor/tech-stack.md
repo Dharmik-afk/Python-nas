@@ -29,7 +29,7 @@
 
 ## Infrastructure & Tooling
 *   **Execution:** `make` (via `Makefile`), `scripts/run.sh`.
-*   **Package Management:** `requirements.txt`.
+*   **Package Management:** `uv` (`pyproject.toml`, `uv.lock`).
 *   **AI Context Management:** Hierarchical context system (scoped `.context.md` files) with `scripts/context_loader.py` for agent orchestration.
 
 ## Mobile Client App (Groundwork)
