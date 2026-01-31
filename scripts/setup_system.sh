@@ -15,8 +15,8 @@ PACKAGES=(
     "sqlite"
     "libjpeg-turbo"
     "build-essential"
-    "python-cryptography"
-    "python-pillow"
+    "python-cryptography",
+    "python-pillow",
     "binutils",
     "uv"
 )

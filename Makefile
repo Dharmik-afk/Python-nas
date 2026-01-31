@@ -53,7 +53,7 @@ set-debug:
 	CUSTOM_SERVE_DIR=
 # Run tests
 test:
-	uv run pytest app/tests
+	PYTHONPATH=. uv run pytest app/tests
 
 # User management
 list-users:
