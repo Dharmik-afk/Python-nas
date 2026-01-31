@@ -17,7 +17,8 @@ PACKAGES=(
     "build-essential"
     "python-cryptography"
     "python-pillow"
-    "binutils"
+    "binutils",
+    "uv"
 )
 
 # Install packages

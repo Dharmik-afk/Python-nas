@@ -7,19 +7,29 @@ cd "$(dirname "$0")/.." || exit
 ROOT_DIR="$PWD"
 
 # Pre-flight checks
-if [ ! -d "venv" ]; then
-    echo "Error: Virtual environment 'venv' not found. Please run 'make setup' first."
+
+if [ ! -d ".venv" ]; then
+
+    echo "Error: Virtual environment '.venv' not found. Please run 'make setup' first."
+
     exit 1
+
 fi
 
+
+
 # Ensure storage directories exist
+
 mkdir -p storage/files storage/db storage/cache logs copyparty
 
-echo "Activating virtual environment..."
-source venv/bin/activate
+
 
 echo "Syncing configuration..."
-python3 -m app.core.user_sync
+
+uv run python3 -m app.core.user_sync
+
+
 
 echo "Starting Supervisor..."
-python3 supervisor/supervisor.py
+
+uv run python3 supervisor/supervisor.py

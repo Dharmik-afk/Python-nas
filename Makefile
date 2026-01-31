@@ -1,10 +1,9 @@
 .PHONY: all setup run test clean clean-all install setup-sys db-init list-users add-user delete-user change-password sync-users set-debug
 
-VENV = .venv-pypy
+VENV = .venv
 VENV_BIN = $(VENV)/bin
-PYTHON = $(VENV_BIN)/pypy3
-PIP = $(VENV_BIN)/pip
-ALEMBIC = $(VENV_BIN)/alembic
+PYTHON = uv run python3
+ALEMBIC = uv run alembic
 
 # Default target
 all: setup run
@@ -17,13 +16,10 @@ setup-sys:
 	./scripts/setup_system.sh
 
 # Install Python dependencies in venv
-install: $(VENV)/bin/activate
-
-$(VENV)/bin/activate:
-	@echo "Creating virtual environment..."
-	python3 -m venv --system-site-packages $(VENV)
-	$(PIP) install --upgrade pip
-	$(PIP) install -r requirements.txt
+install:
+	@echo "Initializing environment and dependencies with uv..."
+	uv venv --system-site-packages $(VENV)
+	uv sync
 
 # Database initialization/migration
 db-init:
@@ -57,32 +53,32 @@ set-debug:
 	CUSTOM_SERVE_DIR=
 # Run tests
 test:
-	$(PYTHON) -m pytest app/tests
+	uv run pytest app/tests
 
 # User management
 list-users:
-	$(PYTHON) scripts/manage.py list-users
+	uv run python3 scripts/manage.py list-users
 
 add-user:
 	@if [ -z "$(user)" ]; then echo "Usage: make add-user user=<name> [perms=<r|rw|rwma|ADMIN|USER|GUEST>]"; exit 1; fi
-	$(PYTHON) scripts/manage.py add-user $(user) --perms $(or $(perms),r)
+	uv run python3 scripts/manage.py add-user $(user) --perms $(or $(perms),r)
 
 add-admin:
 	@USER="admin"; \
 	PASS="admin_pass_a7b3c9d1e5f"; \
 	echo "Adding default admin user ($$USER)..."; \
-	printf "$$PASS\n$$PASS\n" | $(PYTHON) scripts/manage.py add-user $$USER --perms ADMIN
+	printf "$$PASS\n$$PASS\n" | uv run python3 scripts/manage.py add-user $$USER --perms ADMIN
 
 delete-user:
 	@if [ -z "$(user)" ]; then echo "Usage: make delete-user user=<name>"; exit 1; fi
-	$(PYTHON) scripts/manage.py delete-user $(user)
+	uv run python3 scripts/manage.py delete-user $(user)
 
 change-password:
 	@if [ -z "$(user)" ]; then echo "Usage: make change-password user=<name>"; exit 1; fi
-	$(PYTHON) scripts/manage.py change-password $(user)
+	uv run python3 scripts/manage.py change-password $(user)
 
 sync-users:
-	$(PYTHON) scripts/manage.py sync
+	uv run python3 scripts/manage.py sync
 
 # Soft clean (logs and caches)
 clean:
