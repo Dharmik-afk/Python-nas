@@ -90,8 +90,9 @@ clean:
 	rm -rf alembic/__pycache__
 	rm -f logs/*.log storage/db/*.log
 	find . -type d -name "__pycache__" -exec rm -rf {} +
-	pkill -f uvicorn || true
-	pkill -f copyparty || true
+	-pkill -f "supervisor/supervisor.py"
+	-pkill -f "app.main:app"
+	-pkill -f "copyparty"
 
 clean-log:
 	 rm -f logs/*.log storage/db/*.log

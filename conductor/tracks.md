@@ -11,6 +11,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 ## [x] Track: Integrate video thumbnail generation
 *Link: [./conductor/tracks/video_thumbnails_20260102/](./conductor/tracks/video_thumbnails_20260102/)*
 
+---
 
-
-
+- [ ] **Track: Integrate uv into the existing infrastructure for dependency and environment management.**
+*Link: [./tracks/uv_integration_20260131/](./tracks/uv_integration_20260131/)*
