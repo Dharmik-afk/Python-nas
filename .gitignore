@@ -1,4 +1,5 @@
 # Environments
+.venv/
 .venv-pypy/
 .env
 node_modules/

@@ -40,7 +40,7 @@ Version: 2.5.0 (Architecture 2.0 + Hierarchical Context)
 - **Session Persistence**: `storage/db/sessions.json` manages user sessions across restarts.
 
 ## 7. Operational Workflow
-- **Setup**: `make setup` (System pkgs, Venv, Pip, DB Init, Default Admin).
+- **Setup**: `make setup` (System pkgs, uv sync, DB Init, Default Admin).
 - **Run**: `make run` (Triggers `scripts/run.sh` which launches the supervisor).
 - **Set Directory**: `make set-dir dir=/path/to/media` to update the jail root.
 - **User Management**: `make add-user user=name`, `make list-users`, `make delete-user user=name`.

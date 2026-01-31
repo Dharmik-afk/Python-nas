@@ -9,7 +9,7 @@ This manual documents the operational procedures for managing the single-port fi
 ## 1. Quick Start
 
 ### Installation
-Run the automated setup to create the virtual environment, install dependencies, and initialize the database:
+Run the automated setup to create the uv environment, install dependencies, and initialize the database:
 ```bash
 make setup
 ```
