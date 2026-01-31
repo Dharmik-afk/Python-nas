@@ -15,3 +15,12 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Integrate uv into the existing infrastructure for dependency and environment management.**
 *Link: [./tracks/uv_integration_20260131/](./tracks/uv_integration_20260131/)*
+---
+
+- [ ] **Track: Establish the foundational support for PyPy 3.12, including environment setup and dynamic interpreter switching in the build system.**
+*Link: [./tracks/pypy_groundwork_20260201/](./tracks/pypy_groundwork_20260201/)*
+
+---
+
+- [ ] **Track: Ensure the Supervisor, FastAPI server, and all management scripts operate correctly under PyPy 3.12.**
+*Link: [./tracks/pypy_runtime_compatibility_20260201/](./tracks/pypy_runtime_compatibility_20260201/)*
