@@ -1,6 +1,6 @@
 # Implementation Plan: PyPy Groundwork
 
-## Phase 1: Dependency Audit & PyPy Environment Setup
+## Phase 1: Dependency Audit & PyPy Environment Setup [checkpoint: 52081f1]
 **Goal:** Confirm runtime compatibility for all dependencies and establish the `.venv-pypy` environment.
 
 - [x] Task: Audit dependencies for PyPy compatibility c67b3ea
@@ -16,7 +16,7 @@
     - *Note: Adapted to use `pip` and `requirements-pypy.txt` as `uv` failed to inspect PyPy on Termux. Also downgraded to PyPy 3.11.*
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Dependency Audit & PyPy Environment Setup' (Protocol in workflow.md)
 
-## Phase 2: Dynamic Runtime Logic (Makefile & Scripts)
+## Phase 2: Dynamic Runtime Logic (Makefile & Scripts) [checkpoint: 52081f1]
 **Goal:** Enable switching between `.venv` and `.venv-pypy` via the `USE_PYPY` flag.
 
 - [x] Task: Write Tests: Verify `scripts/run.sh` environment activation logic 14761fe
