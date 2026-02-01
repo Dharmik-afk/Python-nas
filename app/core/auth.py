@@ -2,7 +2,16 @@ import base64
 from typing import Optional
 from fastapi import Request, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
+import base64
+import os
+import hashlib
+import hmac
+import logging
+from typing import Optional
+from fastapi import Request, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
+
 try:
     from cryptography.fernet import Fernet
     HAS_CRYPTO = True
@@ -13,22 +22,72 @@ except ImportError:
 from .config import settings
 from .security import hasher
 from .session_manager import session_manager, Session
-import logging
 
 logger = logging.getLogger(__name__)
 
 # OAuth2 scheme for Swagger UI and API clients
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token", auto_error=False)
 
-def get_basic_auth_header(username, password):
-    """Generates a Basic Authentication header string."""
-    credentials = f"{username}:{password}"
-    return "Basic " + base64.b64encode(credentials.encode()).decode()
+class PurePythonCrypter:
+    """
+    A pure-python authenticated encryption implementation.
+    Uses HMAC-SHA256 for integrity and a SHA256-based stream cipher for confidentiality.
+    Used as a replacement when the 'cryptography' library is unavailable.
+    """
+    def __init__(self, key: bytes):
+        # Derive a 32-byte internal key
+        self.key = hashlib.sha256(key).digest()
 
-def _get_fernet() -> Fernet:
+    def _get_keystream(self, iv: bytes, length: int):
+        keystream = b""
+        counter = 0
+        while len(keystream) < length:
+            # Simple but effective keystream generation using HMAC
+            keystream += hmac.new(self.key, iv + str(counter).encode(), hashlib.sha256).digest()
+            counter += 1
+        return keystream[:length]
+
+    def encrypt(self, plaintext: str) -> str:
+        data = plaintext.encode()
+        iv = os.urandom(16)
+        keystream = self._get_keystream(iv, len(data))
+        ciphertext = bytes([b ^ k for b, k in zip(data, keystream)])
+        
+        # payload = version(1) + iv(16) + ciphertext(n)
+        payload = b"\x01" + iv + ciphertext
+        signature = hmac.new(self.key, payload, hashlib.sha256).digest()
+        
+        return base64.urlsafe_b64encode(payload + signature).decode()
+
+    def decrypt(self, token: str) -> str:
+        try:
+            raw = base64.urlsafe_b64decode(token.encode())
+            if len(raw) < 49: # 1 (ver) + 16 (iv) + 32 (sig)
+                return ""
+            
+            payload, signature = raw[:-32], raw[-32:]
+            
+            # Verify signature first (EtM)
+            if not hmac.compare_digest(hmac.new(self.key, payload, hashlib.sha256).digest(), signature):
+                return ""
+            
+            if payload[0] != 1: # Check version
+                return ""
+            
+            iv, ciphertext = payload[1:17], payload[17:]
+            keystream = self._get_keystream(iv, len(ciphertext))
+            return bytes([b ^ k for b, k in zip(ciphertext, keystream)]).decode()
+        except Exception:
+            return ""
+
+def _get_crypter():
+    key = hasher.derive_key(settings.SECRET_KEY)
+    return PurePythonCrypter(key)
+
+def _get_fernet() -> Optional[Fernet]:
     """Derives a 32-byte key from the SECRET_KEY for Fernet encryption."""
     if not HAS_CRYPTO:
-        raise ImportError("cryptography package is required for Fernet operations")
+        return None
     key = hasher.derive_key(settings.SECRET_KEY)
     return Fernet(base64.urlsafe_b64encode(key))
 
@@ -36,25 +95,46 @@ def encrypt_string(text: str) -> str:
     """Encrypts a string for storage in the session."""
     if not text:
         return ""
-    if not HAS_CRYPTO:
-        logger.warning("Encryption requested but 'cryptography' is not installed. Using plain-text.")
-        return text
-    f = _get_fernet()
-    return f.encrypt(text.encode()).decode()
+    
+    if HAS_CRYPTO:
+        f = _get_fernet()
+        if f:
+            try:
+                return f.encrypt(text.encode()).decode()
+            except Exception as e:
+                logger.error(f"Fernet encryption failed: {e}")
+
+    # Fallback to PurePythonCrypter
+    return _get_crypter().encrypt(text)
 
 def decrypt_string(encrypted_text: str) -> str:
     """Decrypts a string retrieved from the session."""
     if not encrypted_text:
         return ""
-    if not HAS_CRYPTO:
-        # If it was "encrypted" without crypto, it's just plain text
-        return encrypted_text
-    try:
+
+    # Try PurePythonCrypter first if it looks like one (starts with \x01 -> 'AQ' in b64)
+    if encrypted_text.startswith("AQ"):
+        decrypted = _get_crypter().decrypt(encrypted_text)
+        if decrypted:
+            return decrypted
+
+    # Try Fernet if available
+    if HAS_CRYPTO:
         f = _get_fernet()
-        return f.decrypt(encrypted_text.encode()).decode()
-    except Exception:
-        # Fallback for plain text if it fails decryption (e.g. migration or dev)
-        return encrypted_text
+        if f:
+            try:
+                return f.decrypt(encrypted_text.encode()).decode()
+            except Exception:
+                pass
+    
+    # Final fallback: try PurePythonCrypter even if it doesn't start with AQ
+    # (in case of different base64 padding/encoding)
+    decrypted = _get_crypter().decrypt(encrypted_text)
+    if decrypted:
+        return decrypted
+
+    # If all fails, return as-is (might be plain text from previous workaround or dev)
+    return encrypted_text
 
 async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_scheme)) -> Session:
     """

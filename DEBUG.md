@@ -15,11 +15,11 @@
 - **Security Impact:** Proxy traffic between FastAPI and Copyparty (port 8090) contains plain-text credentials. This is mitigated by Copyparty normally listening only on `127.0.0.1`.
 
 ### Issue: PyPy 3.11 + Cryptography on Termux
-- **Status:** **WORKAROUND ACTIVE**
+- **Status:** **FIXED / WORKAROUND ACTIVE**
 - **Symptom:** `ImportError: No module named 'cryptography'` when running with `USE_PYPY=true`.
 - **Root Cause:** `cryptography` requires Rust to build from source on PyPy. The system-wide `python-cryptography` package in Termux is built for CPython 3.12 and is binary-incompatible with PyPy.
-- **Workaround:** `app/core/auth.py` now uses a conditional import for `cryptography`. If missing, it falls back to plain-text for session auth headers.
-- **Security Impact:** Session auth headers (internal proxy credentials) are stored in plain-text in the session database when running under PyPy without the `cryptography` library.
+- **Workaround:** `app/core/auth.py` now uses a custom `PurePythonCrypter` (HMAC-SHA256 + SHA256 stream cipher) when the binary `cryptography` library is missing. This ensures sessions are encrypted on both CPython and PyPy.
+- **Security Impact:** Resolved. Encrypted sessions are now supported on all runtimes.
 
 ### Issue: logger Import Failure in app/core/auth.py
 - **Status:** **FIXED**
