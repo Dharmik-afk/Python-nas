@@ -17,7 +17,7 @@ from app.core.config import settings
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] [Supervisor] %(message)s")
 logger = logging.getLogger(__name__)
 
-VENV_PYTHON = "uv"
+VENV_PYTHON = "python3"
 COPYPARTY_CONF = BASE_DIR / "copyparty" / "copyparty.conf"
 
 # Process handles
@@ -28,7 +28,7 @@ def start_copyparty():
     global copyparty_proc
     # Bind Copyparty to the configured host (e.g., 0.0.0.0 for UI access)
     cmd = [
-        VENV_PYTHON, "run", "--no-sync", "python3", "-m", "copyparty",
+        VENV_PYTHON, "-m", "copyparty",
         "-c", str(COPYPARTY_CONF),
         "-i", settings.COPYPARTY_HOST,
         "-p", str(settings.COPYPARTY_PORT)
@@ -40,7 +40,7 @@ def start_copyparty():
 def start_uvicorn():
     global uvicorn_proc
     cmd = [
-        VENV_PYTHON, "run", "--no-sync", "python3", "-m", "uvicorn",
+        VENV_PYTHON, "-m", "uvicorn",
         "app.main:app",
         "--host", settings.FRONTEND_HOST,
         "--port", str(settings.FRONTEND_PORT)
