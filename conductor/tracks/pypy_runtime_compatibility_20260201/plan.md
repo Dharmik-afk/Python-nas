@@ -10,10 +10,10 @@
     - [x] Test critical management commands (e.g., `list-users`, `add-user`) under PyPy.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Supervisor & Management Compatibility' (Protocol in workflow.md) 36ae646
 
-## Phase 4: Full System Verification & Documentation
-- [~] Task: Run full `pytest` suite under CPython (default)
-- [ ] Task: Run full `pytest` suite under PyPy (`USE_PYPY=true`)
-- [ ] Task: Update `ADMIN_MANUAL.md` or `README.md`
-    - [ ] Add a section on "High-Performance Mode (PyPy)".
-    - [ ] Document the `USE_PYPY=true` flag and `make setup-pypy` command.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Full System Verification & Documentation' (Protocol in workflow.md)
+## Phase 4: Full System Verification & Documentation [checkpoint: 9cdbfb1]
+- [x] Task: Run full `pytest` suite under CPython (default) 9cdbfb1
+- [x] Task: Run full `pytest` suite under PyPy (`USE_PYPY=true`) 9cdbfb1
+- [x] Task: Update `ADMIN_MANUAL.md` or `README.md` 9cdbfb1
+    - [x] Add a section on "High-Performance Mode (PyPy)".
+    - [x] Document the `USE_PYPY=true` flag and `make setup-pypy` command.
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Full System Verification & Documentation' (Protocol in workflow.md) 9cdbfb1
