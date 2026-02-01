@@ -22,5 +22,10 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Ensure the Supervisor, FastAPI server, and all management scripts operate correctly under PyPy 3.12.**
+- [x] **Track: Ensure the Supervisor, FastAPI server, and all management scripts operate correctly under PyPy 3.12.**
 *Link: [./tracks/pypy_runtime_compatibility_20260201/](./tracks/pypy_runtime_compatibility_20260201/)*
+
+---
+
+- [ ] **Track: Strict path validation jail for CUSTOM_SERVE_DIR and fail-fast startup security check.**
+*Link: [./tracks/security_jail_20260201/](./tracks/security_jail_20260201/)*
