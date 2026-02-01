@@ -12,7 +12,7 @@ Version: 2.5.0 (Architecture 2.0 + Hierarchical Context)
 - **Process Management**: A Python-based `supervisor/supervisor.py` manages the lifecycles of both FastAPI (Uvicorn) and Copyparty.
 
 ## 2. Technology Stack
-- **Backend**: Python 3.12 (FastAPI), Pydantic (Settings), SQLAlchemy (SQLite), Alembic (Migrations).
+- **Backend**: Python 3.x (CPython 3.12, PyPy 3.11+), FastAPI, Pydantic (Settings), SQLAlchemy (SQLite), Alembic (Migrations).
 - **Frontend**: Jinja2 Templates, HTMX (Partial Swaps), Alpine.js (UI State/Interactions), Bootstrap CSS + Icons.
 - **Media Engine**: Copyparty (Indexing, Thumbnails, Range Requests), custom `sw.js` (Service Worker) for zero-loading streaming and caching.
 - **Process Control**: Supervisor (Python `subprocess`), Makefile (Task Runner).
@@ -40,8 +40,8 @@ Version: 2.5.0 (Architecture 2.0 + Hierarchical Context)
 - **Session Persistence**: `storage/db/sessions.json` manages user sessions across restarts.
 
 ## 7. Operational Workflow
-- **Setup**: `make setup` (System pkgs, uv sync, DB Init, Default Admin).
-- **Run**: `make run` (Triggers `scripts/run.sh` which launches the supervisor).
+- **Setup**: `make setup` (Default CPython) or `make setup-pypy` (PyPy 3.11+).
+- **Run**: `make run` (Triggers `scripts/run.sh`). Use `USE_PYPY=true make run` for PyPy.
 - **Set Directory**: `make set-dir dir=/path/to/media` to update the jail root.
 - **User Management**: `make add-user user=name`, `make list-users`, `make delete-user user=name`.
 

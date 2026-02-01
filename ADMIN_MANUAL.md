@@ -9,15 +9,26 @@ This manual documents the operational procedures for managing the single-port fi
 ## 1. Quick Start
 
 ### Installation
-Run the automated setup to create the uv environment, install dependencies, and initialize the database:
+Run the automated setup to create the uv environment (CPython), install dependencies, and initialize the database:
 ```bash
 make setup
+```
+
+**PyPy Support (Experimental):**
+To set up the PyPy 3.11 environment (requires `pypy3` installed via `pkg`):
+```bash
+make setup-pypy
 ```
 
 ### Starting the Server
 Start the supervisor (manages both FastAPI and Copyparty):
 ```bash
 make run
+```
+
+**Run with PyPy:**
+```bash
+USE_PYPY=true make run
 ```
 - **Frontend (FastAPI):** http://<server-ip>:8000
 - **Backend (Copyparty):** http://<server-ip>:8090 (if enabled in .env)
