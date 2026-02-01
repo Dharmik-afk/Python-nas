@@ -1,7 +1,7 @@
 # Technology Stack: Python FastAPI File Server
 
 ## Backend
-*   **Programming Language:** Python 3.x
+*   **Programming Language:** Python 3.x (CPython 3.12, PyPy 3.11+)
 *   **Web Framework:** FastAPI (with Uvicorn as the ASGI server)
 *   **Logic & Orchestration:** 
     *   Unified frontend architecture serving as a management layer.
@@ -28,7 +28,7 @@
 *   **Dependencies:** `python-multipart`, `requests`, `httpx`.
 
 ## Infrastructure & Tooling
-*   **Execution:** `make` (via `Makefile`), `scripts/run.sh`.
+*   **Execution:** `make` (via `Makefile`), `scripts/run.sh`. Supports dynamic runtime switching via `USE_PYPY=true`.
 *   **Package Management:** `uv` (`pyproject.toml`, `uv.lock`).
 *   **AI Context Management:** Hierarchical context system (scoped `.context.md` files) with `scripts/context_loader.py` for agent orchestration.
 
