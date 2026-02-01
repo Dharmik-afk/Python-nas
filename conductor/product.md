@@ -27,6 +27,8 @@ The primary audience for this server consists of **home users** who require a re
 
 *   **Advanced Media Playback:** Features a robust, gesture-controlled video player (Artplayer.js) with mobile-optimized controls (double-tap seek, swipe for volume/brightness), intelligent orientation locking (auto-landscape for horizontal videos), and playback speed adjustment. Videos present a clean thumbnail preview before playing to maintain visual consistency.
 
+*   **High-Performance Execution:** Supports execution via PyPy for improved responsiveness and efficient handling of large media libraries, especially on resource-constrained devices like mobile phones running Termux.
+
 
 
 ## User Experience (UX) Design
