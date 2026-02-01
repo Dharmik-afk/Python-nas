@@ -3,10 +3,17 @@ from typing import Optional
 from fastapi import Request, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from cryptography.fernet import Fernet
+try:
+    from cryptography.fernet import Fernet
+    HAS_CRYPTO = True
+except ImportError:
+    HAS_CRYPTO = False
+    Fernet = None
+
 from .config import settings
 from .security import hasher
 from .session_manager import session_manager, Session
+from .logger import logger
 
 # OAuth2 scheme for Swagger UI and API clients
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token", auto_error=False)
@@ -18,6 +25,8 @@ def get_basic_auth_header(username, password):
 
 def _get_fernet() -> Fernet:
     """Derives a 32-byte key from the SECRET_KEY for Fernet encryption."""
+    if not HAS_CRYPTO:
+        raise ImportError("cryptography package is required for Fernet operations")
     key = hasher.derive_key(settings.SECRET_KEY)
     return Fernet(base64.urlsafe_b64encode(key))
 
@@ -25,6 +34,9 @@ def encrypt_string(text: str) -> str:
     """Encrypts a string for storage in the session."""
     if not text:
         return ""
+    if not HAS_CRYPTO:
+        logger.warning("Encryption requested but 'cryptography' is not installed. Using plain-text.")
+        return text
     f = _get_fernet()
     return f.encrypt(text.encode()).decode()
 
@@ -32,11 +44,15 @@ def decrypt_string(encrypted_text: str) -> str:
     """Decrypts a string retrieved from the session."""
     if not encrypted_text:
         return ""
-    f = _get_fernet()
+    if not HAS_CRYPTO:
+        # If it was "encrypted" without crypto, it's just plain text
+        return encrypted_text
     try:
+        f = _get_fernet()
         return f.decrypt(encrypted_text.encode()).decode()
     except Exception:
-        return ""
+        # Fallback for plain text if it fails decryption (e.g. migration or dev)
+        return encrypted_text
 
 async def auth_required(request: Request, token: Optional[str] = Depends(oauth2_scheme)) -> Session:
     """
