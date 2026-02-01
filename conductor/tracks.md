@@ -17,10 +17,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 *Link: [./tracks/uv_integration_20260131/](./tracks/uv_integration_20260131/)*
 ---
 
-- [x] **Track: Establish the foundational support for PyPy 3.12, including environment setup and dynamic interpreter switching in the build system.**
-*Link: [./tracks/pypy_groundwork_20260201/](./tracks/pypy_groundwork_20260201/)*
-
----
-
 - [ ] **Track: Strict path validation jail for CUSTOM_SERVE_DIR and fail-fast startup security check.**
 *Link: [./tracks/security_jail_20260201/](./tracks/security_jail_20260201/)*
