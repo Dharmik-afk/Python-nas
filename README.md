@@ -19,7 +19,11 @@ The server has been refactored to a modern Python web application structure:
 
 1.  **Initialize and Verify**: Use the Makefile to install all dependencies and run health checks.
     ```bash
+    # For standard CPython (Default)
     make setup
+
+    # For high-performance PyPy 3.11+
+    make setup-pypy
     ```
 
 ## Running the Server
@@ -27,7 +31,11 @@ The server has been refactored to a modern Python web application structure:
 Start the server using the Makefile (which uses `run.sh` under the hood). By default, it serves the `~/projects` directory.
 
 ```bash
+# Standard run
 make run
+
+# Run with PyPy
+USE_PYPY=true make run
 ```
 
 Or run the script directly with a custom directory:

@@ -14,8 +14,9 @@ Run the automated setup to create the uv environment (CPython), install dependen
 make setup
 ```
 
-**PyPy Support (Experimental):**
-To set up the PyPy 3.11 environment (requires `pypy3` installed via `pkg`):
+**High-Performance Mode (PyPy):**
+The server is fully compatible with PyPy 3.11+, which offers significant performance improvements for media metadata processing and request routing while maintaining a lower memory footprint compared to standard CPython.
+To set up the PyPy environment (requires `pypy3` installed):
 ```bash
 make setup-pypy
 ```
@@ -27,6 +28,7 @@ make run
 ```
 
 **Run with PyPy:**
+To launch the server using the PyPy runtime:
 ```bash
 USE_PYPY=true make run
 ```
