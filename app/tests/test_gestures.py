@@ -11,5 +11,5 @@ def test_lightbox_has_content_aware_gestures():
     assert "150" in content # Check for increased threshold
     assert "this.close()" in content # Vertical swipe close
     assert "Document Isolation" in content
-    assert "item.type === 'text'" in content
-    assert "item.type === 'image' || item.type === 'video'" in content
+    assert 'item.type === "text"' in content
+    assert 'item.type === "image" || item.type === "video"' in content

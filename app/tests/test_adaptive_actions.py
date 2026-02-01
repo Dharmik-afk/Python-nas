@@ -7,7 +7,7 @@ def test_lightbox_adaptive_actions():
     content = template_path.read_text()
     
     # State
-    assert "pmask: ''" in content
+    assert 'pmask: ""' in content
     assert "this.pmask = data.pmask" in content
     
     # Permission Checks
@@ -17,5 +17,6 @@ def test_lightbox_adaptive_actions():
     # Handlers
     assert "handleRename()" in content
     assert "handleDelete()" in content
-    assert "fetch(`/api/v1/fs/rename/" in content
-    assert "method: 'DELETE'" in content
+    assert "fetch(" in content
+    assert "`/api/v1/fs/rename/" in content
+    assert 'method: "DELETE"' in content

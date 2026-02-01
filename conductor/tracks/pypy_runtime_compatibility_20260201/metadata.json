@@ -1,8 +1,0 @@
-{
-  "track_id": "pypy_runtime_compatibility_20260201",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-02-01T12:05:00Z",
-  "updated_at": "2026-02-01T12:05:00Z",
-  "description": "Ensure the Supervisor, FastAPI server, and all management scripts operate correctly under PyPy 3.12. Perform full system verification and document the new runtime capabilities."
-}

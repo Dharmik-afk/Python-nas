@@ -9,7 +9,12 @@ from pathlib import Path
 def mock_auth_required():
     return True
 
-app.dependency_overrides[auth_required] = mock_auth_required
+@pytest.fixture(autouse=True)
+def override_auth():
+    app.dependency_overrides[auth_required] = mock_auth_required
+    yield
+    if auth_required in app.dependency_overrides:
+        del app.dependency_overrides[auth_required]
 
 @pytest.fixture
 def mock_session():

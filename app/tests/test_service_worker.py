@@ -5,11 +5,16 @@ from app.main import app
 from app.core.auth import auth_required
 from app.core.session_manager import Session
 
-# Mock authentication for dependency injection
+# Mock authentication
 def mock_auth_required():
     return True
 
-app.dependency_overrides[auth_required] = mock_auth_required
+@pytest.fixture(autouse=True)
+def override_auth():
+    app.dependency_overrides[auth_required] = mock_auth_required
+    yield
+    if auth_required in app.dependency_overrides:
+        del app.dependency_overrides[auth_required]
 
 @pytest.fixture
 def mock_authenticated_session():

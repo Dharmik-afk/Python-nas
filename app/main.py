@@ -46,7 +46,11 @@ async def session_middleware(request: Request, call_next):
         session = session_manager.get_session(session_id)
     
     new_session_id = None
-    if not session:
+    # Only create a new session for UI/Frontend requests, not for API or downloads
+    # This allows auth_required to handle missing auth correctly for API/Mobile.
+    is_api = request.url.path.startswith("/api/v1") or request.url.path.startswith("/download")
+    
+    if not session and not is_api:
         client_ip = request.client.host if request.client else "unknown"
         user_agent = request.headers.get("user-agent", "unknown")
         session = session_manager.create_session(client_ip, user_agent)

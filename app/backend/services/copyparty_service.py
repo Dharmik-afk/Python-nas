@@ -64,7 +64,12 @@ def get_user_permissions(username: str, password: str) -> str:
 
 def _get_proxy_url(relative_path: Path) -> str:
     """Constructs the full URL to proxy a request to the copyparty backend."""
-    url_path = str(relative_path.as_posix()).lstrip('/')
+    # Ensure root path is empty string instead of '.'
+    path_str = relative_path.as_posix()
+    if path_str == ".":
+        path_str = ""
+    
+    url_path = path_str.lstrip('/')
     proxy_url = f"http://{settings.COPYPARTY_HOST}:{settings.COPYPARTY_PORT}/{url_path}"
     return proxy_url
 
@@ -190,6 +195,8 @@ def get_pmask(request: Request, relative_path: Path) -> str:
         url += "?pmask"
         
     headers = get_proxy_headers(request)
+    # Explicitly request plain text to avoid receiving the HTML browser
+    headers["Accept"] = "text/plain"
     
     # Log the attempt
     session = getattr(request.state, "session", None)
@@ -197,7 +204,8 @@ def get_pmask(request: Request, relative_path: Path) -> str:
     logger.debug(f"Querying pmask for user '{username}' at '{url}'")
 
     try:
-        r = requests.get(url, headers=headers, timeout=5)
+        # Increased timeout for PyPy stability
+        r = requests.get(url, headers=headers, timeout=10)
         if r.status_code == 200:
             pmask = r.text.strip()
             # Validate that we didn't get an HTML error page or directory listing

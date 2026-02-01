@@ -61,10 +61,25 @@ def check_health():
 
 def shutdown(signum, frame):
     logger.info("Shutdown signal received. Terminating processes...")
+    
+    # Terminate FastAPI first to close active proxy connections
     if uvicorn_proc:
+        logger.info("Terminating Uvicorn...")
         uvicorn_proc.terminate()
+    
+    # Wait a moment for Uvicorn to release sockets
     if copyparty_proc:
+        time.sleep(1)
+        logger.info("Terminating Copyparty...")
         copyparty_proc.terminate()
+
+    # Wait for both to exit
+    if uvicorn_proc:
+        uvicorn_proc.wait(timeout=5)
+    if copyparty_proc:
+        copyparty_proc.wait(timeout=5)
+        
+    logger.info("All processes terminated. Exit.")
     sys.exit(0)
 
 def main():

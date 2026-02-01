@@ -1,8 +1,0 @@
-{
-  "track_id": "pypy_groundwork_20260201",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-02-01T12:00:00Z",
-  "updated_at": "2026-02-01T12:00:00Z",
-  "description": "Establish the foundational support for PyPy 3.12, including environment setup and dynamic interpreter switching in the build system."
-}

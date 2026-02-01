@@ -9,7 +9,11 @@ from app.core.session_manager import Session
 def mock_auth_required():
     return True
 
-app.dependency_overrides[auth_required] = mock_auth_required
+@pytest.fixture(autouse=True)
+def override_auth():
+    app.dependency_overrides[auth_required] = mock_auth_required
+    yield
+    del app.dependency_overrides[auth_required]
 
 @pytest.fixture
 def mock_authenticated_session():
@@ -20,10 +24,10 @@ def mock_authenticated_session():
         mock_get.return_value = mock_session
         yield mock_get
 
-@patch("app.backend.services.copyparty_service.proxy_api_request")
-def test_search_files_success(mock_proxy, mock_authenticated_session):
+@patch("app.backend.routes.api_routes.search_files")
+def test_search_files_success(mock_search, mock_authenticated_session):
     """Test successful file search."""
-    mock_proxy.return_value = {
+    mock_search.return_value = {
         "hits": [
             {"p": "folder1/file1.txt", "s": 1024, "t": 1600000000},
             {"p": "file2.jpg", "s": 2048, "t": 1600000001}
@@ -40,18 +44,14 @@ def test_search_files_success(mock_proxy, mock_authenticated_session):
         assert len(data["hits"]) == 2
         
         # Verify proxy was called with correct params
-        # Copyparty search uses ?q=... and usually needs &json or similar
-        # But our service might handle the path.
-        # Typically search is at the root or a specific dir.
-        mock_proxy.assert_called_once()
-        args, kwargs = mock_proxy.call_args
-        # args[1] should be the relative path, for global search it might be "." or ""
-        assert kwargs["params"]["q"] == "test"
+        mock_search.assert_called_once()
+        args, kwargs = mock_search.call_args
+        assert args[1] == "test"
 
-@patch("app.backend.services.copyparty_service.proxy_api_request")
-def test_search_ui_success(mock_proxy, mock_authenticated_session):
+@patch("app.backend.routes.api_routes.search_files")
+def test_search_ui_success(mock_search, mock_authenticated_session):
     """Test successful search UI rendering."""
-    mock_proxy.return_value = {
+    mock_search.return_value = {
         "hits": [
             {"p": "folder1/file1.txt", "s": 1024, "t": 1600000000},
         ]

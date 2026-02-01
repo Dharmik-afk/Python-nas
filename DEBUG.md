@@ -1,36 +1,34 @@
 # DEBUG.md — Project Debug Context
-**Version:** 3.4.1
+**Version:** 3.5.0
 **Scope:** Py_server (Architecture 2.0)
 **Target Agent:** Gemini CLI Agent
 
 ---
 
-## 1. Known Bugs & Issues (CRITICAL)
+## 1. Resolved Issues (FIXED)
 
 ### Bug: Copyparty Hashing Mismatch
-- **Status:** **OPEN / WORKAROUND ACTIVE**
-- **Symptom:** When `Hasher.get_copyparty_hash()` is enabled, login handshakes fail with `invalid password: '%x...'` even with correct credentials.
-- **Root Cause:** Incompatibility between the Python implementation of the SHA-512 iteration loop and Copyparty's internal algorithm.
-- **Workaround:** Both `Hasher.get_copyparty_hash()` and `Hasher.get_internal_proxy_password()` currently return the **raw input** (Plain Text).
-- **Security Impact:** Proxy traffic between FastAPI and Copyparty (port 8090) contains plain-text credentials. This is mitigated by Copyparty normally listening only on `127.0.0.1`.
+- **Status:** **FIXED**
+- **Fix:** Implemented custom SHA-512 "sha2" algorithm compatible with Copyparty. Added salted proxy authentication (`internal_pw = username + password`) to prevent hash collisions for users with identical passwords.
+- **Verification:** Handshake successful on both CPython and PyPy.
 
 ### Issue: PyPy 3.11 + Cryptography on Termux
-- **Status:** **FIXED / WORKAROUND ACTIVE**
-- **Symptom:** `ImportError: No module named 'cryptography'` when running with `USE_PYPY=true`.
-- **Root Cause:** `cryptography` requires Rust to build from source on PyPy. The system-wide `python-cryptography` package in Termux is built for CPython 3.12 and is binary-incompatible with PyPy.
-- **Workaround:** `app/core/auth.py` now uses a custom `PurePythonCrypter` (HMAC-SHA256 + SHA256 stream cipher) when the binary `cryptography` library is missing. This ensures sessions are encrypted on both CPython and PyPy.
-- **Security Impact:** Resolved. Encrypted sessions are now supported on all runtimes.
+- **Status:** **FIXED**
+- **Workaround:** `app/core/auth.py` uses a custom `PurePythonCrypter` (HMAC-SHA256 + SHA256 stream cipher) when the binary `cryptography` library is missing. Verified robust session encryption across all runtimes.
+
+### Issue: PyPy Handshake Timeout / Latency
+- **Status:** **FIXED**
+- **Symptom:** Login failed with `502 Bad Gateway` on PyPy due to 5s timeout.
+- **Fix:** Increased handshake timeout to 15s and permission retrieval to 10s to accommodate PyPy JIT warm-up and mobile hardware latency.
+
+### Issue: Root Path Resolution in Copyparty Proxy
+- **Status:** **FIXED**
+- **Symptom:** Root directory listed as `/.?pmask` (incorrect) instead of `/?pmask`.
+- **Fix:** Refactored `_get_proxy_url` to correctly handle `.` as an empty path string.
 
 ### Issue: logger Import Failure in app/core/auth.py
 - **Status:** **FIXED**
-- **Symptom:** `ImportError: cannot import name 'logger' from 'app.core.logger'`
-- **Root Cause:** Incorrect import statement `from .logger import logger` in a file that doesn't export a `logger` variable.
-- **Fix:** Replaced with standard `logging.getLogger(__name__)`.
-
-### Issue: uv + PyPy Libc Detection
-- **Status:** **WORKAROUND ACTIVE**
-- **Symptom:** `uv venv` or `uv sync` fails with `Could not detect a glibc or a musl libc` when targeting PyPy.
-- **Workaround:** Use `pypy3 -m venv` for environment creation and `pip install -r requirements-pypy.txt` (exported via `uv export`) for dependency management in the PyPy environment.
+- **Fix:** Replaced incorrect import with `logging.getLogger(__name__)`.
 
 ### Issue: Health Check Shadowing
 - **Status:** **FIXED**
@@ -38,11 +36,20 @@
 
 ---
 
-## 2. Project Execution Model
+## 2. Known Issues & Workarounds
+
+### Issue: uv + PyPy Libc Detection
+- **Status:** **WORKAROUND ACTIVE**
+- **Symptom:** `uv venv` or `uv sync` fails with `Could not detect a glibc or a musl libc` when targeting PyPy.
+- **Workaround:** Use `pypy3 -m venv` for environment creation and `pip install -r requirements-pypy.txt` (exported via `uv export`) for dependency management in the PyPy environment.
+
+---
+
+## 3. Project Execution Model
 
 ### Language & Runtime Stack
 - Python 3.12 (FastAPI / CPython)
-- PyPy 3.11 (Experimental support via `USE_PYPY=true`)
+- PyPy 3.11+ (High-Performance Mode via `USE_PYPY=true`)
 - Jinja2 + HTMX + Alpine.js
 - **Config**: `python-dotenv` loads settings from `.env`.
 
@@ -51,7 +58,7 @@
 - **Process 2:** Copyparty (Port 8090).
     - **Prod**: Binds to `127.0.0.1` (Hidden).
     - **Debug**: Binds to `0.0.0.0` (Visible) if `COPYPARTY_HOST=0.0.0.0` in `.env`.
-- **Orchestrator:** `supervisor/supervisor.py`
+- **Orchestrator:** `supervisor/supervisor.py` (Interpreter-aware)
 
 ### Entry Points
 - `scripts/run.sh`: Main launcher (loads `.env`).
@@ -60,7 +67,7 @@
 
 ---
 
-## 3. Debugging Protocol
+## 4. Debugging Protocol
 
 ### Step 1: Check Supervisor Logs
 ```bash
@@ -81,7 +88,7 @@ python3 scripts/manage.py list-users
 
 ---
 
-## 4. Safety & Stability
+## 5. Safety & Stability
 - ✅ **Jail Confinement**: `CUSTOM_SERVE_DIR` in `.env` limits file access.
 - ✅ **Path Obfuscation**: Restricted paths return `404 Not Found`.
 - ✅ SQLite DB: `storage/db/server.db`
@@ -90,7 +97,7 @@ python3 scripts/manage.py list-users
 
 ---
 
-## 5. Context Hierarchy (Scoped AI Instructions)
+## 6. Context Hierarchy (Scoped AI Instructions)
 
 ### Maintenance
 - **Root Context**: Global invariants and project identity are defined in `GEMINI.md`.
@@ -111,4 +118,3 @@ python3 scripts/context_loader.py --path app/frontend --task security
 1. Create `.context.md` in the target directory.
 2. Define rules, library preferences, or architectural details specific to that scope.
 3. The nearest `.context.md` file will always take priority in resolution.
-

@@ -22,7 +22,8 @@ def verify_with_copyparty(username: str, internal_pw: str) -> bool:
     try:
         url = f"http://{settings.COPYPARTY_HOST}:{settings.COPYPARTY_PORT}/?pmask"
         auth = (username, internal_pw)
-        response = requests.get(url, auth=auth, timeout=5)
+        # Increased timeout to 15s to accommodate PyPy JIT warm-up/latency
+        response = requests.get(url, auth=auth, timeout=15)
         return response.status_code == 200
     except Exception as e:
         logger.error(f"Copyparty handshake failed: {e}")
