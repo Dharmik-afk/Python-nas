@@ -15,10 +15,11 @@ PACKAGES=(
     "sqlite"
     "libjpeg-turbo"
     "build-essential"
-    "python-cryptography",
-    "python-pillow",
-    "binutils",
+    "python-cryptography"
+    "python-pillow"
+    "binutils"
     "uv"
+    "pypy3"
 )
 
 # Install packages
