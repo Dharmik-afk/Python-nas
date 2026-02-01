@@ -1,5 +1,5 @@
 # DEBUG.md — Project Debug Context
-**Version:** 3.3.0
+**Version:** 3.4.0
 **Scope:** Py_server (Architecture 2.0)
 **Target Agent:** Gemini CLI Agent
 
@@ -14,6 +14,17 @@
 - **Workaround:** Both `Hasher.get_copyparty_hash()` and `Hasher.get_internal_proxy_password()` currently return the **raw input** (Plain Text).
 - **Security Impact:** Proxy traffic between FastAPI and Copyparty (port 8090) contains plain-text credentials. This is mitigated by Copyparty normally listening only on `127.0.0.1`.
 
+### Issue: PyPy 3.11 + Cryptography on Termux
+- **Status:** **OPEN / LIMITATION**
+- **Symptom:** `ImportError: No module named 'cryptography'` when running with `USE_PYPY=true`.
+- **Root Cause:** `cryptography` requires Rust to build from source on PyPy. The system-wide `python-cryptography` package in Termux is built for CPython 3.12 and is binary-incompatible with PyPy.
+- **Workaround:** None currently for PyPy on Termux. Core features requiring encryption (Auth) currently fail under PyPy.
+
+### Issue: uv + PyPy Libc Detection
+- **Status:** **WORKAROUND ACTIVE**
+- **Symptom:** `uv venv` or `uv sync` fails with `Could not detect a glibc or a musl libc` when targeting PyPy.
+- **Workaround:** Use `pypy3 -m venv` for environment creation and `pip install -r requirements-pypy.txt` (exported via `uv export`) for dependency management in the PyPy environment.
+
 ### Issue: Health Check Shadowing
 - **Status:** **FIXED**
 - **Fix:** Moved `/health` endpoint definition above router inclusions in `app/main.py`.
@@ -23,7 +34,8 @@
 ## 2. Project Execution Model
 
 ### Language & Runtime Stack
-- Python 3.12 (FastAPI)
+- Python 3.12 (FastAPI / CPython)
+- PyPy 3.11 (Experimental support via `USE_PYPY=true`)
 - Jinja2 + HTMX + Alpine.js
 - **Config**: `python-dotenv` loads settings from `.env`.
 
