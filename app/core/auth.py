@@ -13,7 +13,9 @@ except ImportError:
 from .config import settings
 from .security import hasher
 from .session_manager import session_manager, Session
-from .logger import logger
+import logging
+
+logger = logging.getLogger(__name__)
 
 # OAuth2 scheme for Swagger UI and API clients
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token", auto_error=False)

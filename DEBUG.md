@@ -1,5 +1,5 @@
 # DEBUG.md — Project Debug Context
-**Version:** 3.4.0
+**Version:** 3.4.1
 **Scope:** Py_server (Architecture 2.0)
 **Target Agent:** Gemini CLI Agent
 
@@ -15,10 +15,17 @@
 - **Security Impact:** Proxy traffic between FastAPI and Copyparty (port 8090) contains plain-text credentials. This is mitigated by Copyparty normally listening only on `127.0.0.1`.
 
 ### Issue: PyPy 3.11 + Cryptography on Termux
-- **Status:** **OPEN / LIMITATION**
+- **Status:** **WORKAROUND ACTIVE**
 - **Symptom:** `ImportError: No module named 'cryptography'` when running with `USE_PYPY=true`.
 - **Root Cause:** `cryptography` requires Rust to build from source on PyPy. The system-wide `python-cryptography` package in Termux is built for CPython 3.12 and is binary-incompatible with PyPy.
-- **Workaround:** None currently for PyPy on Termux. Core features requiring encryption (Auth) currently fail under PyPy.
+- **Workaround:** `app/core/auth.py` now uses a conditional import for `cryptography`. If missing, it falls back to plain-text for session auth headers.
+- **Security Impact:** Session auth headers (internal proxy credentials) are stored in plain-text in the session database when running under PyPy without the `cryptography` library.
+
+### Issue: logger Import Failure in app/core/auth.py
+- **Status:** **FIXED**
+- **Symptom:** `ImportError: cannot import name 'logger' from 'app.core.logger'`
+- **Root Cause:** Incorrect import statement `from .logger import logger` in a file that doesn't export a `logger` variable.
+- **Fix:** Replaced with standard `logging.getLogger(__name__)`.
 
 ### Issue: uv + PyPy Libc Detection
 - **Status:** **WORKAROUND ACTIVE**
