@@ -17,7 +17,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 *Link: [./tracks/uv_integration_20260131/](./tracks/uv_integration_20260131/)*
 ---
 
-- [~] **Track: Establish the foundational support for PyPy 3.12, including environment setup and dynamic interpreter switching in the build system.**
+- [x] **Track: Establish the foundational support for PyPy 3.12, including environment setup and dynamic interpreter switching in the build system.**
 *Link: [./tracks/pypy_groundwork_20260201/](./tracks/pypy_groundwork_20260201/)*
 
 ---
