@@ -1,8 +1,4 @@
 import base64
-from typing import Optional
-from fastapi import Request, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer
-import base64
 import os
 import hashlib
 import hmac
@@ -27,6 +23,11 @@ logger = logging.getLogger(__name__)
 
 # OAuth2 scheme for Swagger UI and API clients
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token", auto_error=False)
+
+def get_basic_auth_header(username, password):
+    """Generates a Basic Authentication header string."""
+    credentials = f"{username}:{password}"
+    return "Basic " + base64.b64encode(credentials.encode()).decode()
 
 class PurePythonCrypter:
     """
