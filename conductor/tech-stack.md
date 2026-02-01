@@ -1,7 +1,7 @@
 # Technology Stack: Python FastAPI File Server
 
 ## Backend
-*   **Programming Language:** Python 3.x (CPython 3.12, PyPy 3.11+)
+*   **Programming Language:** Python 3.x (CPython 3.12, PyPy 3.11+ (High-Performance Mode))
 *   **Web Framework:** FastAPI (with Uvicorn as the ASGI server)
 *   **Logic & Orchestration:** 
     *   Unified frontend architecture serving as a management layer.
