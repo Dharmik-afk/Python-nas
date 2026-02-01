@@ -17,7 +17,7 @@ from app.core.config import settings
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] [Supervisor] %(message)s")
 logger = logging.getLogger(__name__)
 
-VENV_PYTHON = "python3"
+VENV_PYTHON = sys.executable
 COPYPARTY_CONF = BASE_DIR / "copyparty" / "copyparty.conf"
 
 # Process handles
