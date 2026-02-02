@@ -81,10 +81,10 @@ User accounts are managed via the CLI. All changes are automatically synced to t
 ## 4. Security Architecture
 
 ### The "Jail" (Stream Directory)
-The server enforces a strict security boundary based on `CUSTOM_SERVE_DIR`.
-- **Confinement:** Users **cannot** access files outside this directory (e.g., `../../secret`). attempts are logged and blocked (404 Not Found).
-- **System Protection:** Critical system paths (Project Root, `/usr`, `/etc`) are explicitly restricted even if the jail is misconfigured.
-- **Obfuscation:** Restricted paths return `404 Not Found` instead of `403 Forbidden` to hide their existence.
+The server enforces a strict security boundary based on `SERVE_DIR` (derived from `CUSTOM_SERVE_DIR`).
+- **Fail-Fast Startup Security:** The application will **refuse to start** if the configured `SERVE_DIR` is set to a restricted system path (e.g., the project root, `/usr/`, etc.) without being explicitly whitelisted in `ALLOWED_OVERRIDE_DIRS`.
+- **Strict Runtime Confinement:** Once the server starts, it establishes an absolute boundary at the `SERVE_DIR`. Even if a path is otherwise "allowed" in the global configuration, it is **inaccessible** if it falls outside the currently active `SERVE_DIR`. This prevents leakage between different served folders.
+- **Obfuscation:** Unauthorized access attempts or paths outside the jail return `404 Not Found` instead of `403 Forbidden` to prevent directory discovery.
 
 ### Architecture 2.0
 - **Supervisor:** A single entry point (`supervisor.py`) manages the lifecycle of the frontend and backend.
