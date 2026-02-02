@@ -27,12 +27,12 @@ Update the core path validation logic to strictly isolate the active `SERVE_DIR`
     - [x] Run existing security tests to ensure no regressions.
 - [x] **Task: Conductor - User Manual Verification 'Phase 2: Strict Runtime Jail Enforcement' (Protocol in workflow.md)** ac60cb5
 
-## Phase 3: Integration & Regression Testing
+## Phase 3: Integration & Regression Testing [checkpoint: 64290c0]
 Ensure the changes work correctly across all routes and don't break existing functionality.
 
-- [ ] **Task: Comprehensive Security Regression**
-    - [ ] Run all project tests: `pytest`
-    - [ ] Specifically verify `app/tests/test_api.py` and `app/tests/test_mobile_api.py` with both default and custom directory configurations.
-- [ ] **Task: Documentation Update**
-    - [ ] Update `ADMIN_MANUAL.md` or `DEBUG.md` to explain the new fail-fast behavior and the strict jail isolation.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 3: Integration & Regression' (Protocol in workflow.md)**
+- [x] **Task: Comprehensive Security Regression** f91d287
+    - [x] Run all project tests: `pytest`
+    - [x] Specifically verify `app/tests/test_api.py` and `app/tests/test_mobile_api.py` with both default and custom directory configurations.
+- [x] **Task: Documentation Update** 83f74ea
+    - [x] Update `ADMIN_MANUAL.md` or `DEBUG.md` to explain the new fail-fast behavior and the strict jail isolation.
+- [x] **Task: Conductor - User Manual Verification 'Phase 3: Integration & Regression' (Protocol in workflow.md)** bc7f911
