@@ -1,6 +1,6 @@
 import os
 import secrets
-from pydantic import BaseSettings, validator
+from pydantic import BaseSettings, validator, root_validator
 from pathlib import Path
 from typing import Optional
 from .utils import get_lan_ip
@@ -79,17 +79,27 @@ class Settings(BaseSettings):
     @validator("RESTRICTED_DIRS", always=True, pre=True)
     def set_restricted_dirs(cls, v, values):
         base_dir = values.get("BASE_DIR") or Path(__file__).resolve().parent.parent.parent
-        return [
-            base_dir,
-            Path("/data/data/com.termux/files/usr/")
+        defaults = [
+            base_dir.resolve(),
+            Path("/data/data/com.termux/files/usr/").resolve()
         ]
+        if v:
+            if isinstance(v, list):
+                return list(set(defaults + [Path(x).resolve() for x in v]))
+            return list(set(defaults + [Path(v).resolve()]))
+        return defaults
 
     @validator("ALLOWED_OVERRIDE_DIRS", always=True, pre=True)
     def set_allowed_override_dirs(cls, v, values):
         base_dir = values.get("BASE_DIR") or Path(__file__).resolve().parent.parent.parent
-        return [
-            base_dir / "storage" / "files"
+        defaults = [
+            (base_dir / "storage" / "files").resolve()
         ]
+        if v:
+            if isinstance(v, list):
+                return list(set(defaults + [Path(x).resolve() for x in v]))
+            return list(set(defaults + [Path(v).resolve()]))
+        return defaults
 
     @validator("SECRET_KEY", always=True, pre=True)
     def set_secret_key(cls, v, values):
@@ -122,6 +132,49 @@ class Settings(BaseSettings):
         # Default to media folder in project root
         base_dir = Path(__file__).resolve().parent.parent.parent
         return str((base_dir / "storage" / "files").resolve())
+
+    @root_validator(skip_on_failure=True)
+    def validate_security(cls, values):
+        serve_dir = values.get("SERVE_DIR")
+        if not serve_dir:
+            return values
+        
+        serve_path = Path(serve_dir).resolve()
+        restricted_dirs = values.get("RESTRICTED_DIRS", [])
+        allowed_overrides = values.get("ALLOWED_OVERRIDE_DIRS", [])
+        
+        # Check if serve_path is inside any restricted directory
+        is_restricted = False
+        for restricted in restricted_dirs:
+            res_restricted = restricted.resolve()
+            # is_relative_to is available in Python 3.9+
+            try:
+                if serve_path == res_restricted or serve_path.is_relative_to(res_restricted):
+                    is_restricted = True
+                    break
+            except ValueError:
+                continue # Not relative
+        
+        if is_restricted:
+            # Check if it's explicitly allowed
+            is_allowed = False
+            for allowed in allowed_overrides:
+                res_allowed = allowed.resolve()
+                try:
+                    if serve_path == res_allowed or serve_path.is_relative_to(res_allowed):
+                        is_allowed = True
+                        break
+                except ValueError:
+                    continue
+            
+            if not is_allowed:
+                raise ValueError(
+                    f"SECURITY ALERT: The requested serve directory '{serve_path}' is in a restricted area "
+                    f"and is not explicitly allowed. Please update ALLOWED_OVERRIDE_DIRS in .env "
+                    f"if this is intentional."
+                )
+        
+        return values
 
     class Config:
         env_file = ".env"
