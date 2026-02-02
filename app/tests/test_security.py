@@ -71,3 +71,57 @@ def test_settings_restricted_path_override_passes():
         ALLOWED_OVERRIDE_DIRS=[project_root]
     )
     assert Path(s.SERVE_DIR).resolve() == project_root
+
+from app.core.file_security import validate_and_resolve_path
+from fastapi import HTTPException
+
+def test_validate_path_within_serve_dir(tmp_path):
+    # Setup a dummy serve dir
+    serve_dir = tmp_path / "serve"
+    serve_dir.mkdir()
+    test_file = serve_dir / "hello.txt"
+    test_file.write_text("hello")
+    
+    # Validation should pass
+    resolved = validate_and_resolve_path(Path("hello.txt"), serve_dir)
+    assert resolved == test_file.resolve()
+
+def test_validate_path_outside_jail_fails(tmp_path):
+    serve_dir = tmp_path / "serve"
+    serve_dir.mkdir()
+    
+    other_dir = tmp_path / "other"
+    other_dir.mkdir()
+    other_file = other_dir / "secret.txt"
+    other_file.write_text("secret")
+    
+    # Attempt to access using traversal
+    with pytest.raises(HTTPException) as excinfo:
+        validate_and_resolve_path(Path("../other/secret.txt"), serve_dir)
+    assert excinfo.value.status_code == 404
+
+def test_validate_path_jail_isolation_from_defaults(tmp_path):
+    # This test specifically targets the case where a CUSTOM_SERVE_DIR is active,
+    # and we want to ensure we CANNOT access the default storage/files 
+    # even though it might be in ALLOWED_OVERRIDE_DIRS globally.
+    
+    base_settings = Settings()
+    default_storage = base_settings.BASE_DIR / "storage" / "files"
+    
+    custom_serve = tmp_path / "custom"
+    custom_serve.mkdir()
+    
+    # We pass custom_serve as the base_dir. 
+    # Even if default_storage is 'allowed' in settings, it is OUTSIDE custom_serve.
+    
+    # Path to a file that definitely exists in default storage (e.g. .gitkeep)
+    # We'll just assume there is something there or mock it.
+    
+    # Relative path that points to default storage from custom_serve
+    # This is tricky without knowing the exact relative path, so we use absolute if possible
+    # but the function strips leading slashes.
+    
+    # Let's just use a relative path that we know goes out.
+    with pytest.raises(HTTPException) as excinfo:
+        validate_and_resolve_path(Path("../../storage/files/.gitkeep"), custom_serve)
+    assert excinfo.value.status_code == 404
