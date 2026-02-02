@@ -104,24 +104,19 @@ def test_validate_path_jail_isolation_from_defaults(tmp_path):
     # This test specifically targets the case where a CUSTOM_SERVE_DIR is active,
     # and we want to ensure we CANNOT access the default storage/files 
     # even though it might be in ALLOWED_OVERRIDE_DIRS globally.
+    import os
     
     base_settings = Settings()
-    default_storage = base_settings.BASE_DIR / "storage" / "files"
+    project_storage = (base_settings.BASE_DIR / "storage" / "files").resolve()
     
-    custom_serve = tmp_path / "custom"
+    custom_serve = (tmp_path / "custom").resolve()
     custom_serve.mkdir()
     
-    # We pass custom_serve as the base_dir. 
-    # Even if default_storage is 'allowed' in settings, it is OUTSIDE custom_serve.
+    # Calculate the relative path from custom_serve to the project's storage
+    # This ensures the traversal attempt is correctly targeted regardless of tmp_path location
+    rel_path = os.path.relpath(project_storage, custom_serve)
     
-    # Path to a file that definitely exists in default storage (e.g. .gitkeep)
-    # We'll just assume there is something there or mock it.
-    
-    # Relative path that points to default storage from custom_serve
-    # This is tricky without knowing the exact relative path, so we use absolute if possible
-    # but the function strips leading slashes.
-    
-    # Let's just use a relative path that we know goes out.
+    # We try to access it via traversal
     with pytest.raises(HTTPException) as excinfo:
-        validate_and_resolve_path(Path("../../storage/files/.gitkeep"), custom_serve)
+        validate_and_resolve_path(Path(rel_path) / ".gitkeep", custom_serve)
     assert excinfo.value.status_code == 404
