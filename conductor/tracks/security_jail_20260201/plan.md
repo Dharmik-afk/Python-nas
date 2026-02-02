@@ -2,24 +2,13 @@
 
 This plan focuses on enforcing a strict jail around the active `SERVE_DIR` and implementing a fail-fast startup check in the `Settings` class to prevent insecure configurations.
 
-## Phase 1: Foundation & Startup Security (Fail-Fast)
+## Phase 1: Foundation & Startup Security (Fail-Fast) [checkpoint: daf915a]
 Focus on the Pydantic `Settings` class to ensure the server cannot start with an insecure `SERVE_DIR`.
 
-- [ ] **Task: Write Tests for Settings Validation in `app/tests/test_security.py`**
-    - [ ] Append tests to `app/tests/test_security.py`.
-    - [ ] Test: `Settings` initializes successfully with a default safe path (`storage/files`).
-    - [ ] Test: `Settings` initializes successfully with a custom path outside the project root.
-    - [ ] Test: `Settings` raises `ValueError` if `CUSTOM_SERVE_DIR` is set to the project root (restricted) without an override.
-    - [ ] Test: `Settings` initializes successfully if a restricted path is explicitly added to `ALLOWED_OVERRIDE_DIRS`.
-- [ ] **Task: Implement Fail-Fast Validation in `app/core/config.py`**
-    - [ ] Add a `@root_validator` to the `Settings` class.
-    - [ ] Implement logic to check if `self.SERVE_DIR` is within any `RESTRICTED_DIRS`.
-    - [ ] If restricted, verify it is also in `ALLOWED_OVERRIDE_DIRS`.
-    - [ ] Raise `ValueError` if the security check fails.
-- [ ] **Task: Verify Settings Security**
-    - [ ] Run tests: `pytest app/tests/test_security.py`
-    - [ ] Verify that the server fails to start when `.env` is intentionally misconfigured.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 1: Foundation & Startup Security' (Protocol in workflow.md)**
+- [x] **Task: Write Tests for Settings Validation in `app/tests/test_security.py`** 3152f68
+- [x] **Task: Implement Fail-Fast Validation in `app/core/config.py`** 3152f68
+- [x] **Task: Verify Settings Security** 3152f68
+- [x] **Task: Conductor - User Manual Verification 'Phase 1: Foundation & Startup Security' (Protocol in workflow.md)** daf915a
 
 ## Phase 2: Strict Runtime Jail Enforcement
 Update the core path validation logic to strictly isolate the active `SERVE_DIR`.
