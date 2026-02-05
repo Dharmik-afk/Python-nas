@@ -23,7 +23,8 @@ This document maps the project's dependency structure and identifies `sys.path` 
 | `supervisor/supervisor.py` | 12 | Import `app.core.config`. |
 
 ## 3. Notable Dependencies & Import Patterns
-- **FastAPI Entry Point (`app/main.py`):** Uses a mix of relative (`from .core...`) and absolute (`from app.backend...`) imports.
+- **FastAPI Entry Point (`app/main.py`):** Uses absolute (`from app.core...`, `from app.backend...`) imports.
+- **`app/core/` and `app/backend/`:** Standardized to absolute imports.
 - **Supervisor (`supervisor/supervisor.py`):** Depends on `app.core.config`.
 - **User Sync (`app/core/user_sync.py`):** Cross-imports from `scripts/manage.py`, creating a dependency from `app` to `scripts`.
 - **Scripts:** Often depend on `app` modules for shared logic or configuration.

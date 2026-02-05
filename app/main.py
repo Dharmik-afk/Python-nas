@@ -4,11 +4,11 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from .core.config import settings
-from .core.logger import setup_logging
-from .core.session_manager import session_manager
-from .core.utils import get_lan_ip
-from .core.user_sync import sync_users_to_copyparty
+from app.core.config import settings
+from app.core.logger import setup_logging
+from app.core.session_manager import session_manager
+from app.core.utils import get_lan_ip
+from app.core.user_sync import sync_users_to_copyparty
 from app.backend.routes import download_routes, upload_routes, api_routes, auth_routes
 from app.frontend.routes import frontend_routes
 

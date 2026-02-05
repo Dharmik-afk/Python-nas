@@ -1,6 +1,6 @@
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
-from .config import settings
+from app.core.config import settings
 
 # Shared templates instance
 templates = Jinja2Templates(directory=settings.BASE_DIR / "app" / "frontend" / "templates")

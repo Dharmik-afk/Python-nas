@@ -2,8 +2,8 @@ import logging
 from pathlib import Path
 from typing import Optional
 from fastapi import HTTPException
-from .constants import FORBIDDEN_NAMES, FORBIDDEN_EXTENSIONS
-from .config import settings
+from app.core.constants import FORBIDDEN_NAMES, FORBIDDEN_EXTENSIONS
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 

@@ -15,9 +15,9 @@ except ImportError:
     HAS_CRYPTO = False
     Fernet = None
 
-from .config import settings
-from .security import hasher
-from .session_manager import session_manager, Session
+from app.core.config import settings
+from app.core.security import hasher
+from app.core.session_manager import session_manager, Session
 
 logger = logging.getLogger(__name__)
 

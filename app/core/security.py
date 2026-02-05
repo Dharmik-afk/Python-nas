@@ -5,7 +5,7 @@ from typing import Optional
 from pathlib import Path
 from jose import jwt
 from passlib.context import CryptContext
-from .config import settings
+from app.core.config import settings
 
 class Hasher:
     """

@@ -3,7 +3,7 @@ import secrets
 from pydantic import BaseSettings, validator, root_validator
 from pathlib import Path
 from typing import Optional
-from .utils import get_lan_ip
+from app.core.utils import get_lan_ip
 
 class Settings(BaseSettings):
     # Project base directory
