@@ -29,6 +29,7 @@
 
 ## Infrastructure & Tooling
 *   **Execution:** `make` (via `Makefile`), `scripts/run.sh`. Supports dynamic runtime switching via `USE_PYPY=true`.
+*   **Architecture:** Package-native module execution (via `python -m`) and standardized absolute imports for all components.
 *   **Package Management:** `uv` (`pyproject.toml`, `uv.lock`).
 *   **AI Context Management:** Hierarchical context system (scoped `.context.md` files) with `scripts/context_loader.py` for agent orchestration.
 
