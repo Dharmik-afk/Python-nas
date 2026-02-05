@@ -1,7 +1,6 @@
 import sys
 import os
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from supervisor.supervisor import start_copyparty, start_uvicorn
 
