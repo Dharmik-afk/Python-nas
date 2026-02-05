@@ -17,7 +17,7 @@ This document maps the project's dependency structure and identifies `sys.path` 
 | :--- | :--- | :--- | :--- |
 | `alembic/env.py` | 12 | Import `app` models/base. | Removed |
 | `app/core/user_sync.py` | 8 | Import `scripts.manage`. | Removed |
-| `app/tests/test_supervisor_interpreter.py` | 8 | Resolve project root for testing. | To Remove in Ph 4 |
+| `app/tests/test_supervisor_interpreter.py` | 8 | Resolve project root for testing. | Removed |
 | `scripts/manage.py` | 11 | Resolve project root for imports. | Removed |
 | `scripts/verify_permissions.py` | 9 | Resolve project root for imports. | Removed |
 | `supervisor/supervisor.py` | 12 | Import `app.core.config`. | Removed |
@@ -27,6 +27,7 @@ This document maps the project's dependency structure and identifies `sys.path` 
 - **Supervisor (`supervisor/supervisor.py`):** Runs as a module (`python -m supervisor.supervisor`). Absolute imports.
 - **Scripts:** Run as modules (e.g., `python -m scripts.manage`). Absolute imports.
 - **User Sync (`app/core/user_sync.py`):** Uses absolute import for `scripts.manage`.
+- **Tests:** Use absolute imports for application code. No `sys.path` hacks.
 
 ## 4. Potential Circular Dependencies (To Verify)
 - `app.core.user_sync` <-> `scripts.manage` (Identified cross-import).

@@ -3,10 +3,6 @@ import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-# Add project root to sys.path
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(BASE_DIR))
-
 from supervisor.supervisor import start_copyparty, start_uvicorn
 
 def test_supervisor_uses_current_interpreter():
