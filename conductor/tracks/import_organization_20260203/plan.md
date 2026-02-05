@@ -42,17 +42,17 @@ Ensure entry points run as modules without path hacks.
     - [x] Update `conductor/dependency_map.md` to reflect entry point dependencies.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Entry Point & Script Refactoring' (Protocol in workflow.md)
 
-## Phase 4: Frontend & Tests
+## Phase 4: Frontend & Tests [checkpoint: 328d534]
 Standardize frontend imports and ensure test suite compatibility.
 
-- [ ] Task: Refactor `app/frontend` Imports
-    - [ ] Convert all relative imports in `app/frontend` to absolute imports.
-- [ ] Task: Refactor Test Imports
-    - [ ] Update `app/tests` to use absolute imports for the application code.
-    - [ ] Remove any test-specific `sys.path` hacks.
-- [ ] Task: Verify Test Suite
-    - [ ] Run `pytest` from the project root and ensure all tests pass.
-- [ ] Task: Finalize Dependency Map
-    - [ ] Perform a final audit of the codebase.
-    - [ ] Complete `conductor/dependency_map.md` with the final, clean architecture.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Frontend & Tests' (Protocol in workflow.md)
+- [x] Task: Refactor `app/frontend` Imports
+    - [x] Convert all relative imports in `app/frontend` to absolute imports.
+- [x] Task: Refactor Test Imports
+    - [x] Update `app/tests` to use absolute imports for the application code.
+    - [x] Remove any test-specific `sys.path` hacks.
+- [x] Task: Verify Test Suite
+    - [x] Run `pytest` from the project root and ensure all tests pass.
+- [x] Task: Finalize Dependency Map
+    - [x] Perform a final audit of the codebase.
+    - [x] Complete `conductor/dependency_map.md` with the final, clean architecture.
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Frontend & Tests' (Protocol in workflow.md)
