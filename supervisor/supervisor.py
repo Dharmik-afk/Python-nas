@@ -8,9 +8,7 @@ from pathlib import Path
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
-# Add project root to sys.path to allow importing app modules
-sys.path.append(str(BASE_DIR))
-
+# Import app modules using absolute imports
 from app.core.config import settings
 
 # Configure logging for Supervisor

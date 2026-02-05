@@ -5,8 +5,6 @@ import time
 import subprocess
 from pathlib import Path
 
-# Add project root to sys.path to allow importing app modules
-sys.path.append(str(Path(__file__).resolve().parent.parent))
 from app.core.config import settings
 
 # Configuration
@@ -24,14 +22,14 @@ def setup_user():
     """Ensures the restricted user exists."""
     print(f"[*] Checking for user '{USERNAME}'...")
     # List users to check existence
-    res = run_command("python3 scripts/manage.py list-users")
+    res = run_command("python3 -m scripts.manage list-users")
     if USERNAME in res.stdout:
         print(f"    User '{USERNAME}' already exists.")
         return
 
     print(f"[*] Creating user '{USERNAME}' with 'r' permissions...")
     # Create user non-interactively
-    cmd = f"printf '{PASSWORD}\n{PASSWORD}\n' | python3 scripts/manage.py add-user {USERNAME} --perms r"
+    cmd = f"printf '{PASSWORD}\n{PASSWORD}\n' | python3 -m scripts.manage add-user {USERNAME} --perms r"
     res = run_command(cmd)
     if res.returncode != 0:
         print(f"[!] Failed to create user: {res.stderr}")

@@ -8,9 +8,7 @@ from alembic import context
 import sys
 from pathlib import Path
 
-# Add project root to sys.path
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
+# Import app modules using absolute imports
 from app.core.config import settings
 from app.backend.database.base import Base
 from app.backend.database import models  # This ensures models are registered with Base

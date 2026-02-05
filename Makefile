@@ -73,28 +73,28 @@ test:
 
 # User management
 list-users:
-	USE_PYPY=$(USE_PYPY) $(PYTHON) scripts/manage.py list-users
+	USE_PYPY=$(USE_PYPY) $(PYTHON) -m scripts.manage list-users
 
 add-user:
 	@if [ -z "$(user)" ]; then echo "Usage: make add-user user=<name> [perms=<r|rw|rwma|ADMIN|USER|GUEST>]"; exit 1; fi
-	USE_PYPY=$(USE_PYPY) $(PYTHON) scripts/manage.py add-user $(user) --perms $(or $(perms),r)
+	USE_PYPY=$(USE_PYPY) $(PYTHON) -m scripts.manage add-user $(user) --perms $(or $(perms),r)
 
 add-admin:
 	@USER="admin"; \
 	PASS="admin_pass_a7b3c9d1e5f"; \
 	echo "Adding default admin user ($$USER)..."; \
-	printf "$$PASS\n$$PASS\n" | USE_PYPY=$(USE_PYPY) $(PYTHON) scripts/manage.py add-user $$USER --perms ADMIN
+	printf "$$PASS\n$$PASS\n" | USE_PYPY=$(USE_PYPY) $(PYTHON) -m scripts.manage add-user $$USER --perms ADMIN
 
 delete-user:
 	@if [ -z "$(user)" ]; then echo "Usage: make delete-user user=<name>"; exit 1; fi
-	USE_PYPY=$(USE_PYPY) $(PYTHON) scripts/manage.py delete-user $(user)
+	USE_PYPY=$(USE_PYPY) $(PYTHON) -m scripts.manage delete-user $(user)
 
 change-password:
 	@if [ -z "$(user)" ]; then echo "Usage: make change-password user=<name>"; exit 1; fi
-	USE_PYPY=$(USE_PYPY) $(PYTHON) scripts/manage.py change-password $(user)
+	USE_PYPY=$(USE_PYPY) $(PYTHON) -m scripts.manage change-password $(user)
 
 sync-users:
-	USE_PYPY=$(USE_PYPY) $(PYTHON) scripts/manage.py sync
+	USE_PYPY=$(USE_PYPY) $(PYTHON) -m scripts.manage sync
 
 # Soft clean (logs and caches)
 clean:

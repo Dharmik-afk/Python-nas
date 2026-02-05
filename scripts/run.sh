@@ -32,4 +32,5 @@ echo "Syncing configuration..."
 python3 -m app.core.user_sync
 
 echo "Starting Supervisor..."
-python3 supervisor/supervisor.py
+
+python3 -m supervisor.supervisor

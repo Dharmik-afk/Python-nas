@@ -2,11 +2,7 @@ import sys
 import logging
 from pathlib import Path
 
-# Ensure project root is in path to allow importing from scripts
-root_dir = Path(__file__).resolve().parent.parent.parent
-if str(root_dir) not in sys.path:
-    sys.path.append(str(root_dir))
-
+# Import from scripts using absolute import
 try:
     from scripts.manage import sync_users_to_copyparty
 except ImportError:

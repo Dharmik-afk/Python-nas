@@ -5,11 +5,7 @@ import getpass
 import logging
 from pathlib import Path
 
-# Add the parent directory to sys.path so we can import our app modules
-# Assumes we are in Py_server/scripts/
-project_root = Path(__file__).resolve().parent.parent
-sys.path.append(str(project_root))
-
+# Import our app modules using absolute imports
 from app.backend.database.session import SessionLocal
 from app.backend.database.models import User
 from app.core.security import hasher
