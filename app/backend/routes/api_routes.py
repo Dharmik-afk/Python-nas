@@ -334,13 +334,17 @@ async def get_gallery_metadata(request: Request, full_path: str):
     
     try:
         # Unquote path to handle spaces from URL
-        full_path = urllib.parse.unquote(full_path)
+        full_path = urllib.parse.unquote(full_path).lstrip('/')
         requested_path = Path(full_path)
         
         # If the path exists and is a file, use its parent. 
         # Otherwise, assume it's a directory.
-        actual_path = base_serve_dir / requested_path
-        if actual_path.is_file():
+        actual_path = (base_serve_dir / requested_path).resolve()
+        
+        # Extra safety check: Ensure actual_path is still within base_serve_dir
+        if not actual_path.is_relative_to(base_serve_dir.resolve()):
+            target_dir = Path("")
+        elif actual_path.is_file():
             target_dir = requested_path.parent
         else:
             target_dir = requested_path
