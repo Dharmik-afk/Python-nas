@@ -13,18 +13,18 @@ Understand the current state of imports and dependencies.
     - [x] Document these in the dependency map as targets for removal.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Analysis & Initial Mapping' (Protocol in workflow.md)
 
-## Phase 2: Import Standardization (Core & Backend)
+## Phase 2: Import Standardization (Core & Backend) [checkpoint: 5c0dd57]
 Convert core modules to use absolute imports and remove path hacks.
 
-- [ ] Task: Refactor `app/core` Imports
-    - [ ] Convert all relative imports in `app/core` to absolute imports (e.g., `from app.core...`).
-    - [ ] Verify no circular dependencies are introduced.
-- [ ] Task: Refactor `app/backend` Imports
-    - [ ] Convert all relative imports in `app/backend` to absolute imports.
-    - [ ] Ensure `app/backend` modules correctly import from `app/core`.
-- [ ] Task: Update Dependency Map
-    - [ ] Update `conductor/dependency_map.md` to reflect the changes in `app/core` and `app/backend`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Import Standardization (Core & Backend)' (Protocol in workflow.md)
+- [x] Task: Refactor `app/core` Imports
+    - [x] Convert all relative imports in `app/core` to absolute imports (e.g., `from app.core...`).
+    - [x] Verify no circular dependencies are introduced.
+- [x] Task: Refactor `app/backend` Imports
+    - [x] Convert all relative imports in `app/backend` to absolute imports.
+    - [x] Ensure `app/backend` modules correctly import from `app/core`.
+- [x] Task: Update Dependency Map
+    - [x] Update `conductor/dependency_map.md` to reflect the changes in `app/core` and `app/backend`.
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Import Standardization (Core & Backend)' (Protocol in workflow.md)
 
 ## Phase 3: Entry Point & Script Refactoring
 Ensure entry points run as modules without path hacks.
