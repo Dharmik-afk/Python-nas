@@ -26,21 +26,21 @@ Convert core modules to use absolute imports and remove path hacks.
     - [x] Update `conductor/dependency_map.md` to reflect the changes in `app/core` and `app/backend`.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Import Standardization (Core & Backend)' (Protocol in workflow.md)
 
-## Phase 3: Entry Point & Script Refactoring
+## Phase 3: Entry Point & Script Refactoring [checkpoint: b990c9d]
 Ensure entry points run as modules without path hacks.
 
-- [ ] Task: Refactor `main.py` (Root)
-    - [ ] Modify `main.py` (if applicable) or ensure it's redundant/correctly forwarding to `app.main`.
-    - [ ] Ensure it can be run via `python -m main` (if kept) or `uv run`.
-- [ ] Task: Refactor `supervisor/supervisor.py`
-    - [ ] Remove `sys.path` hacks.
-    - [ ] Ensure it runs via `python -m supervisor.supervisor`.
-- [ ] Task: Refactor `scripts/`
-    - [ ] specific scripts like `manage.py` to use absolute imports.
-    - [ ] Verify they run correctly from the project root.
-- [ ] Task: Update Dependency Map
-    - [ ] Update `conductor/dependency_map.md` to reflect entry point dependencies.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Entry Point & Script Refactoring' (Protocol in workflow.md)
+- [x] Task: Refactor `main.py` (Root)
+    - [x] Modify `main.py` (if applicable) or ensure it's redundant/correctly forwarding to `app.main`.
+    - [x] Ensure it can be run via `python -m main` (if kept) or `uv run`.
+- [x] Task: Refactor `supervisor/supervisor.py`
+    - [x] Remove `sys.path` hacks.
+    - [x] Ensure it runs via `python -m supervisor.supervisor`.
+- [x] Task: Refactor `scripts/`
+    - [x] specific scripts like `manage.py` to use absolute imports.
+    - [x] Verify they run correctly from the project root.
+- [x] Task: Update Dependency Map
+    - [x] Update `conductor/dependency_map.md` to reflect entry point dependencies.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Entry Point & Script Refactoring' (Protocol in workflow.md)
 
 ## Phase 4: Frontend & Tests
 Standardize frontend imports and ensure test suite compatibility.
