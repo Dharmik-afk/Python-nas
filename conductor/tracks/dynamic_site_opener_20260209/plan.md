@@ -12,8 +12,8 @@
 - [x] Task: Integrate with Supervisor. [code-change]
     - [x] Modify `supervisor/supervisor.py` to call `generate_opener_script()` at startup.
 
-## Phase 3: Verification
+## Phase 3: Verification [checkpoint: 778bbb8]
 - [x] Task: Start the server and verify `open_server.sh` is created. [verified]
 - [x] Task: Verify the content of `open_server.sh` matches the expected `am start` format and current URL. [verified]
 - [x] Task: Execute `./open_server.sh` manually to ensure it opens the browser. [verified command]
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Verification' (Protocol in workflow.md) [verified]
