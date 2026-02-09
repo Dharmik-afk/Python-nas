@@ -1,0 +1,8 @@
+{
+  "track_id": "codebase_context_audit_20260209",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-02-09T14:30:00Z",
+  "updated_at": "2026-02-09T14:30:00Z",
+  "description": "chore : reading all of the code one by one and writing the finding in that folders file called context.md and in server root a big file called CONTEXT.md . every time a context.md is created or updated also add those info to CONTEXT.md ."
+}

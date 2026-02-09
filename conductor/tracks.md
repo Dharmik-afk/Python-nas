@@ -20,3 +20,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 - [x] **Track: Strict path validation jail for CUSTOM_SERVE_DIR and fail-fast startup security check.**
 
 *Link: [./tracks/security_jail_20260201/](./tracks/security_jail_20260201/)*
+
+---
+
+- [ ] **Track: Comprehensive Codebase Context Audit**
+*Link: [./tracks/codebase_context_audit_20260209/](./tracks/codebase_context_audit_20260209/)*
