@@ -29,6 +29,8 @@ The primary audience for this server consists of **home users** who require a re
 
 *   **High-Performance Execution:** Supports execution via PyPy for improved responsiveness and efficient handling of large media libraries, especially on resource-constrained devices like mobile phones running Termux.
 
+*   **Termux-Native Quick Opener:** Automatically generates a shell script (`open_server.sh`) at startup to quickly open the server URL in the Android browser via `am start`.
+
 
 
 ## User Experience (UX) Design
