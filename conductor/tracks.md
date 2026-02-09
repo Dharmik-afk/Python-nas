@@ -20,15 +20,3 @@ This file tracks all major tracks for the project. Each track has its own detail
 - [x] **Track: Strict path validation jail for CUSTOM_SERVE_DIR and fail-fast startup security check.**
 
 *Link: [./tracks/security_jail_20260201/](./tracks/security_jail_20260201/)*
-
-
-
----
-
-
-
-- [x] **Track: Create a shell script (open_server.sh) at startup that opens the server URL in the Android browser via am start.**
-
-
-
-*Link: [./tracks/dynamic_site_opener_20260209/](./tracks/dynamic_site_opener_20260209/)*
