@@ -27,7 +27,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 
 
-- [~] **Track: Create a shell script (open_server.sh) at startup that opens the server URL in the Android browser via am start.**
+- [x] **Track: Create a shell script (open_server.sh) at startup that opens the server URL in the Android browser via am start.**
 
 
 
