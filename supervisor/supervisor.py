@@ -10,6 +10,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Import app modules using absolute imports
 from app.core.config import settings
+from app.core.utils import generate_opener_script
 
 # Configure logging for Supervisor
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] [Supervisor] %(message)s")
@@ -83,6 +84,12 @@ def shutdown(signum, frame):
 def main():
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
+
+    # Generate the opener script
+    try:
+        generate_opener_script(settings.FRONTEND_PORT, settings.FRONTEND_HOST)
+    except Exception as e:
+        logger.error(f"Failed to generate opener script: {e}")
 
     start_copyparty()
     time.sleep(2) # Give copyparty a moment to initialize
