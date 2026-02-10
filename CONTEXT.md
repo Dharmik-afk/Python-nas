@@ -123,4 +123,22 @@ Management and orchestration scripts. Includes `manage.py` for user synchronizat
 ### [supervisor/](./supervisor/.context.md)
 Process orchestration layer. Manages the lifecycle of the FastAPI (Uvicorn) and Copyparty processes, including health monitoring and graceful shutdown.
 
-### [alembic/](./alembic/.context.md)
+### [copyparty/](./copyparty/)
+Internal configuration for the Copyparty file engine. Contains `copyparty.conf`, which is automatically managed by `scripts/manage.py`.
+
+### [storage/](./storage/)
+Persistent data storage.
+- `files/`: The default "Jail Root" (serve directory).
+- `db/`: SQLite database (`server.db`) and persistent secrets.
+- `cache/`: Thumbnail and media cache managed by Copyparty and the Service Worker.
+
+---
+
+## Context and Documentation System
+
+The project employs a hierarchical context system to provide AI agents and developers with relevant, scoped information.
+
+- **[GEMINI.md](./GEMINI.md)**: High-level project identity, architecture overview, and global mandates.
+- **[.context.md files]**: Localized context for specific directories (e.g., `app/core/.context.md`). These take priority for tasks within their scope.
+- **[.context/](./.context/)**: Role-based overlays (e.g., `security.md`) that can be applied to any task via the context loader.
+- **[scripts/context_loader.py](./scripts/context_loader.py)**: The utility used to aggregate and merge these context files.
