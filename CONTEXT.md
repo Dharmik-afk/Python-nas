@@ -115,9 +115,12 @@ Jinja2 templates organized into `layouts`, `pages`, and `partials`. Key partials
 The automated test suite. Uses `pytest` to validate security jails, API endpoints, and frontend template logic. Employs extensive mocking to isolate the application from the physical filesystem and internal services.
 
 ### [alembic/](./alembic/.context.md)
+Database migration management. Contains `env.py` for configuring the migration environment and the `versions/` directory for schema history.
 
 ### [scripts/](./scripts/.context.md)
-*Summary and link to be added after audit.*
+Management and orchestration scripts. Includes `manage.py` for user synchronization and the hierarchical `context_loader.py`.
 
 ### [supervisor/](./supervisor/.context.md)
-*Summary and link to be added after audit.*
+Process orchestration layer. Manages the lifecycle of the FastAPI (Uvicorn) and Copyparty processes, including health monitoring and graceful shutdown.
+
+### [alembic/](./alembic/.context.md)

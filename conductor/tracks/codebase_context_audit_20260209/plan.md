@@ -46,17 +46,17 @@ Audit the UI components, static assets, templates, and routing logic.
 ## Phase 4: Infrastructure Tooling Audit
 Audit supporting scripts, process management, and database migrations.
 
-- [ ] Task: Audit `scripts/` Directory
-    - [ ] Create `scripts/.context.md`.
-    - [ ] Update root `CONTEXT.md` with a summary and link.
-- [ ] Task: Audit `supervisor/` Directory
-    - [ ] Create `supervisor/.context.md`.
-    - [ ] Update root `CONTEXT.md` with a summary and link.
-- [ ] Task: Audit `alembic/` Directory
-    - [ ] Create `alembic/.context.md`.
-    - [ ] Create `alembic/versions/.context.md`.
-    - [ ] Update root `CONTEXT.md` with a summary and link.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Infrastructure Tooling Audit' (Protocol in workflow.md)
+- [x] Task: Audit `scripts/` Directory
+    - [x] Create `scripts/.context.md`. (6b88130)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
+- [x] Task: Audit `supervisor/` Directory
+    - [x] Create `supervisor/.context.md`. (6b88130)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
+- [x] Task: Audit `alembic/` Directory
+    - [x] Create `alembic/.context.md`. (6b88130)
+    - [x] Create `alembic/versions/.context.md`. (6b88130)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
+- [~] Task: Conductor - User Manual Verification 'Phase 4: Infrastructure Tooling Audit' (Protocol in workflow.md)
 
 ## Phase 5: Final Consolidation and Verification
 Ensure the entire context system is coherent and complete.
