@@ -5,13 +5,13 @@ This plan outlines the systematic audit of the project's source code and infrast
 ## Phase 1: Root Infrastructure Audit
 Audit all files located directly in the project root and initialize the main `CONTEXT.md`.
 
-- [ ] Task: Create Initial `CONTEXT.md` and Audit Core Root Files
-    - [ ] Audit `main.py`, `Makefile`, `package.json`, `pyproject.toml`, and `alembic.ini`.
-    - [ ] Initialize `CONTEXT.md` with detailed context for these files.
-- [ ] Task: Audit Root Documentation and Scripts
-    - [ ] Audit `README.md`, `ADMIN_MANUAL.md`, `DEBUG.md`, and root `.sh` files (e.g., `open_server.sh`).
-    - [ ] Update `CONTEXT.md` with their detailed context.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Root Infrastructure Audit' (Protocol in workflow.md)
+- [x] Task: Create Initial `CONTEXT.md` and Audit Core Root Files
+    - [x] Audit `main.py`, `Makefile`, `package.json`, `pyproject.toml`, and `alembic.ini`.
+    - [x] Initialize `CONTEXT.md` with detailed context for these files.
+- [x] Task: Audit Root Documentation and Scripts
+    - [x] Audit `README.md`, `ADMIN_MANUAL.md`, `DEBUG.md`, and root `.sh` files (e.g., `open_server.sh`).
+    - [x] Update `CONTEXT.md` with their detailed context.
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Root Infrastructure Audit' (Protocol in workflow.md)
 
 ## Phase 2: Application Core and Backend Audit
 Audit the internal logic, core utilities, and backend service layers.
