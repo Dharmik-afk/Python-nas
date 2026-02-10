@@ -29,19 +29,19 @@ Audit the internal logic, core utilities, and backend service layers.
     - [x] Update root `CONTEXT.md` with summaries and links for each. (5ce9e47)
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Application Core and Backend Audit' (Protocol in workflow.md)
 
-## Phase 3: Application Frontend and Routing Audit
+## Phase 3: Application Frontend and Routing Audit [checkpoint: 6b88130]
 Audit the UI components, static assets, templates, and routing logic.
 
 - [x] Task: Audit `app/frontend/` and its Sub-directories
-    - [x] Create `app/frontend/.context.md`. (5ce9e47)
-    - [x] Create `app/frontend/routes/.context.md`. (5ce9e47)
-    - [x] Create `app/frontend/static/` contexts: `.context.md`, `css/.context.md`, `icons/.context.md`, `js/.context.md`. (5ce9e47)
-    - [x] Create `app/frontend/templates/` contexts: `.context.md`, `layouts/.context.md`, `pages/.context.md`, `partials/.context.md`, `partials/components/.context.md`. (5ce9e47)
-    - [x] Update root `CONTEXT.md` with summaries and links for each. (5ce9e47)
+    - [x] Create `app/frontend/.context.md`. (6b88130)
+    - [x] Create `app/frontend/routes/.context.md`. (6b88130)
+    - [x] Create `app/frontend/static/` contexts: `.context.md`, `css/.context.md`, `icons/.context.md`, `js/.context.md`. (6b88130)
+    - [x] Create `app/frontend/templates/` contexts: `.context.md`, `layouts/.context.md`, `pages/.context.md`, `partials/.context.md`, `partials/components/.context.md`. (6b88130)
+    - [x] Update root `CONTEXT.md` with summaries and links for each. (6b88130)
 - [x] Task: Audit `app/tests/` Directory
-    - [x] Create `app/tests/.context.md`. (5ce9e47)
-    - [x] Update root `CONTEXT.md` with a summary and link. (5ce9e47)
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Application Frontend and Routing Audit' (Protocol in workflow.md)
+    - [x] Create `app/tests/.context.md`. (6b88130)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Application Frontend and Routing Audit' (Protocol in workflow.md)
 
 ## Phase 4: Infrastructure Tooling Audit
 Audit supporting scripts, process management, and database migrations.
