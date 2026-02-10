@@ -100,7 +100,19 @@ FastAPI routers defining endpoints for `api`, `auth`, `download`, and `upload`.
 Service layer for interacting with Copyparty. Handles proxying of streams, uploads, and search requests.
 
 ### [app/frontend/](./app/frontend/.context.md)
-*Summary and link to be added after audit.*
+The presentation layer of the application. Uses Jinja2 for server-side rendering, enhanced with HTMX and Alpine.js for a modern, reactive user experience.
+
+#### [app/frontend/routes/](./app/frontend/routes/.context.md)
+Frontend page controllers. Handles routing for browsing, login, and test pages.
+
+#### [app/frontend/static/](./app/frontend/static/.context.md)
+Client-side assets. Includes `sw.js` (Service Worker) for media caching and `style.css` for the glassmorphism UI.
+
+#### [app/frontend/templates/](./app/frontend/templates/.context.md)
+Jinja2 templates organized into `layouts`, `pages`, and `partials`. Key partials include `lightbox.html` for media viewing.
+
+### [app/tests/](./app/tests/.context.md)
+The automated test suite. Uses `pytest` to validate security jails, API endpoints, and frontend template logic. Employs extensive mocking to isolate the application from the physical filesystem and internal services.
 
 ### [alembic/](./alembic/.context.md)
 
