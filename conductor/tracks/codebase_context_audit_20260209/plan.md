@@ -13,21 +13,21 @@ Audit all files located directly in the project root and initialize the main `CO
     - [x] Update `CONTEXT.md` with their detailed context.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Root Infrastructure Audit' (Protocol in workflow.md)
 
-## Phase 2: Application Core and Backend Audit
+## Phase 2: Application Core and Backend Audit [checkpoint: 5ce9e47]
 Audit the internal logic, core utilities, and backend service layers.
 
 - [x] Task: Audit `app/` and `app/core/` Directories
-    - [x] Create `app/.context.md` (for files like `app/main.py`). (b1c2d3e)
-    - [x] Create `app/core/.context.md`. (b1c2d3e)
-    - [x] Update root `CONTEXT.md` with summaries and links. (b1c2d3e)
+    - [x] Create `app/.context.md` (for files like `app/main.py`). (5ce9e47)
+    - [x] Create `app/core/.context.md`. (5ce9e47)
+    - [x] Update root `CONTEXT.md` with summaries and links. (5ce9e47)
 - [x] Task: Audit `app/backend/` and its Sub-directories
-    - [x] Create `app/backend/.context.md`. (c3d4e5f)
-    - [x] Create `app/backend/database/.context.md`. (c3d4e5f)
-    - [x] Create `app/backend/models/.context.md`. (c3d4e5f)
-    - [x] Create `app/backend/routes/.context.md`. (c3d4e5f)
-    - [x] Create `app/backend/services/.context.md`. (c3d4e5f)
-    - [x] Update root `CONTEXT.md` with summaries and links for each. (c3d4e5f)
-- [~] Task: Conductor - User Manual Verification 'Phase 2: Application Core and Backend Audit' (Protocol in workflow.md)
+    - [x] Create `app/backend/.context.md`. (5ce9e47)
+    - [x] Create `app/backend/database/.context.md`. (5ce9e47)
+    - [x] Create `app/backend/models/.context.md`. (5ce9e47)
+    - [x] Create `app/backend/routes/.context.md`. (5ce9e47)
+    - [x] Create `app/backend/services/.context.md`. (5ce9e47)
+    - [x] Update root `CONTEXT.md` with summaries and links for each. (5ce9e47)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Application Core and Backend Audit' (Protocol in workflow.md)
 
 ## Phase 3: Application Frontend and Routing Audit
 Audit the UI components, static assets, templates, and routing logic.
