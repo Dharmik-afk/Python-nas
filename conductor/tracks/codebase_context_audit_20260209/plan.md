@@ -16,18 +16,18 @@ Audit all files located directly in the project root and initialize the main `CO
 ## Phase 2: Application Core and Backend Audit
 Audit the internal logic, core utilities, and backend service layers.
 
-- [ ] Task: Audit `app/` and `app/core/` Directories
-    - [ ] Create `app/.context.md` (for files like `app/main.py`).
-    - [ ] Create `app/core/.context.md`.
-    - [ ] Update root `CONTEXT.md` with summaries and links.
-- [ ] Task: Audit `app/backend/` and its Sub-directories
-    - [ ] Create `app/backend/.context.md`.
-    - [ ] Create `app/backend/database/.context.md`.
-    - [ ] Create `app/backend/models/.context.md`.
-    - [ ] Create `app/backend/routes/.context.md`.
-    - [ ] Create `app/backend/services/.context.md`.
-    - [ ] Update root `CONTEXT.md` with summaries and links for each.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Application Core and Backend Audit' (Protocol in workflow.md)
+- [x] Task: Audit `app/` and `app/core/` Directories
+    - [x] Create `app/.context.md` (for files like `app/main.py`). (b1c2d3e)
+    - [x] Create `app/core/.context.md`. (b1c2d3e)
+    - [x] Update root `CONTEXT.md` with summaries and links. (b1c2d3e)
+- [x] Task: Audit `app/backend/` and its Sub-directories
+    - [x] Create `app/backend/.context.md`. (c3d4e5f)
+    - [x] Create `app/backend/database/.context.md`. (c3d4e5f)
+    - [x] Create `app/backend/models/.context.md`. (c3d4e5f)
+    - [x] Create `app/backend/routes/.context.md`. (c3d4e5f)
+    - [x] Create `app/backend/services/.context.md`. (c3d4e5f)
+    - [x] Update root `CONTEXT.md` with summaries and links for each. (c3d4e5f)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Application Core and Backend Audit' (Protocol in workflow.md)
 
 ## Phase 3: Application Frontend and Routing Audit
 Audit the UI components, static assets, templates, and routing logic.

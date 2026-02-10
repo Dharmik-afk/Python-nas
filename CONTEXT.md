@@ -79,10 +79,30 @@ This file provides a centralized overview of the project's architecture, infrast
 ## Application Structure
 
 ### [app/](./app/.context.md)
+The main application package. Contains the FastAPI initialization (`main.py`) and serves as the container for backend, frontend, and core logic.
+
+### [app/core/](./app/core/.context.md)
+The engine of the application. Handles configuration (`Settings`), security (jail enforcement, path validation), authentication (JWT, sessions), and core utilities. Key modules include `file_security.py` for path validation and `session_manager.py` for persistent user sessions.
+
+### [app/backend/](./app/backend/.context.md)
+The core business logic layer. Contains database models, Pydantic schemas, and the implementation of the Mobile API and file management routes.
+
+#### [app/backend/database/](./app/backend/database/.context.md)
+SQLAlchemy-based database layer. Manages the `User` model and standard CRUD operations.
+
+#### [app/backend/models/](./app/backend/models/.context.md)
+Pydantic schemas used for API request/response validation (`FSItem`, `UserCreate`).
+
+#### [app/backend/routes/](./app/backend/routes/.context.md)
+FastAPI routers defining endpoints for `api`, `auth`, `download`, and `upload`.
+
+#### [app/backend/services/](./app/backend/services/.context.md)
+Service layer for interacting with Copyparty. Handles proxying of streams, uploads, and search requests.
+
+### [app/frontend/](./app/frontend/.context.md)
 *Summary and link to be added after audit.*
 
 ### [alembic/](./alembic/.context.md)
-*Summary and link to be added after audit.*
 
 ### [scripts/](./scripts/.context.md)
 *Summary and link to be added after audit.*
