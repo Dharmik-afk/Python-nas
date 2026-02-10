@@ -43,20 +43,20 @@ Audit the UI components, static assets, templates, and routing logic.
     - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Application Frontend and Routing Audit' (Protocol in workflow.md)
 
-## Phase 4: Infrastructure Tooling Audit
+## Phase 4: Infrastructure Tooling Audit [checkpoint: 6f289f1]
 Audit supporting scripts, process management, and database migrations.
 
 - [x] Task: Audit `scripts/` Directory
-    - [x] Create `scripts/.context.md`. (6b88130)
-    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
+    - [x] Create `scripts/.context.md`. (6f289f1)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6f289f1)
 - [x] Task: Audit `supervisor/` Directory
-    - [x] Create `supervisor/.context.md`. (6b88130)
-    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
+    - [x] Create `supervisor/.context.md`. (6f289f1)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6f289f1)
 - [x] Task: Audit `alembic/` Directory
-    - [x] Create `alembic/.context.md`. (6b88130)
-    - [x] Create `alembic/versions/.context.md`. (6b88130)
-    - [x] Update root `CONTEXT.md` with a summary and link. (6b88130)
-- [~] Task: Conductor - User Manual Verification 'Phase 4: Infrastructure Tooling Audit' (Protocol in workflow.md)
+    - [x] Create `alembic/.context.md`. (6f289f1)
+    - [x] Create `alembic/versions/.context.md`. (6f289f1)
+    - [x] Update root `CONTEXT.md` with a summary and link. (6f289f1)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Infrastructure Tooling Audit' (Protocol in workflow.md)
 
 ## Phase 5: Final Consolidation and Verification
 Ensure the entire context system is coherent and complete.
